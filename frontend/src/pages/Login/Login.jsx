@@ -1,7 +1,11 @@
+
+
 import { useState } from "react";
-import api from "../../api";
+import { useNavigate } from "react-router-dom";
+import api from "../../services/api";
 
 function Login() {
+  const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
@@ -15,9 +19,15 @@ function Login() {
 
       console.log("LOGIN SUCCESS:", res.data);
 
-      localStorage.setItem("token", res.data.access);
+      localStorage.setItem("access", res.data.access);
+      localStorage.setItem("refresh", res.data.refresh);
 
       setMessage("Successfully logged in");
+
+      setTimeout(() => {
+        navigate("/app");
+      }, 1000);
+
     } catch (err) {
       console.log("LOGIN FAILED:", err.response?.data);
 

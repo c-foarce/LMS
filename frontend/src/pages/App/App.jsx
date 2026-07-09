@@ -1,4 +1,4 @@
-import { 
+import {
   createBrowserRouter,
   createRoutesFromElements,
   Route,
@@ -30,7 +30,7 @@ const router = createBrowserRouter(
 
       {/* Login Access */}
       <Route path="/app" element={<AppLayout />}>
-        <Route index element={<Dashboard />} />
+        <Route index element={<Navigate to="dashboard" replace />} />
 
         <Route path="dashboard" element={<Dashboard />} />
         <Route path="courses" element={<Courses />} />
