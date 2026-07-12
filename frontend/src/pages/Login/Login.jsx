@@ -46,7 +46,8 @@ function Login() {
 
       <input
         placeholder="password"
-        type="password"
+        /*TO DO, REMOVE COMMENT FOR PRODUCTION*/
+        /* type="password" */
         onChange={(e) => setPassword(e.target.value)}
       />
 
