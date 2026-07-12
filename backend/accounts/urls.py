@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import RegisterView, get_user_role, MyEnrolmentsView
+from .views import RegisterView, get_user_role
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 urlpatterns = [
@@ -12,6 +12,4 @@ urlpatterns = [
     #Below is for testing Get Request decorator
     path('user-role/', get_user_role),
 
-    #Returns all enrolments the requested user has
-    path('enrolments/me/', MyEnrolmentsView.as_view(), name='my-enrolments')
-    ]
+  ]
