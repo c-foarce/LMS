@@ -11,7 +11,7 @@ function Dashboard() {
     useEffect(() => {
         async function loadInfo() {
             // Sends GET request to /api/user-role/
-            const res = await api.get("user-role/");
+            const res = await api.get("/accounts/user-role/");
 
             // Saves the response data into React state
             setInfo(res.data);

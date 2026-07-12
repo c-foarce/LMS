@@ -8,7 +8,7 @@ function Courses() {
   useEffect(() => {
     const fetchEnrolments = async () => {
       try {
-        const response = await api.get("/enrolments/me/")
+        const response = await api.get("/courses/enrolments/me/")
         setEnrolments(response.data)
       } catch (error) {
         console.error(error)

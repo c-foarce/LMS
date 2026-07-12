@@ -41,7 +41,7 @@ api.interceptors.response.use(
             if (refreshToken) {
                 try {
                     console.log("refreshing token");
-                    const response = await api.post("/refresh/", {
+                    const response = await api.post("/accounts/refresh/", {
                         refresh: refreshToken
                     });
                     const newAccessToken = response.data.access;
