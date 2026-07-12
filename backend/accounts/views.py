@@ -14,12 +14,6 @@ class RegisterView(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = RegisterSerializer
 
-class MyEnrolmentsView(generics.ListAPIView):
-    serializer_class = EnrolmentSerializer
-    permission_classes = [IsAuthenticated]
-
-    def get_queryset(self):
-        return Enrolment.objects.filter(student=self.request.user)
 
 @api_view(["GET"])  
 #Defines this as API endpoint, [] specify allowed method(s)
