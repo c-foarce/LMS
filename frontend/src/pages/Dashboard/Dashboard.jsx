@@ -24,7 +24,7 @@ function Dashboard() {
 
     return (
         <div>
-            <h1>Dashboard</h1>
+            <h1>Dashboard [S/T/A] view - Welcome, {info?.username}!</h1>
             <h2>The below is for testing endpoint success</h2>
 
             <p>{info?.username}</p>
