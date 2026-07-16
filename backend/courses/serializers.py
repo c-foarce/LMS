@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from accounts.models import Enrolment
+from .models import Enrolment, Course
 
 class EnrolmentSerializer(serializers.ModelSerializer):
     course_name = serializers.CharField(source="course.name", read_only = True)
@@ -19,3 +19,10 @@ class EnrolmentSerializer(serializers.ModelSerializer):
             "grade",
             "enrolled_at",
         ]
+
+
+class CourseSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Course
+        fields = "__all__"
+

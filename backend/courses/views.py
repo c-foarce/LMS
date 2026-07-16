@@ -1,8 +1,12 @@
 from rest_framework import generics
-from accounts.models import Enrolment
-from .serializers import EnrolmentSerializer
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.response import Response
+from .models import Enrolment, Course
+from accounts.models import User
+from .serializers import EnrolmentSerializer, CourseSerializer
 
 from rest_framework.permissions import IsAuthenticated
+from accounts.permissions import IsTeacherOrAdmin
 
 # Create your views here.
 
@@ -13,3 +17,47 @@ class MyEnrolmentsView(generics.ListAPIView):
 
     def get_queryset(self):
         return Enrolment.objects.filter(student=self.request.user)
+    
+class CourseCreateView(generics.CreateAPIView):
+    serializer_class = CourseSerializer
+    permission_classes = [IsTeacherOrAdmin]
+    
+
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def course_fields(request):
+
+    print(request.user)
+    print(getattr(request.user, "role", "NO ROLE"))
+    fields = []
+
+    for field in Course._meta.fields:
+
+        if field.name in ["id", "created_at"]:
+            continue
+
+        fields.append({
+            "name": field.name,
+            "type": field.get_internal_type(),
+            "required": not field.blank,
+        })
+
+    teacher_options=[]
+
+    if getattr(request.user, "role", None) == "admin":
+        teachers=User.objects.filter(role="teacher")
+
+        teacher_options = [
+            {
+                "id": teacher.id,
+                "username": teacher.username
+            }
+            for teacher in teachers
+        ]
+
+    return Response({
+    "role": getattr(request.user, "role", None),
+    "fields": fields,
+    "teacher_options": teacher_options
+})
