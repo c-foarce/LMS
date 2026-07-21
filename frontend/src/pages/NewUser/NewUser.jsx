@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react"
 import api from '../../services/api'
-import { resolvePath } from "react-router-dom"
 
 function NewUser() {
 
@@ -112,9 +111,9 @@ function NewUser() {
                             />
 
                         ) : (
-
+                            // tyoe below here is set to "text" : "text" so that leaves option open for more hidden types later but keeps password visible
                             <input
-                                type={field.name === "password" ? "password" : "text"}
+                                type={field.name === "password" ? "text" : "text"}
                                 name={field.name}
                                 required={field.required}
                                 onChange={handleChange}
