@@ -18,6 +18,8 @@ import Dashboard from "../Dashboard/Dashboard";
 import Courses from "../Courses/Courses";
 import NewCourse from "../NewCourse/NewCourse";
 
+import NewUser from "../NewUser/NewUser";
+
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -35,6 +37,7 @@ const router = createBrowserRouter(
         <Route path="dashboard" element={<Dashboard />} />
         <Route path="courses" element={<Courses />} />
         <Route path="courses/new" element={<NewCourse />} />
+        <Route path="accounts/new" element = {<NewUser />}/>
       </Route>
     </>
   )

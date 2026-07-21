@@ -17,9 +17,14 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
+from .views import home_redirect
+
 urlpatterns = [
+    path('', home_redirect, name="home"),
     path('admin/', admin.site.urls),
     
     path('api/accounts/', include('accounts.urls')),
-    path('api/courses/', include('courses.urls'))
+    path('api/courses/', include('courses.urls')),
+
+    path('api-auth/', include('rest_framework.urls')),
 ]

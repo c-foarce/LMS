@@ -18,10 +18,22 @@ class MyEnrolmentsView(generics.ListAPIView):
     def get_queryset(self):
         return Enrolment.objects.filter(student=self.request.user)
     
+
+
 class CourseCreateView(generics.CreateAPIView):
     serializer_class = CourseSerializer
     permission_classes = [IsTeacherOrAdmin]
+
+    def perform_create(self, serializer):
+        user = self.request.user
+
+        if user.role == "teacher":
+            serializer.save(teacher=user)
+        elif user.role == "admin":
+            serializer.save()
     
+
+
 
 
 @api_view(["GET"])
@@ -59,5 +71,6 @@ def course_fields(request):
     return Response({
     "role": getattr(request.user, "role", None),
     "fields": fields,
-    "teacher_options": teacher_options
+    "teacher_id": request.user.id,
+    "teacher_options": teacher_options,
 })

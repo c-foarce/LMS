@@ -1,18 +1,27 @@
 from django.shortcuts import render
 
 from rest_framework import generics
-from .models import User
-from .serializers import RegisterSerializer
-
-from rest_framework.decorators import api_view,permission_classes
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+
+from .models import User
+from .serializers import RegisterSerializer, UserSerializer
+from .permissions import IsAdminRole
+
+
 
 # Create your views here.
 
 class RegisterView(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = RegisterSerializer
+
+
+class UserCreateView(generics.CreateAPIView):
+
+    serializer_class= UserSerializer
+    permission_classes = [IsAdminRole]
 
 
 @api_view(["GET"])  
@@ -38,5 +47,67 @@ def get_user_role(request):
     # Axios receives this as res.data.
 
 
+@api_view(["GET"])
+@permission_classes([IsAdminRole])
+def user_fields(request):
 
-##TO DO
+    allowed_fields = [
+        "first_name",
+        "last_name",
+        "username",
+        "password",
+        "email",
+        "role",
+
+    ]
+
+    fields = []
+
+    for field_name in allowed_fields:
+
+        #get model by field name
+        field = User._meta.get_field(field_name)
+
+        field_info = {
+            "name": field.name,
+            "type": field.get_internal_type(),
+            "required": not field.blank,
+        }
+
+        #if field has choices, send all to frontend to it can render a dropdown
+        if field.choices:
+            field_info["choices"] = [
+                {
+                    "value": value, 
+                    "label": label,
+                }
+                for value, label in field.choices
+            ]
+        fields.append(field_info)
+
+
+    return Response({
+        "fields": fields
+    })
+    # for field in User._meta.fields:
+
+    #     if field.name not in allowed_fields:
+    #         continue
+
+    #     field_info = {
+    #         "name": field.name,
+    #         "type": field.get_internal_type(),
+    #         "required": not field.blank,
+    #     }
+
+    #     if field.name == "role":
+    #         field_info["choices"] = [
+    #             {
+    #                 "value": value,
+    #                 "label": label, 
+    #             }
+    #             for value,label in User.Roles.choices
+    #         ]
+        
+    #     fields.append(field_info)
+

@@ -4,17 +4,22 @@ import api from '../../services/api'
 
 function NewCourse() {
 
-  // Stores the list of fields received from Django.
-  // This is generated from the Course model, so React does not need
-  // to know the Course fields ahead of time.
+  //SETTING STATE
+
+  // Stores the list of fields received from Django. taken from course model
   const [fields, setFields] = useState([])
 
-  // Stores the logged-in user's role.
-  // Used to decide whether to hide the teacher field or show the dropdown.
+  // Stores the logged-in user's role. Used currently to determine the method of displaying teachers, pre-set or dropdown
+  // possibly a good use case to store it so if students come to this page via entering the URL, they are locked out. simple check at the top, render "ACCESS DENIED" if true
   const [role, setRole] = useState("")
 
-  // Stores all possible teachers.
-  // This is only populated for admins.
+  // for tracking when a successful POST has been made, flags to reset the page back to default
+  const [success, setSuccess] = useState(false);
+
+  // captures TeacherID, for use in case of teacher created courses
+  const [teacherId, setTeacherId] = useState(null)
+
+  // Stores all possible teachers, only for use when role == "admin"
   // Each item contains information like:
   // {
   //   id: 3,
@@ -27,7 +32,7 @@ function NewCourse() {
   //
   // Example:
   // {
-  //   name: "Physics",
+  //   subject_name: "Physics",
   //   code: "PHY101",
   //   teacher: "3",
   //   description: "Introduction to physics"
@@ -53,14 +58,32 @@ function NewCourse() {
   };
 
   const handleSubmit = (event) => {
-    event.preventDefault()
+    event.preventDefault();
 
     api.post("/courses/create/", formData)
       .then(response => {
         console.log("Course Created", response.data);
+
+        setSuccess(true);
+
+        // this will reset the form
+        setTimeout(() => {
+          if (role === "teacher") {
+            setFormData({
+              teacher: teacherId, 
+            });
+          } else {
+            setFormData({})
+          }
+
+          //hide success message
+          setSuccess(false)
+
+
+        }, 3000)
       })
       .catch(error => {
-        console.error("Course creation failed:", error.response.data)
+        console.error("Course creation failed:", error.response.data);
       })
   }
 
@@ -78,19 +101,29 @@ function NewCourse() {
 
         console.log(response.data);
 
-        // Save the fields Django generated from the Course model
+        // saves all fields form course model in array
         setFields(response.data.fields);
 
-        // Save current user's role
+        // store the current logged in users role
         setRole(response.data.role);
 
-        // Save possible teacher choices for admin dropdown
+        // store current users id
+        setTeacherId(response.data.teacher_id)
+
+        if (response.data.role === "teacher") {
+          setFormData({
+            teacher: response.data.teacher_id,
+          });
+        }
+
+        // gets all users with role == "teacher" to be used with admin view
         setTeacherOptions(response.data.teacher_options)
       })
       .catch(error => {
 
-        // Logs API errors while developing
+        // for debugging, logs error to console
         console.error(error)
+        //IF NO INTERNET DISPLAY BAD PAGE
 
       });
 
@@ -99,6 +132,9 @@ function NewCourse() {
 
   return (
     <>
+      {success && (
+        <p>Course sucessfully created!</p>
+      )}
       <h1>New Course Page</h1>
 
       <form onSubmit={handleSubmit}>
@@ -124,6 +160,7 @@ function NewCourse() {
                 <select
                   name="teacher"
                   onChange={handleChange}
+                  value={formData[field.name] || ""}
                   required={field.required}
                 >
 
@@ -146,6 +183,7 @@ function NewCourse() {
                 // TextField from Django becomes a textarea.
                 <textarea
                   name={field.name}
+                  value={formData[field.name] || ""}
                   onChange={handleChange}
                 />
 
@@ -158,6 +196,7 @@ function NewCourse() {
                   type="text"
                   name={field.name}
                   required={field.required}
+                  value={formData[field.name] || ""}
                   onChange={handleChange}
                 />
 

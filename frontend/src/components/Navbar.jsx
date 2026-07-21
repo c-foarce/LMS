@@ -21,13 +21,16 @@ function Navbar() {
     return (
         <nav style={{ display: "flex", gap: "12px", padding: "10px" }}>
             {/* Later: add className={({ isActive }) => ... } using clsx */}
-            <NavLink to={isLoggedIn ? "/app/dashboard":"/"}>Home</NavLink>
+            <NavLink to={isLoggedIn ? "/app/dashboard" : "/"}>Home</NavLink>
 
             {/* Later: add className={({ isActive }) => ... } using clsx */}
             <NavLink to="/app/courses">Courses</NavLink>
 
             {/* Later: add className={({ isActive }) => ... } using clsx */}
             <NavLink to="/app/courses/new">New Course</NavLink>
+
+            {/* Later: add className={({ isActive }) => ... } using clsx */}
+            <NavLink to="/app/accounts/new"> New User </NavLink>
 
             {isLoggedIn ? (
                 <button onClick={handleLogout}>Logout</button>
