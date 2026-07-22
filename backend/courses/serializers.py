@@ -26,3 +26,17 @@ class CourseSerializer(serializers.ModelSerializer):
         model = Course
         fields = "__all__"
 
+        
+class CourseListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Course
+        fields = ["id", "subject_name", "code"]
+
+class CreateEnrolmentSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Enrolment
+        fields = [
+            "student",
+            "course",
+        ]

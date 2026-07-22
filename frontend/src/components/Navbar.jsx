@@ -32,6 +32,9 @@ function Navbar() {
             {/* Later: add className={({ isActive }) => ... } using clsx */}
             <NavLink to="/app/accounts/new"> New User </NavLink>
 
+            {}
+            <NavLink to="courses/enrolments/new"> New Enrolment</NavLink>
+
             {isLoggedIn ? (
                 <button onClick={handleLogout}>Logout</button>
             ) : (

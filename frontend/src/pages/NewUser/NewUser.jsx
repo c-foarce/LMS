@@ -9,6 +9,8 @@ function NewUser() {
     // gets the rle of the user, possibly for denying access to Students/Teachers since this should be an admin only feature
     const [role, setRole] = useState("")
 
+    const [success, setSuccess] = usestate(false)
+
     // Stores whatever the user has entered into the form.
     //
     // Example:
@@ -46,6 +48,13 @@ function NewUser() {
         api.post("/accounts/create/", formData)
             .then(response => {
                 console.log("User created", response.data);
+
+                setSuccess(true);
+
+                setTimeout(() => {
+                    setFormData({});
+                    setSuccess(false)
+                }, 3000)
             })
             .catch(error => {
                 console.error(
@@ -79,6 +88,9 @@ function NewUser() {
     return (
         <>
             <h1>New User Page</h1>
+            {success && (
+                <p>User sucessfully created!</p>
+            )}
 
             <form onSubmit={handleSubmit}>
                 {fields.map((field) => (

@@ -17,8 +17,8 @@ import Login from "../Login/Login";
 import Dashboard from "../Dashboard/Dashboard";
 import Courses from "../Courses/Courses";
 import NewCourse from "../NewCourse/NewCourse";
-
 import NewUser from "../NewUser/NewUser";
+import NewEnrolment from "../NewEnrolment/NewEnrolment";
 
 
 const router = createBrowserRouter(
@@ -38,6 +38,7 @@ const router = createBrowserRouter(
         <Route path="courses" element={<Courses />} />
         <Route path="courses/new" element={<NewCourse />} />
         <Route path="accounts/new" element = {<NewUser />}/>
+        <Route path="courses/enrolments/new" element = {<NewEnrolment />} />
       </Route>
     </>
   )

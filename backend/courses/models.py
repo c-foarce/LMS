@@ -28,7 +28,7 @@ class Course(models.Model):
         db_table = "accounts_course"
 
     def __str__(self):
-        return f"{self.name} {self.code}"
+        return f"{self.subject_name} {self.code}"
 
 
 class Enrolment(models.Model):

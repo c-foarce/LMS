@@ -6,7 +6,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from .models import User
-from .serializers import RegisterSerializer, UserSerializer
+from .serializers import RegisterSerializer, UserSerializer, StudentListSerializer
 from .permissions import IsAdminRole
 
 
@@ -89,6 +89,17 @@ def user_fields(request):
     return Response({
         "fields": fields
     })
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def student_list(request):
+
+    students = User.objects.filter(role="student")
+
+    serializer = StudentListSerializer(students, many=True)
+
+    return Response(serializer.data)
+
+
     # for field in User._meta.fields:
 
     #     if field.name not in allowed_fields:

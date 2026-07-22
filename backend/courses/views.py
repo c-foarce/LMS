@@ -1,12 +1,16 @@
 from rest_framework import generics
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
-from .models import Enrolment, Course
-from accounts.models import User
-from .serializers import EnrolmentSerializer, CourseSerializer
-
 from rest_framework.permissions import IsAuthenticated
-from accounts.permissions import IsTeacherOrAdmin
+
+from .models import Enrolment, Course
+from .serializers import EnrolmentSerializer, CourseSerializer, CourseListSerializer, CreateEnrolmentSerializer
+
+from accounts.models import User
+from accounts.permissions import IsTeacherOrAdmin, IsAdminRole
+
+
+
 
 # Create your views here.
 
@@ -74,3 +78,18 @@ def course_fields(request):
     "teacher_id": request.user.id,
     "teacher_options": teacher_options,
 })
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def course_list(request):
+
+    courses = Course.objects.all()
+    serializer = CourseListSerializer(courses, many=True)
+
+    return Response(serializer.data)
+
+
+#LaTER FOR POSTS
+class EnrolmentCreateView(generics.CreateAPIView):
+    serializer_class=CreateEnrolmentSerializer
+    permission_classes=[IsAdminRole]
