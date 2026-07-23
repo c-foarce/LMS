@@ -5,6 +5,7 @@ import clsx from "clsx"
 
 //important imports for state and navigation
 import { NavLink, useNavigate } from "react-router-dom";
+
 import { useAuth } from "../context/AuthContext";
 
 function Navbar() {
