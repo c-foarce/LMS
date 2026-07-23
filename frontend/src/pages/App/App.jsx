@@ -8,6 +8,11 @@ import {
 
 //import Root from "../../layouts/Root";
 
+import { AuthProvider } from "../../context/AuthContext";
+
+import ProtectedRoute from "../../components/ProtectedRoute";
+import RoleRoute from "../../components/RoleRoute";
+
 import AuthLayout from "../../layouts/AuthLayout";
 import AppLayout from "../../layouts/AppLayout";
 
@@ -29,39 +34,69 @@ const router = createBrowserRouter(
         <Route index element={<Welcome />} />
         <Route path="login" element={<Login />} />
       </Route>
-
+      {/*Anyone can access this */}
       {/* Login Access */}
-      <Route path="/app" element={<AppLayout />}>
+      <Route
+        path="/app"
+        element={
+          <ProtectedRoute>
+            <AppLayout />
+          </ProtectedRoute>
+        }
+      >
+        {/*Anyone can access this */}
         <Route index element={<Navigate to="dashboard" replace />} />
 
-        <Route path="dashboard" element={<Dashboard />} />
-        <Route path="courses" element={<Courses />} />
-        <Route path="courses/new" element={<NewCourse />} />
-        <Route path="accounts/new" element = {<NewUser />}/>
-        <Route path="courses/enrolments/new" element = {<NewEnrolment />} />
+        {/*Anyone can access this */}
+        <Route
+          path="dashboard"
+          element={<Dashboard />}
+        />
+        {/*Anyone can access this */}
+        <Route
+          path="courses"
+          element={<Courses />}
+        />
+
+        <Route
+          path="courses/new"
+          element={
+            <RoleRoute roles={["teacher", "admin"]}>
+              <NewCourse />
+            </RoleRoute>
+          }
+        />
+
+        <Route
+          path="accounts/new"
+          element={
+            <RoleRoute roles={["admin"]}>
+              <NewUser />
+            </RoleRoute>
+          }
+        />
+
+        <Route
+          path="courses/enrolments/new"
+          element={
+            <RoleRoute roles={["teacher", "admin"]}>
+              <NewEnrolment />
+            </RoleRoute>
+          }
+        />
+
       </Route>
     </>
   )
 )
 
-// const router = createBrowserRouter(
-//   createRoutesFromElements(
-//     <Route path="/" element={<Root />}>
-//       {/* default address */}
-//       <Route index element = {<Welcome />} />
-
-//       {/* app pages */}
-//       <Route path="login" element={<Login />} />
-//       <Route path="courses" element={<Courses />} />
-//       <Route path="courses/new" element={<NewCourse />} />
-
-//     </Route>
-//   )
-// )
-
 
 function App() {
-  return <RouterProvider router={router} />
+  return (
+    <AuthProvider>
+      <RouterProvider router={router} />
+    </AuthProvider>
+  )
 }
 
 export default App;

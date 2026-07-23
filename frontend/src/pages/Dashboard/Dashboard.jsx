@@ -2,33 +2,25 @@
 import { useState, useEffect } from "react";
 import api from '../../services/api'
 
+import { useAuth } from "../../context/AuthContext";
+
 
 function Dashboard() {
+
+    const { user, loading } = useAuth()
 
     // info will contain {"username", "role" of logged in user}
     const [info, setInfo] = useState(null);
 
-    useEffect(() => {
-        async function loadInfo() {
-            // Sends GET request to /api/user-role/
-            const res = await api.get("/accounts/user-role/");
-
-            // Saves the response data into React state
-            setInfo(res.data);
-        }
-
-        loadInfo();
-
-    }, []);
     //[] means once upon component render
 
     return (
         <div>
-            <h1>Dashboard [S/T/A] view - Welcome, {info?.username}!</h1>
+            <h1>Dashboard {user?.role} view - Welcome, {user?.username}!</h1>
             <h2>The below is for testing endpoint success</h2>
 
-            <p>{info?.username}</p>
-            <p>{info?.role}</p>
+            <p>{user?.username}</p>
+            <p>{user?.role}</p>
         </div>
     );
 }

@@ -5,15 +5,19 @@ import clsx from "clsx"
 
 //important imports for state and navigation
 import { NavLink, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 function Navbar() {
     const navigate = useNavigate();
+    const {setUser} = useAuth();
 
     const isLoggedIn = localStorage.getItem("access") !== null;
 
     function handleLogout() {
         localStorage.removeItem("access");
         localStorage.removeItem("refresh");
+
+        setUser(null)
 
         navigate("/");
     }
