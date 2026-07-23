@@ -2,7 +2,7 @@ from rest_framework import serializers
 from .models import Enrolment, Course
 
 class EnrolmentSerializer(serializers.ModelSerializer):
-    course_name = serializers.CharField(source="course.name", read_only = True)
+    course_name = serializers.CharField(source="course.subject_name", read_only = True)
     course_code = serializers.CharField(source="course.code", read_only = True)
     teacher = serializers.CharField(source="course.teacher.username", read_only=True)
 
