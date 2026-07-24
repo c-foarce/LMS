@@ -1,21 +1,60 @@
 from django.urls import path
-from .views import RegisterView, get_user_role, user_fields, UserCreateView, student_list
-from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+
+from . import views
+
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+)
+
 
 urlpatterns = [
-    path('register/', RegisterView.as_view()),
-    path('login/', TokenObtainPairView.as_view()),
 
-    #This is for token refreshing
-    path('refresh/', TokenRefreshView.as_view()),
+    path(
+        "register/",
+        views.RegisterView.as_view(),
+        name="register",
+    ),
 
-    #Below is for testing Get Request decorator
-    path('user-role/', get_user_role),
+    path(
+        "login/",
+        TokenObtainPairView.as_view(),
+        name="login",
+    ),
 
-    path("user-fields/", user_fields, name="user-fields"),
+    # Token refreshing
+    path(
+        "refresh/",
+        TokenRefreshView.as_view(),
+        name="token-refresh",
+    ),
 
-    path('create/', UserCreateView.as_view(), name="user-create"),
+    # Returns current authenticated user's role
+    path(
+        "user-role/",
+        views.get_user_role,
+        name="user-role",
+    ),
 
-    path('students/', student_list),
+    # Returns dynamic user form fields
+    path(
+        "user-fields/",
+        views.user_fields,
+        name="user-fields",
+    ),
 
-  ]
+    # Admin creates users
+    path(
+        "create/",
+        views.UserCreateView.as_view(),
+        name="user-create",
+    ),
+
+    # Returns students
+    path(
+        "students/",
+        views.student_list,
+        name="student-list",
+    ),
+
+]

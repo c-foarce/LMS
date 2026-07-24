@@ -22,9 +22,23 @@ class EnrolmentSerializer(serializers.ModelSerializer):
 
 
 class CourseSerializer(serializers.ModelSerializer):
+
+    teacher_name = serializers.CharField(
+        source="teacher.username",
+        read_only=True
+    )
+
     class Meta:
         model = Course
-        fields = "__all__"
+        fields =  [
+            "id",
+            "subject_name",
+            "code",
+            "description",
+            "teacher",
+            "teacher_name",
+            "created_at",
+        ]
 
         
 class CourseListSerializer(serializers.ModelSerializer):

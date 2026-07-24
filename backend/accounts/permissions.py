@@ -17,3 +17,15 @@ class IsTeacherOrAdmin(BasePermission):
         return (
             request.user.is_authenticated and request.user.role in ["teacher", "admin"]
         )
+
+class IsCourseOwnerOrAdmin(BasePermission):
+
+    def has_object_permission(self, request, view, obj):
+
+        if request.user.role == "admin":
+            return True
+
+        if request.user.role == "teacher":
+            return obj.teacher == request.user
+
+        return False

@@ -1,27 +1,67 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+
+import { useAuth } from '../../context/AuthContext'
+
 import api from '../../services/api'
 
 function Courses() {
-  const [enrolments, setEnrolments] = useState([])
+
+  const navigate = useNavigate()
+
+  const { user } = useAuth()
+
+  const [courses, setCourses] = useState([])
   const [loading, setLoading] = useState(true)
 
+
   useEffect(() => {
-    const fetchEnrolments = async () => {
+
+    const fetchCourses = async () => {
+
       try {
-        const response = await api.get("/courses/enrolments/me/")
-        setEnrolments(response.data)
+
+        let response;
+
+        switch (user.role) {
+
+          case "student":
+            response = await api.get("/courses/enrolments/me/");
+            break;
+
+          case "teacher":
+            response = await api.get("/courses/teaching/")
+            break;
+
+          case "admin":
+            response = await api.get("/courses/list/")
+            break;
+
+          default:
+            console.error("Unknown user role.")
+            return;
+
+        }
+
+        // const response = await api.get("/courses/enrolments/me/")
+
+        setCourses(response.data)
+
       } catch (error) {
+
         console.error(error)
+
       } finally {
+
         setLoading(false)
+
       }
+
     };
 
-    fetchEnrolments();
-  }, []);
+    fetchCourses();
+  }, [user]);
 
-  useEffect(() => {
-  }, [enrolments])
 
   if (loading) {
     return <p>Loading...</p>
@@ -32,25 +72,48 @@ function Courses() {
       <div>
         <h1>My Courses</h1>
 
-        {enrolments.length === 0 ? (
-          <p>You aren't enrolled in any courses.</p>
+        {courses.length === 0 ? (
+          <p>No courses found.</p>
         ) : (
-          enrolments.map((enrolment) => {
-            return (
-            <div key={enrolment.id}>
-              <h3>{enrolment.course_name}</h3>
+          courses.map((course) => {
 
-              <p>Code: {enrolment.course_code}</p>
+            if (user.role === "student") {
 
-              <p>Teacher: {enrolment.teacher}</p>
+              return (
+                <div key={course.id}>
+                  <h3>{course.course_name}</h3>
 
-              <p>Status: {enrolment.status}</p>
+                  <p>Code: {course.course_code}</p>
 
-              <p>Progress: {enrolment.progress}%</p>
+                  <p>Teacher: {course.teacher_name}</p>
 
-              <p>Grade: {enrolment.grade || "Not graded"}</p>
-            </div>
-            )
+                  <p>Status: {course.status}</p>
+
+                  <p>Progress: {course.progress}%</p>
+
+                  <p>Grade: {course.grade || "Not graded"}</p>
+                </div>
+              )
+
+            } else {
+
+              return (
+                <div key={course.id}>
+                  <h3>{course.subject_name}</h3>
+
+                  <p>Code: {course.code}</p>
+
+                  <p>Teacher: {course.teacher_name}</p>
+
+                  <button
+                  onClick={() =>  navigate(`/app/courses/${course.id}/edit`)}>
+                    Edit
+                  </button>
+                </div>
+              )
+
+            }
+
           })
         )}
       </div>

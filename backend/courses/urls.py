@@ -1,11 +1,61 @@
 from django.urls import path
-from .views import MyEnrolmentsView, course_fields, CourseCreateView, EnrolmentCreateView, course_list
+
+from . import views
+
 
 urlpatterns = [
-    #Returns all enrolments the requested user has
-    path('enrolments/me/', MyEnrolmentsView.as_view(), name='my-enrolments'),
-    path('course-fields/', course_fields, name='course-fields'),
-    path('create/', CourseCreateView.as_view(), name='course-create'),
-    path('enrolments/create/', EnrolmentCreateView.as_view(), name = "enrolment-create"),
-    path('list/', course_list)
-    ]
+
+    # Course metadata / dynamic fields
+    path(
+        "course-fields/",
+        views.course_fields,
+        name="course-fields",
+    ),
+
+    # Course creation
+    path(
+        "create/",
+        views.CourseCreateView.as_view(),
+        name="course-create",
+    ),
+
+    # Course detail and editing
+    path(
+        "<int:pk>/",
+        views.CourseDetailView.as_view(),
+        name="course-details",
+    ),
+
+    path(
+        "<int:pk>/edit/",
+        views.CourseEditView.as_view(),
+        name="course-update",
+    ),
+
+    # Course lists
+    path(
+        "list/",
+        views.course_list,
+        name="course-list",
+    ),
+
+    path(
+        "teaching/",
+        views.TeachingCoursesView.as_view(),
+        name="teaching-courses",
+    ),
+
+    # Enrolments
+    path(
+        "enrolments/me/",
+        views.MyEnrolmentsView.as_view(),
+        name="my-enrolments",
+    ),
+
+    path(
+        "enrolments/create/",
+        views.EnrolmentCreateView.as_view(),
+        name="enrolment-create",
+    ),
+
+]

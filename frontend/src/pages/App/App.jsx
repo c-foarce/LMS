@@ -24,6 +24,7 @@ import Courses from "../Courses/Courses";
 import NewCourse from "../NewCourse/NewCourse";
 import NewUser from "../NewUser/NewUser";
 import NewEnrolment from "../NewEnrolment/NewEnrolment";
+import EditCourse from "../EditCourse/EditCourse";
 
 
 const router = createBrowserRouter(
@@ -52,12 +53,14 @@ const router = createBrowserRouter(
           path="dashboard"
           element={<Dashboard />}
         />
+
         {/*Anyone can access this */}
         <Route
           path="courses"
           element={<Courses />}
         />
 
+        {/*Only teachers or admins can access this */}
         <Route
           path="courses/new"
           element={
@@ -67,6 +70,7 @@ const router = createBrowserRouter(
           }
         />
 
+        {/*Only admins can access this */}
         <Route
           path="accounts/new"
           element={
@@ -76,11 +80,22 @@ const router = createBrowserRouter(
           }
         />
 
+        {/*Only teachers or admins can access this */}
         <Route
           path="courses/enrolments/new"
           element={
             <RoleRoute roles={["teacher", "admin"]}>
               <NewEnrolment />
+            </RoleRoute>
+          }
+        />
+
+        {/*Only teachers or admins can access this */}
+        <Route
+          path="courses/:id/edit"
+          element={
+            <RoleRoute roles={["teacher", "admin"]}>
+              <EditCourse />
             </RoleRoute>
           }
         />

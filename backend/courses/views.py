@@ -4,28 +4,28 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 
 from .models import Enrolment, Course
-from .serializers import EnrolmentSerializer, CourseSerializer, CourseListSerializer, CreateEnrolmentSerializer
+from . import serializers
 
 from accounts.models import User
-from accounts.permissions import IsTeacherOrAdmin, IsAdminRole
+from accounts.permissions import IsTeacherOrAdmin, IsAdminRole, IsCourseOwnerOrAdmin
 
 
 
 
 # Create your views here.
 
-
+# Gets all Enrolments
 class MyEnrolmentsView(generics.ListAPIView):
-    serializer_class = EnrolmentSerializer
+    serializer_class = serializers.EnrolmentSerializer
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         return Enrolment.objects.filter(student=self.request.user)
     
 
-
+# Creates a new Course
 class CourseCreateView(generics.CreateAPIView):
-    serializer_class = CourseSerializer
+    serializer_class = serializers.CourseSerializer
     permission_classes = [IsTeacherOrAdmin]
 
     def perform_create(self, serializer):
@@ -35,11 +35,32 @@ class CourseCreateView(generics.CreateAPIView):
             serializer.save(teacher=user)
         elif user.role == "admin":
             serializer.save()
+
+
+# Edits a created Course
+class CourseEditView(generics.UpdateAPIView):
+    queryset = Course.objects.all()
+    serializer_class = serializers.CourseSerializer
+    permission_classes = [IsTeacherOrAdmin, IsCourseOwnerOrAdmin]
+
+    
+    
+# Gets all Courses a "teacher" User owns
+class TeachingCoursesView(generics.ListAPIView):
+    serializer_class = serializers.CourseSerializer
+    permission_classes=[IsAuthenticated]
+
+    def get_queryset(self):
+        return (
+            Course.objects.filter(
+                teacher=self.request.user
+            )
+        )
+
+
     
 
-
-
-
+# Gets name, type, and required Course fields
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
 def course_fields(request):
@@ -79,17 +100,26 @@ def course_fields(request):
     "teacher_options": teacher_options,
 })
 
+
+# Gets a list of all Courses
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
 def course_list(request):
 
     courses = Course.objects.all()
-    serializer = CourseListSerializer(courses, many=True)
+    serializer = serializers.CourseListSerializer(courses, many=True)
 
     return Response(serializer.data)
 
 
-#LaTER FOR POSTS
+# Creates an Enrolment
 class EnrolmentCreateView(generics.CreateAPIView):
-    serializer_class=CreateEnrolmentSerializer
+    serializer_class = serializers.CreateEnrolmentSerializer
     permission_classes=[IsAdminRole]
+
+
+# Gets details on one Course
+class CourseDetailView(generics.RetrieveAPIView):
+    queryset = Course.objects.all()
+    serializer_class = serializers.CourseSerializer
+    permission_classes=[IsAuthenticated]

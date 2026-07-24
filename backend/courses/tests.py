@@ -1,6 +1,9 @@
 from django.test import TestCase
 from django.db import IntegrityError
 
+from django.urls import reverse
+from rest_framework.test import APITestCase
+from rest_framework import status
 
 from accounts.models import User
 
@@ -49,6 +52,86 @@ class CourseModelTests(TestCase):
         self.assertEqual(str(course), "Maths MATHS101")
 
 
+class CoursePermissionsTests(APITestCase):
+
+    def setUp(self):
+
+        self.teacher1 = User.objects.create_user(
+            username="teacher1",
+            password="password123",
+            role="teacher"
+        )
+
+        self.teacher2 = User.objects.create_user(
+            username="teacher2",
+            password="password123",
+            role="teacher"
+        )
+
+        self.course = Course.objects.create(
+            subject_name="Physics",
+            code="PHY101",
+            teacher=self.teacher2
+        )
+
+    def test_teacher_cant_edit_another_teachers_course(self):
+        self.client.force_authenticate(
+            user=self.teacher1
+        )
+
+        url = reverse(
+            "course-update",
+            kwargs={"pk":self.course.id}
+        )
+
+        response = self.client.patch(
+            url,
+            {
+                "subject_name": "Changed Physics"
+            }
+        )
+
+        self.assertEqual(
+            response.status_code,
+            status.HTTP_403_FORBIDDEN
+        )
+
+        self.course.refresh_from_db()
+
+        self.assertEqual(
+            self.course.subject_name,
+            "Physics"
+        )
+
+    def test_teacher_can_edit_own_course(self):
+
+        self.client.force_authenticate(
+        user=self.teacher2
+        )
+
+        url = reverse(
+        "course-update",
+        kwargs={"pk": self.course.id}
+        )
+
+        response = self.client.patch(
+        url,
+            {
+            "subject_name": "Updated Physics"
+            }
+        )
+
+        self.assertEqual(
+        response.status_code,
+        status.HTTP_200_OK
+        )
+
+        self.course.refresh_from_db()
+
+        self.assertEqual(
+            self.course.subject_name,
+            "Updated Physics"
+        )
 
 class EnrolmentModelTests(TestCase):
 
