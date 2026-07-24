@@ -9,7 +9,7 @@ function NewUser() {
     // gets the rle of the user, possibly for denying access to Students/Teachers since this should be an admin only feature
     const [role, setRole] = useState("")
 
-    const [success, setSuccess] = usestate(false)
+    const [success, setSuccess] = useState(false)
 
     // Stores whatever the user has entered into the form.
     //
