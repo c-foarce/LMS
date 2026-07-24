@@ -25,7 +25,6 @@ class Course(models.Model):
 
     class Meta:
         unique_together = ("subject_name", "code")
-        db_table = "accounts_course"
 
     def __str__(self):
         return f"{self.subject_name} {self.code}"
@@ -68,7 +67,6 @@ class Enrolment(models.Model):
 
     class Meta:
         unique_together = ("student", "course")
-        db_table="accounts_enrolment"
 
     def __str__(self):
-        return f"{self.student.username} enrolled in {self.course.name}"
+        return f"{self.student.username} enrolled in {self.course.subject_name}"
