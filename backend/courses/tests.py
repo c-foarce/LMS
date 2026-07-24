@@ -46,7 +46,7 @@ class CourseModelTests(TestCase):
         )
 
 
-        self.assertEqual(str(course), "Maths: MATHS101")
+        self.assertEqual(str(course), "Maths MATHS101")
 
 
 
