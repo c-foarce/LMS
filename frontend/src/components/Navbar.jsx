@@ -9,10 +9,14 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
 function Navbar() {
+
     const navigate = useNavigate();
-    const {setUser} = useAuth();
+    const { user, setUser } = useAuth();
 
     const isLoggedIn = localStorage.getItem("access") !== null;
+
+    const isAdmin = user?.role === "admin";
+    const isTeacherOrAdmin = user?.role === "teacher" || user?.role === "admin";
 
     function handleLogout() {
         localStorage.removeItem("access");
@@ -25,20 +29,29 @@ function Navbar() {
 
     return (
         <nav style={{ display: "flex", gap: "12px", padding: "10px" }}>
+
             {/* Later: add className={({ isActive }) => ... } using clsx */}
+
+            {/* Dashboard - anyone can access */}
             <NavLink to={isLoggedIn ? "/app/dashboard" : "/"}>Home</NavLink>
 
-            {/* Later: add className={({ isActive }) => ... } using clsx */}
+            {/* Courses - anyone can access, currently admin have no use here */}
             <NavLink to="/app/courses">Courses</NavLink>
 
-            {/* Later: add className={({ isActive }) => ... } using clsx */}
-            <NavLink to="/app/courses/new">New Course</NavLink>
+            {/* New Course- admin or teachers can access */}
+            {isTeacherOrAdmin && (
+                <NavLink to="/app/courses/new">New Course</NavLink>
+            )}
+            
+            {/* New User - only Admin can access */}
+            {isAdmin && (
+                <NavLink to="/app/accounts/new"> New User </NavLink>
+            )}
 
-            {/* Later: add className={({ isActive }) => ... } using clsx */}
-            <NavLink to="/app/accounts/new"> New User </NavLink>
-
-            {}
-            <NavLink to="courses/enrolments/new"> New Enrolment</NavLink>
+            {/* New Enrolments - admin or teacher can access */}
+            {isTeacherOrAdmin && (
+                <NavLink to="/app/courses/enrolments/new"> New Enrolment</NavLink>
+            )}
 
             {isLoggedIn ? (
                 <button onClick={handleLogout}>Logout</button>
