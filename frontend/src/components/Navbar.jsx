@@ -17,6 +17,7 @@ function Navbar() {
 
     const isAdmin = user?.role === "admin";
     const isTeacherOrAdmin = user?.role === "teacher" || user?.role === "admin";
+    const isStudent = user?.role === "student"
 
     function handleLogout() {
         localStorage.removeItem("access");
@@ -38,11 +39,17 @@ function Navbar() {
             {/* Courses - anyone can access, currently admin have no use here */}
             <NavLink to="/app/courses">Courses</NavLink>
 
+            {/* Submit Progress for courses, might be redundant here but adding this to the navbar for easy testing */}
+            {isStudent && (
+                <NavLink to="/app/courses/submit">Submit progress</NavLink>
+
+            )}
+
             {/* New Course- admin or teachers can access */}
             {isTeacherOrAdmin && (
                 <NavLink to="/app/courses/new">New Course</NavLink>
             )}
-            
+
             {/* New User - only Admin can access */}
             {isAdmin && (
                 <NavLink to="/app/accounts/new"> New User </NavLink>
