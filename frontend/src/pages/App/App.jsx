@@ -25,7 +25,6 @@ import NewCourse from "../NewCourse/NewCourse";
 import NewUser from "../NewUser/NewUser";
 import NewEnrolment from "../NewEnrolment/NewEnrolment";
 import EditCourse from "../EditCourse/EditCourse";
-import SubmitProgress from "../SubmitProgress/SubmitProgress";
 
 
 const router = createBrowserRouter(
@@ -59,16 +58,6 @@ const router = createBrowserRouter(
         <Route
           path="courses"
           element={<Courses />}
-        />
-
-        {/*Students (and teachers i suppose) should be the only ones able to access this in the intended way */}
-        <Route
-          path="courses/submit"
-          element={
-            <RoleRoute roles={["student", "teacher"]}>
-              <SubmitProgress />
-            </RoleRoute>
-          }
         />
 
         {/*Only teachers or admins can access this */}

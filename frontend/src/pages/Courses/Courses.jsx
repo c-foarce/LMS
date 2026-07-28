@@ -11,13 +11,14 @@ function Courses() {
 
   const { user } = useAuth()
 
-  const [courses, setCourses] = useState([])
+  const [items, setItems] = useState([])
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
 
-
+  //on initial mounting, get the enrolment data to render
   useEffect(() => {
 
-    const fetchCourses = async () => {
+    const fetchItems = async () => {
 
       try {
 
@@ -45,7 +46,7 @@ function Courses() {
 
         // const response = await api.get("/courses/enrolments/me/")
 
-        setCourses(response.data)
+        setItems(response.data)
 
       } catch (error) {
 
@@ -59,8 +60,45 @@ function Courses() {
 
     };
 
-    fetchCourses();
+    fetchItems();
   }, [user]);
+
+
+  const handleSubmitProgress = async (enrolmentId) => {
+  try {
+
+    setError(null)
+
+    const response = await api.post(
+      `/courses/enrolments/${enrolmentId}/submit/`
+    )
+
+    console.log("SUBMIT RESPONSE:", response)
+
+    setItems(previousItems =>
+      previousItems.map(enrolment =>
+        enrolment.id === response.data.id
+          ? response.data
+          : enrolment
+      )
+    )
+
+  } catch (error) {
+
+    console.error("SUBMIT ERROR:", error)
+
+    setError(
+      error.response?.data?.detail ||
+      "Something went wrong when submitting"
+    )
+
+    setTimeout(() => {
+      setError(null)
+      
+    }, 3000);
+
+  }
+}
 
 
   if (loading) {
@@ -72,41 +110,52 @@ function Courses() {
       <div>
         <h1>My Courses</h1>
 
-        {courses.length === 0 ? (
+        {error && (
+          <p>{error}</p>
+        )}
+
+        {items.length === 0 ? (
           <p>No courses found.</p>
         ) : (
-          courses.map((course) => {
+
+          items.map((enrolment) => {
 
             if (user.role === "student") {
 
               return (
-                <div key={course.id}>
-                  <h3>{course.course_name}</h3>
 
-                  <p>Code: {course.course_code}</p>
+                <div key={enrolment.id}>
+                  <h3>{enrolment.course_name}</h3>
 
-                  <p>Teacher: {course.teacher_name}</p>
+                  <p>Code: {enrolment.course_code}</p>
 
-                  <p>Status: {course.status}</p>
+                  <p>Teacher: {enrolment.teacher}</p>
 
-                  <p>Progress: {course.progress}%</p>
+                  <p>Status: {enrolment.status}</p>
 
-                  <p>Grade: {course.grade || "Not graded"}</p>
+                  <p>Progress: {enrolment.progress}%</p>
+
+                  <button
+                    onClick={() => handleSubmitProgress(enrolment.id)}
+                  >Submit Progress</button>
+
+                  <p>Grade: {enrolment.grade || "Not graded"}</p>
+                  {/* Eventually combine this grade <p> with the below <button> in a conidtional: if not 100% of work submitted, no need to see grade */}
                 </div>
               )
 
             } else {
 
               return (
-                <div key={course.id}>
-                  <h3>{course.subject_name}</h3>
+                <div key={enrolment.id}>
+                  <h3>{enrolment.subject_name}</h3>
 
-                  <p>Code: {course.code}</p>
+                  <p>Code: {enrolment.code}</p>
 
-                  <p>Teacher: {course.teacher_name}</p>
+                  <p>Teacher: {enrolment.teacher_name}</p>
 
                   <button
-                  onClick={() =>  navigate(`/app/courses/${course.id}/edit`)}>
+                    onClick={() => navigate(`/app/courses/${enrolment.id}/edit`)}>
                     Edit
                   </button>
                 </div>

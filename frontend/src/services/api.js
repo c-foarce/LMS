@@ -63,6 +63,7 @@ console.log("tokens refreshed")
                 }
             }
         }
+        return Promise.reject(error)
     }
 )
 

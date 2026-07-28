@@ -99,7 +99,7 @@ function NewCourse() {
     api.get("/courses/course-fields/")
       .then(response => {
 
-        console.log(response.data);
+        console.log("HERE", response.data.fields);
 
         // saves all fields form course model in array
         setFields(response.data.fields);

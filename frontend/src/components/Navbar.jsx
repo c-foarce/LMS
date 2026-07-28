@@ -39,12 +39,6 @@ function Navbar() {
             {/* Courses - anyone can access, currently admin have no use here */}
             <NavLink to="/app/courses">Courses</NavLink>
 
-            {/* Submit Progress for courses, might be redundant here but adding this to the navbar for easy testing */}
-            {isStudent && (
-                <NavLink to="/app/courses/submit">Submit progress</NavLink>
-
-            )}
-
             {/* New Course- admin or teachers can access */}
             {isTeacherOrAdmin && (
                 <NavLink to="/app/courses/new">New Course</NavLink>

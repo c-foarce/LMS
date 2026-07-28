@@ -1,7 +1,10 @@
-from rest_framework import generics
+from rest_framework import generics, status
+from rest_framework.views import APIView
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
+
+from django.shortcuts import get_object_or_404
 
 from .models import Enrolment, Course
 from . import serializers
@@ -56,7 +59,34 @@ class TeachingCoursesView(generics.ListAPIView):
                 teacher=self.request.user
             )
         )
+#increments selected course by 1, after cheking if it's able to
+class SubmitProgress(APIView):
 
+    def post(self, request, pk):
+
+        enrolment = get_object_or_404(
+            Enrolment,
+            pk = pk,
+            student=request.user
+        )
+
+        if enrolment.completed_submissions >= enrolment.course.total_submissions:
+            return Response(
+                {
+                    "detail":"All required submissions have already neen completed"
+                },
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        enrolment.completed_submissions += 1
+
+        if enrolment.completed_submissions == enrolment.course.total_submissions:
+            enrolment.status = Enrolment.Status.COMPLETED
+
+        
+        enrolment.save()
+
+        serializer = serializers.EnrolmentSerializer(enrolment)
+        return Response(serializer.data)
 
     
 

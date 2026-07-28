@@ -56,6 +56,7 @@ class CourseSerializer(serializers.ModelSerializer):
             "code",
             "description",
             "teacher",
+            "total_submissions",
             "teacher_name",
             "created_at",
         ]

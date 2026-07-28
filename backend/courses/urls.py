@@ -57,5 +57,8 @@ urlpatterns = [
         views.EnrolmentCreateView.as_view(),
         name="enrolment-create",
     ),
+    path("enrolments/<int:pk>/submit/",
+         views.SubmitProgress.as_view(),
+         name="submit-progress"),
 
 ]
