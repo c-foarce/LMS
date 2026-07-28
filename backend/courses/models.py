@@ -4,7 +4,9 @@ from django.db import models
 
 class Course(models.Model):
     subject_name = models.CharField(max_length=100)
-    
+
+    total_submissions = models.PositiveIntegerField(default=1)
+
     code = models.CharField(
     max_length=20,
     null=True,
@@ -22,6 +24,7 @@ class Course(models.Model):
     description = models.TextField(blank=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
+
 
     class Meta:
         unique_together = ("subject_name", "code")
@@ -58,7 +61,7 @@ class Enrolment(models.Model):
 
     )
 
-    progress = models.IntegerField(default = 0)
+    completed_submissions = models.PositiveIntegerField(default=0)
 
     grade = models.CharField(
         max_length= 10,
