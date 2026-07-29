@@ -88,7 +88,7 @@ function Login() {
       <button onClick={handleLogin}>Login</button>
 
       {loginState.message && (
-        <p classname={`message ${loginState.type}`}>
+        <p className={`message ${loginState.type}`}>
           {loginState.message}
         </p>
       )}

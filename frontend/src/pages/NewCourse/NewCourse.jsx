@@ -70,7 +70,7 @@ function NewCourse() {
         setTimeout(() => {
           if (role === "teacher") {
             setFormData({
-              teacher: teacherId, 
+              teacher: teacherId,
             });
           } else {
             setFormData({})
@@ -129,6 +129,52 @@ function NewCourse() {
 
   }, []);
 
+  const renderField = (field) => {
+
+    if (field.name === "teacher" && role === "admin") {
+      return (
+        <select
+          name={field.name}
+          onChange={handleChange}
+          value={formData[field.name] || ""}
+          required={field.required}
+        >
+          {teacherOptions.map((teacher) => (
+            <option
+              key={teacher.id}
+              value={teacher.id}
+            >
+              {teacher.username}
+            </option>
+          ))}
+        </select>
+      );
+    }
+
+
+    if (field.widget === "textarea") {
+      return (
+        <textarea
+          name={field.name}
+          value={formData[field.name] || ""}
+          onChange={handleChange}
+        />
+      );
+    }
+
+
+    return (
+      <input
+        type={field.widget}
+        name={field.name}
+        required={field.required}
+        value={formData[field.name] || ""}
+        onChange={handleChange}
+      />
+    );
+
+  };
+
 
   return (
     <>
@@ -138,6 +184,7 @@ function NewCourse() {
       <h1>New Course Page</h1>
 
       <form onSubmit={handleSubmit}>
+  
         {fields.map((field) => {
 
           {/* Teachers should not choose a teacher. Their own user account will eventually be assigned by the backend. */ }
@@ -155,52 +202,8 @@ function NewCourse() {
               {/*If the current user is an admin:
              show a dropdown instead of a normal text input.
              The dropdown sends the teacher ID as the value.*/}
-              {field.name === "teacher" && role === "admin" ? (
+              {renderField(field)}
 
-                <select
-                  name="teacher"
-                  onChange={handleChange}
-                  value={formData[field.name] || ""}
-                  required={field.required}
-                >
-
-                  {teacherOptions.map((teacher) => (
-
-                    <option
-                      key={teacher.id}
-                      value={teacher.id}
-                    >
-                      {teacher.username}
-                    </option>
-
-                  ))}
-
-                </select>
-
-
-              ) : field.type === "TextField" ? (
-
-                // TextField from Django becomes a textarea.
-                <textarea
-                  name={field.name}
-                  value={formData[field.name] || ""}
-                  onChange={handleChange}
-                />
-
-
-              ) : (
-
-                // Normal model fields become normal inputs.
-                // "required" comes from Django's blank=False setting.
-                <input
-                  type="text"
-                  name={field.name}
-                  required={field.required}
-                  value={formData[field.name] || ""}
-                  onChange={handleChange}
-                />
-
-              )}
 
             </div>
           );

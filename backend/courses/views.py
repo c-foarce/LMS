@@ -17,6 +17,8 @@ from accounts.permissions import IsTeacherOrAdmin, IsAdminRole, IsCourseOwnerOrA
 
 # Create your views here.
 
+
+
 # Gets all Enrolments
 class MyEnrolmentsView(generics.ListAPIView):
     serializer_class = serializers.EnrolmentSerializer
@@ -89,31 +91,60 @@ class SubmitProgress(APIView):
         return Response(serializer.data)
 
     
+##########################
+###### WIDGET TYPES ######
+WIDGET_TYPES = {
+    "CharField": "text",
+    "TextField": "textarea",
+    "PositiveIntegerField": "number",
+    "IntegerField": "number",
+    "FloatField": "number",
+    "ForeignKey": "select",
+}
+#########################
+#########################
+
+
+#########################
+###### FIELD ORDER ######
+FIELD_ORDER = [
+"subject_name",
+"code", 
+"teacher",
+"description",
+"total_submissions",
+]
 
 # Gets name, type, and required Course fields
+## USES WIDGET_TYPES
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
 def course_fields(request):
 
     print(request.user)
-    print(getattr(request.user, "role", "NO ROLE"))
+    print(getattr(request.user, "role", "No Role"))
+
     fields = []
 
-    for field in Course._meta.fields:
+    for field_name in FIELD_ORDER:
 
-        if field.name in ["id", "created_at"]:
-            continue
+        field = Course._meta.get_field(field_name)
 
         fields.append({
             "name": field.name,
-            "type": field.get_internal_type(),
-            "required": not field.blank,
+            "widget": WIDGET_TYPES.get(
+                field.get_internal_type(),
+                "text"
+            ),
+            "required": not field.blank
         })
 
-    teacher_options=[]
+
+    teacher_options = []
 
     if getattr(request.user, "role", None) == "admin":
-        teachers=User.objects.filter(role="teacher")
+
+        teachers = User.objects.filter(role="teacher")
 
         teacher_options = [
             {
@@ -123,12 +154,16 @@ def course_fields(request):
             for teacher in teachers
         ]
 
+
+    # print(fields)
+
     return Response({
-    "role": getattr(request.user, "role", None),
-    "fields": fields,
-    "teacher_id": request.user.id,
-    "teacher_options": teacher_options,
-})
+        "role": getattr(request.user, "role", None),
+        "fields": fields,
+        "teacher_id": request.user.id,
+        "teacher_options": teacher_options
+    })
+
 
 
 # Gets a list of all Courses
