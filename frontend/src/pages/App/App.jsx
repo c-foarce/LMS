@@ -25,6 +25,7 @@ import NewCourse from "../NewCourse/NewCourse";
 import NewUser from "../NewUser/NewUser";
 import NewEnrolment from "../NewEnrolment/NewEnrolment";
 import EditCourse from "../EditCourse/EditCourse";
+import EnrolmentList from "../EnrolmentList/EnrolmentList";
 
 
 const router = createBrowserRouter(
@@ -50,19 +51,19 @@ const router = createBrowserRouter(
 
         {/*Anyone can access this */}
         <Route
-          path="dashboard"
+          path="dashboard/"
           element={<Dashboard />}
         />
 
         {/*Anyone can access this */}
         <Route
-          path="courses"
+          path="courses/"
           element={<Courses />}
         />
 
         {/*Only teachers or admins can access this */}
         <Route
-          path="courses/new"
+          path="courses/new/"
           element={
             <RoleRoute roles={["teacher", "admin"]}>
               <NewCourse />
@@ -72,7 +73,7 @@ const router = createBrowserRouter(
 
         {/*Only admins can access this */}
         <Route
-          path="accounts/new"
+          path="accounts/new/"
           element={
             <RoleRoute roles={["admin"]}>
               <NewUser />
@@ -82,7 +83,7 @@ const router = createBrowserRouter(
 
         {/*Only teachers or admins can access this */}
         <Route
-          path="courses/enrolments/new"
+          path="courses/enrolments/new/"
           element={
             <RoleRoute roles={["teacher", "admin"]}>
               <NewEnrolment />
@@ -92,12 +93,22 @@ const router = createBrowserRouter(
 
         {/*Only teachers or admins can access this */}
         <Route
-          path="courses/:id/edit"
+          path="courses/:id/edit/"
           element={
             <RoleRoute roles={["teacher", "admin"]}>
               <EditCourse />
             </RoleRoute>
           }
+        />
+
+        {/*Only admins should be able to see this */}
+        <Route 
+        path="courses/enrolments/all/"
+        element={
+          <RoleRoute roles={["admin"]}>
+            <EnrolmentList />
+          </RoleRoute>
+        }
         />
 
       </Route>

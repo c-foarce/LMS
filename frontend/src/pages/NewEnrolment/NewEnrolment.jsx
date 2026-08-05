@@ -56,7 +56,7 @@ function NewEnrolment() {
             try {
 
                 const studentsResponse = await api.get('/accounts/students/');
-                const coursesResponse = await api.get('/courses/list/');
+                const coursesResponse = await api.get('/courses/available/');
 
                 console.log("Testing")
                 console.log(studentsResponse.data)

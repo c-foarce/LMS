@@ -36,6 +36,7 @@ function Courses() {
 
           case "admin":
             response = await api.get("/courses/list/")
+            console.log(response.data)
             break;
 
           default:
@@ -65,46 +66,84 @@ function Courses() {
 
 
   const handleSubmitProgress = async (enrolmentId) => {
-  try {
+    try {
 
-    setError(null)
-
-    const response = await api.post(
-      `/courses/enrolments/${enrolmentId}/submit/`
-    )
-
-    console.log("SUBMIT RESPONSE:", response)
-
-    setItems(previousItems =>
-      previousItems.map(enrolment =>
-        enrolment.id === response.data.id
-          ? response.data
-          : enrolment
-      )
-    )
-
-  } catch (error) {
-
-    console.error("SUBMIT ERROR:", error)
-
-    setError(
-      error.response?.data?.detail ||
-      "Something went wrong when submitting"
-    )
-
-    setTimeout(() => {
       setError(null)
-      
-    }, 3000);
+
+      const response = await api.post(
+        `/courses/enrolments/${enrolmentId}/submit/`
+      )
+
+      console.log("SUBMIT RESPONSE:", response)
+
+      setItems(previousItems =>
+        previousItems.map(enrolment =>
+          enrolment.id === response.data.id
+            ? response.data
+            : enrolment
+        )
+      )
+
+    } catch (error) {
+
+      console.error("SUBMIT ERROR:", error)
+
+      setError(
+        error.response?.data?.detail ||
+        "Something went wrong when submitting"
+      )
+
+      setTimeout(() => {
+        setError(null)
+
+      }, 3000);
+
+    }
+  }
+
+  const handleToggleActive = async (courseId) => {
+
+    try {
+
+      setError(null)
+
+      const response = await api.patch(
+        `/courses/${courseId}/toggle-active/`
+      )
+
+      setItems(previousItems =>
+        previousItems.map(course =>
+          course.id === response.data.id
+            ? response.data
+            : course
+        )
+      )
+
+    } catch (error) {
+
+      console.error("SUBMIT ERROR:", error)
+
+      setError(
+        error.response?.data?.detail ||
+        "Something went wrong when trying to process the request"
+      )
+
+      setTimeout(() => {
+        setError(null)
+
+      }, 3000);
+
+    }
+
 
   }
-}
 
 
   if (loading) {
     return <p>Loading...</p>
   }
 
+  {/* Later, extract this whole chunk into a couple of component Cards, similar to KingdomCards from MoonTracker */}
   return (
     <>
       <div>
@@ -118,44 +157,58 @@ function Courses() {
           <p>No courses found.</p>
         ) : (
 
-          items.map((enrolment) => {
+          items.map((item) => {
 
             if (user.role === "student") {
 
               return (
 
-                <div key={enrolment.id}>
-                  <h3>{enrolment.course_name}</h3>
+                <div key={item.id}>
+                  <h3>{item.course_name}</h3>
 
-                  <p>Code: {enrolment.course_code}</p>
+                  <p>Code: {item.course_code}</p>
 
-                  <p>Teacher: {enrolment.teacher}</p>
+                  <p>Teacher: {item.teacher_name}</p>
 
-                  <p>Status: {enrolment.status}</p>
+                  <p>Status: {item.status}</p>
 
-                  <p>Progress: {enrolment.progress}%</p>
+                  <p>Progress: {item.progress}%</p>
 
                   <button
-                    onClick={() => handleSubmitProgress(enrolment.id)}
-                  >Submit Progress</button>
+                    onClick={() => handleSubmitProgress(item.id)}
+                  >
+                    Submit Progress
+                  </button>
 
-                  <p>Grade: {enrolment.grade || "Not graded"}</p>
-                  {/* Eventually combine this grade <p> with the below <button> in a conidtional: if not 100% of work submitted, no need to see grade */}
+                  <p>Grade: {item.grade || "Not graded"}</p>
                 </div>
               )
 
             } else {
 
+              {/* Having this work for admin kind of doesnt make sense, there's the EnrolmentList page now. maybe move all admin related work there ie delete, deactivate etc */}
               return (
-                <div key={enrolment.id}>
-                  <h3>{enrolment.subject_name}</h3>
+                <div key={item.id}>
+                  <h3>{item.subject_name}</h3>
 
-                  <p>Code: {enrolment.code}</p>
+                  <p>Code: {item.code}</p>
 
-                  <p>Teacher: {enrolment.teacher_name}</p>
+                  <p>Teacher: {item.teacher_name}</p>
+
+                  <p>Status: {item.is_active ? "Active" : "Inactive"}</p>
+
+                  {user.role === "admin" && (
+                    <button>Delete Course</button>
+                  )}
+                  <button
+                    onClick={() => handleToggleActive(item.id)}
+                  >
+                    {item.is_active ? "Deactivate" : "Activate"}
+                  </button>
 
                   <button
-                    onClick={() => navigate(`/app/courses/${enrolment.id}/edit`)}>
+                    onClick={() => navigate(`/app/courses/${item.id}/edit`)}
+                  >
                     Edit
                   </button>
                 </div>

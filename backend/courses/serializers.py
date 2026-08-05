@@ -2,17 +2,24 @@ from rest_framework import serializers
 from .models import Enrolment, Course
 
 class EnrolmentSerializer(serializers.ModelSerializer):
-    course_name = serializers.CharField(
-        source="course.subject_name",
-        read_only = True
-    )
-    course_code = serializers.CharField(
-        source="course.code",
+    student_name = serializers.CharField(
+        source = "student.username",
         read_only = True
         )
+
+    course_name = serializers.CharField(
+        source = "course.subject_name",
+        read_only = True
+        )
+    
+    course_code = serializers.CharField(
+        source = "course.code",
+        read_only = True
+        )
+    
     teacher = serializers.CharField(
-        source="course.teacher.username",
-        read_only=True
+        source = "course.teacher.username",
+        read_only = True
         )
 
     progress = serializers.SerializerMethodField()
@@ -21,6 +28,7 @@ class EnrolmentSerializer(serializers.ModelSerializer):
         model = Enrolment
         fields= [
             "id",
+            "student_name",
             "course",
             "course_name",
             "course_code",
@@ -59,13 +67,18 @@ class CourseSerializer(serializers.ModelSerializer):
             "total_submissions",
             "teacher_name",
             "created_at",
+            "is_active",
         ]
 
-        
 class CourseListSerializer(serializers.ModelSerializer):
+    teacher_name = serializers.CharField(
+        source="teacher.username",
+        read_only=True,
+    )
+
     class Meta:
         model = Course
-        fields = ["id", "subject_name", "code"]
+        fields = ["id", "subject_name", "code", "is_active", "teacher_name"]
 
 class CreateEnrolmentSerializer(serializers.ModelSerializer):
 
@@ -75,6 +88,14 @@ class CreateEnrolmentSerializer(serializers.ModelSerializer):
             "student",
             "course",
         ]
+
+    def validate_course(self, course):
+
+        if not course.is_active:
+            raise serializers.ValidationError(
+                "This course is no longer accepting enrolments"
+            )
+        return course
 
 class SubmitProgressSerializer(serializers.ModelSerializer):
     class Meta:

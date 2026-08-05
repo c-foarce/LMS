@@ -53,7 +53,7 @@ class CourseEditView(generics.UpdateAPIView):
 # Gets all Courses a "teacher" User owns
 class TeachingCoursesView(generics.ListAPIView):
     serializer_class = serializers.CourseSerializer
-    permission_classes=[IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         return (
@@ -169,7 +169,7 @@ FIELD_ORDER = [
 
 # Above as below, keep to show/ask then remove
 class CourseFieldsView(APIView):
-    permission_classes=[IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
     def get(self, request):
 
@@ -237,11 +237,49 @@ class CourseListView(generics.ListAPIView):
 # Creates an Enrolment
 class EnrolmentCreateView(generics.CreateAPIView):
     serializer_class = serializers.CreateEnrolmentSerializer
-    permission_classes=[IsAdminRole]
+    permission_classes = [IsAdminRole]
 
 
 # Gets details on one Course
 class CourseDetailView(generics.RetrieveAPIView):
     queryset = Course.objects.all()
     serializer_class = serializers.CourseSerializer
-    permission_classes=[IsAuthenticated]
+    permission_classes = [IsAuthenticated]
+
+
+# Activates/Deactivates a course to no longer be shown for enrolments
+class CourseToggleActiveView(APIView):
+    permission_classes = [IsAuthenticated, IsCourseOwnerOrAdmin]
+
+    def patch(self, request, pk):
+
+        course = get_object_or_404(Course, pk=pk)
+
+        course.is_active = not course.is_active
+
+        course.save()
+
+        serializer = serializers.CourseSerializer(course)
+
+        return Response(serializer.data)
+
+class AvaliableCourseListView(generics.ListAPIView):
+    serializer_class = serializers.CourseListSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return Course.objects.filter(is_active=True)
+
+
+class EnrolmentDeleteView(generics.DestroyAPIView):
+
+    queryset = Enrolment.objects.all()
+    permission_classes = [IsTeacherOrAdmin,IsAuthenticated]
+
+
+class ListAllEnrolmentsView(generics.ListAPIView):
+        
+    queryset = Enrolment.objects.all()
+    permission_classes = [IsAuthenticated,IsAdminRole]
+    serializer_class=serializers.EnrolmentSerializer
+

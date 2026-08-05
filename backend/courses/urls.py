@@ -5,38 +5,42 @@ from . import views
 
 urlpatterns = [
 
-    # Course metadata / dynamic fields
+    # ======================
+    # Course metadata
+    # ======================
+
     path(
         "course-fields/",
         views.CourseFieldsView.as_view(),
         name="course-fields",
     ),
 
+
+    # ======================
     # Course creation
+    # ======================
+
     path(
         "create/",
         views.CourseCreateView.as_view(),
         name="course-create",
     ),
 
-    # Course detail and editing
-    path(
-        "<int:pk>/",
-        views.CourseDetailView.as_view(),
-        name="course-details",
-    ),
 
-    path(
-        "<int:pk>/edit/",
-        views.CourseEditView.as_view(),
-        name="course-update",
-    ),
-
+    # ======================
     # Course lists
+    # ======================
+
     path(
         "list/",
         views.CourseListView.as_view(),
         name="course-list",
+    ),
+
+    path(
+        "available/",
+        views.AvaliableCourseListView.as_view(),
+        name="available-courses"
     ),
 
     path(
@@ -45,7 +49,17 @@ urlpatterns = [
         name="teaching-courses",
     ),
 
+
+    # ======================
     # Enrolments
+    # ======================
+
+    path(
+    "enrolments/all/",
+    views.ListAllEnrolmentsView.as_view(),
+    name="all-enrolments",
+    ), 
+
     path(
         "enrolments/me/",
         views.MyEnrolmentsView.as_view(),
@@ -57,8 +71,45 @@ urlpatterns = [
         views.EnrolmentCreateView.as_view(),
         name="enrolment-create",
     ),
-    path("enrolments/<int:pk>/submit/",
-         views.SubmitProgress.as_view(),
-         name="submit-progress"),
+
+    path(
+        "enrolments/<int:pk>/submit/",
+        views.SubmitProgress.as_view(),
+        name="submit-progress",
+    ),
+
+    path(
+        "enrolments/<int:pk>/delete/",
+        views.EnrolmentDeleteView.as_view(),
+        name="delete-enrolment"
+    ),
+
+
+    # ======================
+    # Course actions
+    # ======================
+
+    path(
+        "<int:pk>/toggle-active/", 
+        views.CourseToggleActiveView.as_view(),
+        name="course-toggle-active",
+    ),
+
+
+    # ======================
+    # Course detail/editing
+    # ======================
+
+    path(
+        "<int:pk>/edit/",
+        views.CourseEditView.as_view(),
+        name="course-update",
+    ),
+
+    path(
+        "<int:pk>/",
+        views.CourseDetailView.as_view(),
+        name="course-details",
+    ),
 
 ]

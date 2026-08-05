@@ -34,24 +34,29 @@ function Navbar() {
             {/* Later: add className={({ isActive }) => ... } using clsx */}
 
             {/* Dashboard - anyone can access */}
-            <NavLink to={isLoggedIn ? "/app/dashboard" : "/"}>Home</NavLink>
+            <NavLink to={isLoggedIn ? "/app/dashboard/" : "/"}>Home</NavLink>
 
             {/* Courses - anyone can access, currently admin have no use here */}
-            <NavLink to="/app/courses">Courses</NavLink>
+            <NavLink to="/app/courses/">Courses</NavLink>
 
             {/* New Course- admin or teachers can access */}
             {isTeacherOrAdmin && (
-                <NavLink to="/app/courses/new">New Course</NavLink>
+                <NavLink to="/app/courses/new/">New Course</NavLink>
             )}
 
             {/* New User - only Admin can access */}
             {isAdmin && (
-                <NavLink to="/app/accounts/new"> New User </NavLink>
+                <NavLink to="/app/accounts/new/">New User</NavLink>
             )}
 
             {/* New Enrolments - admin or teacher can access */}
             {isTeacherOrAdmin && (
-                <NavLink to="/app/courses/enrolments/new"> New Enrolment</NavLink>
+                <NavLink to="/app/courses/enrolments/new/">New Enrolment</NavLink>
+            )}
+
+            {/* Enrolment List - admin only view */}
+            {isAdmin && (
+                <NavLink to="/app/courses/enrolments/all/">Enrolments List</NavLink>
             )}
 
             {isLoggedIn ? (
