@@ -8,7 +8,7 @@ urlpatterns = [
     # Course metadata / dynamic fields
     path(
         "course-fields/",
-        views.course_fields,
+        views.CourseFieldsView.as_view(),
         name="course-fields",
     ),
 
@@ -35,7 +35,7 @@ urlpatterns = [
     # Course lists
     path(
         "list/",
-        views.course_list,
+        views.CourseListView.as_view(),
         name="course-list",
     ),
 

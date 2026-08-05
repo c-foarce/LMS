@@ -117,64 +117,121 @@ FIELD_ORDER = [
 
 # Gets name, type, and required Course fields
 ## USES WIDGET_TYPES
-@api_view(["GET"])
-@permission_classes([IsAuthenticated])
-def course_fields(request):
 
-    print(request.user)
-    print(getattr(request.user, "role", "No Role"))
 
-    fields = []
+# @api_view(["GET"])
+# @permission_classes([IsAuthenticated])
+# def course_fields(request):
 
-    for field_name in FIELD_ORDER:
+#     print(request.user)
+#     print(getattr(request.user, "role", "No Role"))
 
-        field = Course._meta.get_field(field_name)
+#     fields = []
 
-        fields.append({
-            "name": field.name,
-            "widget": WIDGET_TYPES.get(
-                field.get_internal_type(),
-                "text"
-            ),
-            "required": not field.blank
+#     for field_name in FIELD_ORDER:
+
+#         field = Course._meta.get_field(field_name)
+
+#         fields.append({
+#             "name": field.name,
+#             "widget": WIDGET_TYPES.get(
+#                 field.get_internal_type(),
+#                 "text"
+#             ),
+#             "required": not field.blank
+#         })
+
+
+#     teacher_options = []
+
+#     if getattr(request.user, "role", None) == "admin":
+
+#         teachers = User.objects.filter(role="teacher")
+
+#         teacher_options = [
+#             {
+#                 "id": teacher.id,
+#                 "username": teacher.username
+#             }
+#             for teacher in teachers
+#         ]
+
+
+#     # print(fields)
+
+#     return Response({
+#         "role": getattr(request.user, "role", None),
+#         "fields": fields,
+#         "teacher_id": request.user.id,
+#         "teacher_options": teacher_options
+#     })
+
+
+# Above as below, keep to show/ask then remove
+class CourseFieldsView(APIView):
+    permission_classes=[IsAuthenticated]
+
+    def get(self, request):
+
+        fields = []
+
+        for field_name in FIELD_ORDER:
+
+            field = Course._meta.get_field(field_name)
+
+            fields.append({
+                "name": field.name,
+                "widget": WIDGET_TYPES.get(
+                    field.get_internal_type(),
+                    "text"
+                ),
+                "required": not field.blank
+            })
+
+        teacher_options = []
+
+        if getattr(request.user, "role", None) == "admin":
+
+            teachers = User.objects.filter(role="teacher")
+
+            teacher_options = [
+                {
+                    "id": teacher.id,
+                    "username": teacher.username,
+                }
+                for teacher in teachers
+            ]
+
+        return Response({
+            "role": getattr(request.user, "role", None),
+            "fields": fields,
+            "teacher_id": request.user.id,
+            "teacher_options": teacher_options,
         })
 
-
-    teacher_options = []
-
-    if getattr(request.user, "role", None) == "admin":
-
-        teachers = User.objects.filter(role="teacher")
-
-        teacher_options = [
-            {
-                "id": teacher.id,
-                "username": teacher.username
-            }
-            for teacher in teachers
-        ]
-
-
-    # print(fields)
-
-    return Response({
-        "role": getattr(request.user, "role", None),
-        "fields": fields,
-        "teacher_id": request.user.id,
-        "teacher_options": teacher_options
-    })
-
-
-
 # Gets a list of all Courses
-@api_view(["GET"])
-@permission_classes([IsAuthenticated])
-def course_list(request):
+#this will be changed to a geneircs.apiview
 
-    courses = Course.objects.all()
-    serializer = serializers.CourseListSerializer(courses, many=True)
 
-    return Response(serializer.data)
+# @api_view(["GET"])
+# @permission_classes([IsAuthenticated])
+# def course_list(request):
+
+#     courses = Course.objects.all()
+#     serializer = serializers.CourseListSerializer(courses, many=True)
+
+#     return Response(serializer.data)
+
+
+
+# As above but as a class, keep to show/ask
+class CourseListView(generics.ListAPIView):
+
+    queryset = Course.objects.all()
+    serializer_class = serializers.CourseListSerializer
+    permission_classes = [IsAuthenticated]
+
+
 
 
 # Creates an Enrolment

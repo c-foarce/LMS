@@ -32,14 +32,14 @@ urlpatterns = [
     # Returns current authenticated user's role
     path(
         "user-role/",
-        views.get_user_role,
+        views.UserRoleView.as_view(),
         name="user-role",
     ),
 
     # Returns dynamic user form fields
     path(
         "user-fields/",
-        views.user_fields,
+        views.UserFieldsView.as_view(),
         name="user-fields",
     ),
 
@@ -53,7 +53,7 @@ urlpatterns = [
     # Returns students
     path(
         "students/",
-        views.student_list,
+        views.StudentListView.as_view(),
         name="student-list",
     ),
 
