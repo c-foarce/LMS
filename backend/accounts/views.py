@@ -7,7 +7,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from .models import User
-from .serializers import RegisterSerializer, UserSerializer, StudentListSerializer
+from . import serializers
 from .permissions import IsAdminRole
 
 
@@ -16,12 +16,12 @@ from .permissions import IsAdminRole
 
 class RegisterView(generics.CreateAPIView):
     queryset = User.objects.all()
-    serializer_class = RegisterSerializer
+    serializer_class = serializers.RegisterSerializer
 
 
 class UserCreateView(generics.CreateAPIView):
 
-    serializer_class= UserSerializer
+    serializer_class = serializers.UserSerializer
     permission_classes = [IsAdminRole]
 
 
@@ -40,7 +40,8 @@ class UserCreateView(generics.CreateAPIView):
 
 
 class UserRoleView(APIView):
-    permission_classes=[IsAuthenticated]
+
+    permission_classes = [IsAuthenticated]
 
     def get(self, request):
         return Response({
@@ -94,14 +95,15 @@ class UserRoleView(APIView):
 
 
 class UserFieldsView(APIView):
-    permission_classes=[IsAdminRole]
+
+    permission_classes = [IsAdminRole]
 
     def get(self, request):
 
         allowed_fields = [
             "first_name",
             "last_name",
-             "username",
+            "username",
             "password",
             "email",
             "role",
@@ -149,9 +151,22 @@ class UserFieldsView(APIView):
 
 class StudentListView(generics.ListAPIView):
 
-    serializer_class = StudentListSerializer
+    serializer_class = serializers.StudentListSerializer
 
-    permission_classes=[IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         return User.objects.filter(role="student")
+
+class AllUserListView(generics.ListAPIView):
+
+    serializer_class = serializers.AllUsersListSerializer
+
+    permission_classes = [IsAuthenticated, IsAdminRole]
+
+    queryset = User.objects.all()
+
+class UserDeleteView(generics.DestroyAPIView):
+
+    queryset=User.objects.all()
+    permission_classes=[IsAuthenticated, IsAdminRole]

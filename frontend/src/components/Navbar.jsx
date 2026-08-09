@@ -59,6 +59,16 @@ function Navbar() {
                 <NavLink to="/app/courses/enrolments/all/">Enrolments List</NavLink>
             )}
 
+            {/* Users List - admin view only */}
+            {isAdmin && (
+                <NavLink to="/app/accounts/all/">User List</NavLink>
+            )}
+
+            {/* Course List - different form S+T view, this is a list of all courses, for admin editing purposes */}
+            {isAdmin && (
+                <NavLink to="/app/courses/all">Course List</NavLink>
+            )}
+
             {isLoggedIn ? (
                 <button onClick={handleLogout}>Logout</button>
             ) : (

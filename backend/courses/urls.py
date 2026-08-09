@@ -95,6 +95,12 @@ urlpatterns = [
         name="course-toggle-active",
     ),
 
+    path(
+        "<int:pk>/delete/",
+        views.CourseDeleteView.as_view(),
+        name = "delete-course"
+    ),
+
 
     # ======================
     # Course detail/editing

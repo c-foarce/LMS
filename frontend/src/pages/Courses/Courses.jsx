@@ -34,7 +34,7 @@ function Courses() {
             response = await api.get("/courses/teaching/")
             break;
 
-          case "admin":
+          case "admin": //this should probably be a redirect to /courses/all, not sure on implementing a navigatge in switch case tho
             response = await api.get("/courses/list/")
             console.log(response.data)
             break;

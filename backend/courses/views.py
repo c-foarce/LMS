@@ -283,3 +283,25 @@ class ListAllEnrolmentsView(generics.ListAPIView):
     permission_classes = [IsAuthenticated,IsAdminRole]
     serializer_class=serializers.EnrolmentSerializer
 
+
+class CourseDeleteView(generics.DestroyAPIView):
+
+    queryset = Course.objects.all()
+    permission_classes = [IsAdminRole]
+
+    def destroy(self, request, *args, **kwargs):
+
+        course = self.get_object()
+
+        if course.enrolments.exists():
+            return Response(
+                {
+                    "detail": "Course cannot be deleted whiule students are enrolled."
+                },
+                status = status.HTTP_400_BAD_REQUEST
+            )
+        course.delete()
+
+        return Response(
+            status = status.HTTP_204_NO_CONTENT
+        )
