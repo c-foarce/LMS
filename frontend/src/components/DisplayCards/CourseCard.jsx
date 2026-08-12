@@ -13,9 +13,12 @@ function CourseCard({ course }) {
     ]
 
     return (
+        
         <RenderCard
             title={course.subject_name}
             details={details}
         />
     )
 }
+
+export default CourseCard

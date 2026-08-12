@@ -5,6 +5,9 @@ import { useAuth } from '../../context/AuthContext'
 
 import api from '../../services/api'
 
+
+import CourseCard from "../../components/DisplayCards/CourseCard";
+
 function CourseList() {
 
     const navigate = useNavigate()
@@ -137,23 +140,12 @@ function CourseList() {
             <h1>
                 Course List
             </h1>
-            {/* TODO: Extract course rendering into reusable CourseCard component */}
+
             {courses.map(course => (
-                <div key={course.id}>
-                    <p>ID: {course.id}</p>
-                    <p>Subject: {course.subject_name}</p>
-                    <p>Code: {course.code}</p>
-                    <p>Teacher: {course.teacher_name}</p>
-                    <p>Status: {course.is_active ? "Active" : "Inactive"}</p>
-
-                    {error && errorCourseId === course.id && (
-                        <p>{error}</p>
-                    )}
-
-                    <button onClick={() => handleDelete(course.id)}>Delete Course</button>
-                    <button onClick={() => handleToggleActive(course.id)}>{course.is_active ? "Deactivate" : "Activate"}</button>
-                    <button onClick={() => navigate(`/app/courses/${course.id}/edit/`)}>Edit</button>
-                </div>
+                <CourseCard
+                    key={course.id}
+                    course={course}
+                />
             ))}
 
 
