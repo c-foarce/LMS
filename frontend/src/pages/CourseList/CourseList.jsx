@@ -53,6 +53,12 @@ function CourseList() {
 
     //BUTTON FUNCTIONS
 
+    const handleEdit = (courseId) => {
+        navigate(`/app/courses/${courseId}/edit/`)
+    }
+
+    
+
     const handleToggleActive = async (courseId) => {
 
         try {
@@ -145,6 +151,11 @@ function CourseList() {
                 <CourseCard
                     key={course.id}
                     course={course}
+                    onDelete={handleDelete}
+                    onToggleActive={handleToggleActive}
+                    onEdit={handleEdit}
+                    error={error}
+                    errorCourseId={errorCourseId}
                 />
             ))}
 
