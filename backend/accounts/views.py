@@ -50,48 +50,6 @@ class UserRoleView(APIView):
         })
 
 
-# @api_view(["GET"])
-# @permission_classes([IsAdminRole])
-# def user_fields(request):
-
-#     allowed_fields = [
-#         "first_name",
-#         "last_name",
-#         "username",
-#         "password",
-#         "email",
-#         "role",
-
-#     ]
-
-#     fields = []
-
-#     for field_name in allowed_fields:
-
-#         #get model by field name
-#         field = User._meta.get_field(field_name)
-
-#         field_info = {
-#             "name": field.name,
-#             "type": field.get_internal_type(),
-#             "required": not field.blank,
-#         }
-
-#         #if field has choices, send all to frontend to it can render a dropdown
-#         if field.choices:
-#             field_info["choices"] = [
-#                 {
-#                     "value": value, 
-#                     "label": label,
-#                 }
-#                 for value, label in field.choices
-#             ]
-#         fields.append(field_info)
-
-
-#     return Response({
-#         "fields": fields
-#     })
 
 
 class UserFieldsView(APIView):

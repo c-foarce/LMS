@@ -152,7 +152,7 @@ function CourseList() {
 
                     <button onClick={() => handleDelete(course.id)}>Delete Course</button>
                     <button onClick={() => handleToggleActive(course.id)}>{course.is_active ? "Deactivate" : "Activate"}</button>
-                <button onClick={() => navigate(`/app/courses/${course.id}/edit/`)}>Edit</button>
+                    <button onClick={() => navigate(`/app/courses/${course.id}/edit/`)}>Edit</button>
                 </div>
             ))}
 

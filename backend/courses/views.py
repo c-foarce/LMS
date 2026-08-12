@@ -75,7 +75,7 @@ class SubmitProgress(APIView):
         if enrolment.completed_submissions >= enrolment.course.total_submissions:
             return Response(
                 {
-                    "detail":"All required submissions have already neen completed"
+                    "detail":"All required submissions have already been completed"
                 },
                 status=status.HTTP_400_BAD_REQUEST
             )
@@ -119,55 +119,7 @@ FIELD_ORDER = [
 ## USES WIDGET_TYPES
 
 
-# @api_view(["GET"])
-# @permission_classes([IsAuthenticated])
-# def course_fields(request):
 
-#     print(request.user)
-#     print(getattr(request.user, "role", "No Role"))
-
-#     fields = []
-
-#     for field_name in FIELD_ORDER:
-
-#         field = Course._meta.get_field(field_name)
-
-#         fields.append({
-#             "name": field.name,
-#             "widget": WIDGET_TYPES.get(
-#                 field.get_internal_type(),
-#                 "text"
-#             ),
-#             "required": not field.blank
-#         })
-
-
-#     teacher_options = []
-
-#     if getattr(request.user, "role", None) == "admin":
-
-#         teachers = User.objects.filter(role="teacher")
-
-#         teacher_options = [
-#             {
-#                 "id": teacher.id,
-#                 "username": teacher.username
-#             }
-#             for teacher in teachers
-#         ]
-
-
-#     # print(fields)
-
-#     return Response({
-#         "role": getattr(request.user, "role", None),
-#         "fields": fields,
-#         "teacher_id": request.user.id,
-#         "teacher_options": teacher_options
-#     })
-
-
-# Above as below, keep to show/ask then remove
 class CourseFieldsView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -296,7 +248,7 @@ class CourseDeleteView(generics.DestroyAPIView):
         if course.enrolments.exists():
             return Response(
                 {
-                    "detail": "Course cannot be deleted whiule students are enrolled."
+                    "detail": "Course cannot be deleted while students are enrolled."
                 },
                 status = status.HTTP_400_BAD_REQUEST
             )

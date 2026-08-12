@@ -50,8 +50,8 @@ function Login() {
       setTimeout(() => {
         setLoginState(
           {
-            type:"",
-            message:""
+            type: "",
+            message: ""
           }
         )
         navigate("/app");
@@ -73,7 +73,9 @@ function Login() {
     <div>
       <h1>Login</h1>
 
+      <label htmlFor="username">Username:</label>
       <input
+        id="username"
         placeholder="username"
         onChange={(e) => setUsername(e.target.value)}
       />
