@@ -4,6 +4,8 @@ import { useAuth } from '../../context/AuthContext'
 
 import api from '../../services/api'
 
+import EnrolmentCard from "../../components/DisplayCards/EnrolmentCard";
+
 function EnrolmentList() {
 
     const { user } = useAuth() //needed?
@@ -75,45 +77,13 @@ function EnrolmentList() {
             {enrolments.length === 0 ? (
                 <p>No enrolments found.</p>
             ) : (
-                enrolments.map((enrolment) => {
-                    return (
-                    <div key={enrolment.id}>
-                        <h3>
-                            {enrolment.student_name}
-                        </h3>
-
-                        <p>
-                            Course: {enrolment.course_name}
-                        </p>
-
-                        <p>
-                            Code: {enrolment.course_code}
-                        </p>
-
-                        <p>
-                            Teacher: {enrolment.teacher_name}
-                        </p>
-
-                        <p>
-                            Status: {enrolment.status}
-                        </p>
-
-                        <p>
-                            Progress: {enrolment.progress}%
-                        </p>
-
-                        <p>
-                            Grade: {enrolment.grade || "Not graded"}
-                        </p>
-
-                        <button
-                        onClick={() => handleDelete(enrolment.id)}>
-                            Delete
-                        </button>
-
-                    </div>
-                    )
-                })
+                enrolments.map(enrolment => (
+                    <EnrolmentCard
+                        key={enrolment.id}
+                        enrolment={enrolment}
+                        onDelete={handleDelete}
+                    />
+                ))
             )}
         </>
     )
