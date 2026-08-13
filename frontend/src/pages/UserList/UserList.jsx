@@ -38,7 +38,7 @@ function UserList() {
         fetchUsers()
     }, [])
 
-    
+
     const handleDelete = async (userId) => {
 
         console.log("DEL USER ID:", userId)
@@ -90,6 +90,7 @@ function UserList() {
                     <UserCard
                         key={user.id}
                         user={user}
+                        role={user.role}
                         onDelete={handleDelete}
                     />
                 ))

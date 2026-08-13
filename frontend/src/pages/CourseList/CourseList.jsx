@@ -52,12 +52,14 @@ function CourseList() {
 
 
     //BUTTON FUNCTIONS
+    // ------------------------
+    //ADMIN ONLY
 
     const handleEdit = (courseId) => {
         navigate(`/app/courses/${courseId}/edit/`)
     }
 
-    
+
 
     const handleToggleActive = async (courseId) => {
 
@@ -151,6 +153,7 @@ function CourseList() {
                 <CourseCard
                     key={course.id}
                     course={course}
+                    role={user.role}
                     onDelete={handleDelete}
                     onToggleActive={handleToggleActive}
                     onEdit={handleEdit}

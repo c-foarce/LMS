@@ -1,6 +1,6 @@
 import RenderCard from "./RenderCard";
 
-function UserCard({ user, onDelete }) {
+function UserCard({ user, role, onDelete }) {
 
     const details = [
         {
@@ -17,11 +17,18 @@ function UserCard({ user, onDelete }) {
         }
     ]
 
-    const actions = (
-        <button onClick={() => onDelete(user.id)}>
-            Delete User
-        </button>
-    )
+    const actions = []
+
+    if (role === "admin") {
+        actions.push(
+            <button
+                key="delete"
+                onClick={() => onDelete(user.id)}
+            >
+                Delete User
+            </button>
+        )
+    }
 
     return (
         <RenderCard

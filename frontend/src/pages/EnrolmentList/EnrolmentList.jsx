@@ -47,7 +47,7 @@ function EnrolmentList() {
             try {
                 const response = await api.get("/courses/enrolments/all/");
 
-                console.log("response data TESTING", response.data);
+                // console.log("response data TESTING", response.data);
 
                 setEnrolments(response.data);
             } catch (error) {
@@ -80,6 +80,7 @@ function EnrolmentList() {
                 enrolments.map(enrolment => (
                     <EnrolmentCard
                         key={enrolment.id}
+                        role={user.role}
                         enrolment={enrolment}
                         onDelete={handleDelete}
                     />

@@ -126,7 +126,7 @@ const router = createBrowserRouter(
         <Route
         path = "courses/all/"
         element = {
-          <RoleRoute roles={["admin"]}>
+          <RoleRoute roles={["admin", "student"]}>
             <CourseList />
           </RoleRoute>
         }

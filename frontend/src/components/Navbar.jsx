@@ -16,6 +16,7 @@ function Navbar() {
     const isLoggedIn = localStorage.getItem("access") !== null;
 
     const isAdmin = user?.role === "admin";
+    const isTeacher = user?.role ==="teacher"
     const isTeacherOrAdmin = user?.role === "teacher" || user?.role === "admin";
     const isStudent = user?.role === "student"
 
@@ -40,7 +41,7 @@ function Navbar() {
             <NavLink to="/app/courses/">Courses</NavLink>
 
             {/* New Course- admin or teachers can access */}
-            {isTeacherOrAdmin && (
+            {(isTeacher || isAdmin) && (
                 <NavLink to="/app/courses/new/">New Course</NavLink>
             )}
 
@@ -50,7 +51,7 @@ function Navbar() {
             )}
 
             {/* New Enrolments - admin or teacher can access */}
-            {isTeacherOrAdmin && (
+            {(isTeacher || isAdmin) && (
                 <NavLink to="/app/courses/enrolments/new/">New Enrolment</NavLink>
             )}
 
@@ -65,7 +66,7 @@ function Navbar() {
             )}
 
             {/* Course List - different form S+T view, this is a list of all courses, for admin editing purposes */}
-            {isAdmin && (
+            {(isAdmin || isStudent) && (
                 <NavLink to="/app/courses/all">Course List</NavLink>
             )}
 
