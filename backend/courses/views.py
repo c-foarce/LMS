@@ -10,7 +10,7 @@ from .models import Enrolment, Course
 from . import serializers
 
 from accounts.models import User
-from accounts.permissions import IsTeacherOrAdmin, IsAdminRole, IsCourseOwnerOrAdmin
+from accounts import permissions
 
 
 
@@ -31,7 +31,7 @@ class MyEnrolmentsView(generics.ListAPIView):
 # Creates a new Course
 class CourseCreateView(generics.CreateAPIView):
     serializer_class = serializers.CourseSerializer
-    permission_classes = [IsTeacherOrAdmin]
+    permission_classes = [permissions.IsTeacherOrAdmin]
 
     def perform_create(self, serializer):
         user = self.request.user
@@ -46,7 +46,7 @@ class CourseCreateView(generics.CreateAPIView):
 class CourseEditView(generics.UpdateAPIView):
     queryset = Course.objects.all()
     serializer_class = serializers.CourseSerializer
-    permission_classes = [IsTeacherOrAdmin, IsCourseOwnerOrAdmin]
+    permission_classes = [permissions.IsTeacherOrAdmin, permissions.IsCourseOwnerOrAdmin]
 
     
     
@@ -186,10 +186,16 @@ class CourseListView(generics.ListAPIView):
 
 
 
-# Creates an Enrolment
+# Creates an Enrolment (Admin method)
 class EnrolmentCreateView(generics.CreateAPIView):
     serializer_class = serializers.CreateEnrolmentSerializer
-    permission_classes = [IsAdminRole]
+    permission_classes = [permissions.IsAdmin]
+
+
+# Creates an Enrolment (Student method)
+class StudentEnrolmentCreateView(generics.CreateAPIView):
+    serializer_class=serializers.StudentEnrolmentSerializer
+    permission_classes=[permissions.IsStudent]
 
 
 # Gets details on one Course
@@ -201,7 +207,7 @@ class CourseDetailView(generics.RetrieveAPIView):
 
 # Activates/Deactivates a course to no longer be shown for enrolments
 class CourseToggleActiveView(APIView):
-    permission_classes = [IsAuthenticated, IsCourseOwnerOrAdmin]
+    permission_classes = [IsAuthenticated, permissions.IsCourseOwnerOrAdmin]
 
     def patch(self, request, pk):
 
@@ -226,20 +232,20 @@ class AvaliableCourseListView(generics.ListAPIView):
 class EnrolmentDeleteView(generics.DestroyAPIView):
 
     queryset = Enrolment.objects.all()
-    permission_classes = [IsTeacherOrAdmin,IsAuthenticated]
+    permission_classes = [permissions.IsTeacherOrAdmin,IsAuthenticated]
 
 
 class ListAllEnrolmentsView(generics.ListAPIView):
         
     queryset = Enrolment.objects.all()
-    permission_classes = [IsAuthenticated,IsAdminRole]
+    permission_classes = [IsAuthenticated,permissions.IsAdmin]
     serializer_class=serializers.EnrolmentSerializer
 
 
 class CourseDeleteView(generics.DestroyAPIView):
 
     queryset = Course.objects.all()
-    permission_classes = [IsAdminRole]
+    permission_classes = [permissions.IsAdmin]
 
     def destroy(self, request, *args, **kwargs):
 

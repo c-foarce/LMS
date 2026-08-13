@@ -6,8 +6,11 @@ function CourseCard({
     onDelete,
     onToggleActive,
     onEdit,
+    onEnrol,
     error,
-    errorCourseId
+    errorCourseId,
+    enrolError,
+    enrolErrorCourseId
 }) {
 
     // Base information for all 3 roles, additional info pushed and unshifted underneath
@@ -29,32 +32,16 @@ function CourseCard({
         })
     }
 
-    // const actions = (
-    //     <>
-    //         {error && errorCourseId === course.id && (
-    //             <p>{error}</p>
-    //         )}
 
-    //         <button onClick={() => onDelete(course.id)}>
-    //             Delete Course
-    //         </button>
+    const errorMessage =
+        error && errorCourseId === course.id && (
+            <p>{error}</p>
+        )
 
-    //         <button onClick={() => onToggleActive(course.id)}>
-    //             {course.is_active ? "Deactivate" : "Activate"}
-    //         </button>
-
-    //         <button
-    //             onClick={() => onEdit(course.id)
-    //             }
-    //         >
-    //             Edit
-    //         </button>
-    //     </>
-    // )
-
-    const errorMessage = error && errorCourseId === course.id && (
-        <p>{error}</p>
-    )
+    const enrolErrorMessage =
+        enrolError && enrolErrorCourseId === course.id && (
+            <p>{enrolError}</p>
+        )
 
     const actions = []
 
@@ -92,12 +79,19 @@ function CourseCard({
     //adds buttons for students
     if (role === "student") {
         actions.push(
-            <button
-            key="enrol"
-            onClick={()=> {/* ADD ENROL FUNCTION IN COURSELIST AND PASSPROP */}}
-            >
-                Enrol (Currently Dummy)
-            </button>
+            <div key="enrol-action">
+                <button
+                    onClick={() => onEnrol(course.id)}
+                >
+                    Enrol
+                </button>
+
+                {enrolError && enrolErrorCourseId === course.id && (
+                    <span>
+                        {enrolError}
+                    </span>
+                )}
+            </div>
         )
     }
 

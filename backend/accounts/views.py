@@ -8,7 +8,7 @@ from rest_framework.response import Response
 
 from .models import User
 from . import serializers
-from .permissions import IsAdminRole
+from . import permissions
 
 
 
@@ -22,7 +22,7 @@ class RegisterView(generics.CreateAPIView):
 class UserCreateView(generics.CreateAPIView):
 
     serializer_class = serializers.UserSerializer
-    permission_classes = [IsAdminRole]
+    permission_classes = [permissions.IsAdmin]
 
 
 
@@ -54,7 +54,7 @@ class UserRoleView(APIView):
 
 class UserFieldsView(APIView):
 
-    permission_classes = [IsAdminRole]
+    permission_classes = [permissions.IsAdmin]
 
     def get(self, request):
 
@@ -116,15 +116,19 @@ class StudentListView(generics.ListAPIView):
     def get_queryset(self):
         return User.objects.filter(role="student")
 
+    
+
 class AllUserListView(generics.ListAPIView):
 
     serializer_class = serializers.AllUsersListSerializer
 
-    permission_classes = [IsAuthenticated, IsAdminRole]
+    permission_classes = [IsAuthenticated, permissions.IsAdmin]
 
     queryset = User.objects.all()
+
+    
 
 class UserDeleteView(generics.DestroyAPIView):
 
     queryset=User.objects.all()
-    permission_classes=[IsAuthenticated, IsAdminRole]
+    permission_classes=[IsAuthenticated, permissions.IsAdmin]

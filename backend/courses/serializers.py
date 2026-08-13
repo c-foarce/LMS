@@ -97,6 +97,28 @@ class CreateEnrolmentSerializer(serializers.ModelSerializer):
             )
         return course
 
+
+class StudentEnrolmentSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Enrolment
+        fields = ["course"]
+
+    def validate_course(self, course):
+        if not course.is_active:
+            raise serializers.ValidationError(
+                "This course is no longer accepting enrolments"
+            )
+
+        return course
+
+    def create(self, validated_data):
+        return Enrolment.objects.create(
+            student=self.context["request"].user,
+            **validated_data
+        )
+
+
 class SubmitProgressSerializer(serializers.ModelSerializer):
     class Meta:
         model=Enrolment

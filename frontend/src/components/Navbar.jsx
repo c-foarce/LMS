@@ -38,7 +38,7 @@ function Navbar() {
             <NavLink to={isLoggedIn ? "/app/dashboard/" : "/"}>Home</NavLink>
 
             {/* Courses - anyone can access, currently admin have no use here */}
-            <NavLink to="/app/courses/">Courses</NavLink>
+            <NavLink to="/app/courses/">My Courses</NavLink>
 
             {/* New Course- admin or teachers can access */}
             {(isTeacher || isAdmin) && (

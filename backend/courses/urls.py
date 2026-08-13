@@ -69,7 +69,13 @@ urlpatterns = [
     path(
         "enrolments/create/",
         views.EnrolmentCreateView.as_view(),
-        name="enrolment-create",
+        name="enrolment-create-admin",
+    ),
+
+    path(
+        "enrolments/enrol/",
+        views.StudentEnrolmentCreateView.as_view(),
+        name="enrolment-create-student"
     ),
 
     path(

@@ -22,6 +22,9 @@ function CourseList() {
     const [error, setError] = useState(null)
     const [errorCourseId, setErrorCourseId] = useState(null)
 
+    const [enrolError, setEnrolError] = useState(null)
+    const [enrolErrorCourseId, setEnrolErrorCourseId] = useState(null)
+
 
     // INITIAL MOUNTING
 
@@ -137,6 +140,43 @@ function CourseList() {
         }
     }
 
+    //------------------
+    //STUDENT
+
+    const handleEnrol = async (courseId) => {
+
+        try {
+
+            setEnrolError(null)
+            setEnrolErrorCourseId(null)
+
+            const response = await api.post(
+                "/courses/enrolments/enrol/",
+                {
+                    course: courseId
+                }
+            )
+
+            console.log("Enrolment created: ", response.data)
+
+        } catch (error) {
+
+            console.error("Enrolment creation failed: ", error)
+
+            setEnrolErrorCourseId(courseId)
+
+            setEnrolError(
+                error.response?.data.detail ||
+                "Could not enrol in this course"
+            )
+
+            setTimeout(() => {
+                setEnrolError(null)
+                setEnrolErrorCourseId(null)
+            }, 3000);
+        }
+    }
+
 
     //EXTRACT COURSELIST FROM COURSES <<<---, THEN ALL CREATOIN/EDITING IS ADMIN CONTROLLED
 
@@ -157,8 +197,11 @@ function CourseList() {
                     onDelete={handleDelete}
                     onToggleActive={handleToggleActive}
                     onEdit={handleEdit}
+                    onEnrol={handleEnrol}
                     error={error}
                     errorCourseId={errorCourseId}
+                    enrolError={enrolError}
+                    enrolErrorCourseId={enrolErrorCourseId}
                 />
             ))}
 
