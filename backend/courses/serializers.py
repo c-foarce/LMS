@@ -122,4 +122,10 @@ class StudentEnrolmentSerializer(serializers.ModelSerializer):
 class SubmitProgressSerializer(serializers.ModelSerializer):
     class Meta:
         model=Enrolment
-        fields=["progress"]
+        fields=["progress"]#
+
+class GradeEnrolmentSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Enrolment
+        fields = ["grade"]

@@ -13,6 +13,7 @@ function CourseCard({
     enrolErrorCourseId
 }) {
 
+    // DETAILS -----------------------------------------
     // Base information for all 3 roles, additional info pushed and unshifted underneath
     const details = [
         { label: "Subject", value: course.subject_name },
@@ -45,7 +46,9 @@ function CourseCard({
 
     const actions = []
 
-    //adds buttons that only admins will be able to see
+
+    // ACTIONS ------------------------------------
+    // Admin
     if (role === "admin") {
         actions.push(
             <button
@@ -64,19 +67,21 @@ function CourseCard({
                 {course.is_active ? "Deactivate" : "Activate"}
             </button>
         )
+    }
 
+    // Teacher + Admin
+    if (role === "admin" || role === "teacher") {
         actions.push(
             <button
                 key="edit"
-                onClick={() => onEdit(course.id)
-                }
+                onClick={() => onEdit(course.id)}
             >
                 Edit
             </button>
         )
     }
 
-    //adds buttons for students
+    // Student
     if (role === "student") {
         actions.push(
             <div key="enrol-action">

@@ -90,6 +90,16 @@ class SubmitProgress(APIView):
         serializer = serializers.EnrolmentSerializer(enrolment)
         return Response(serializer.data)
 
+
+class TeacherProgressView(generics.ListAPIView):
+    serializer_class=serializers.EnrolmentSerializer
+    permission_classes=[permissions.IsTeacher]
+
+    def get_queryset(self):
+        return Enrolment.objects.filter(
+            course__teacher=self.request.user
+        )
+
     
 ##########################
 ###### WIDGET TYPES ######
@@ -262,4 +272,14 @@ class CourseDeleteView(generics.DestroyAPIView):
 
         return Response(
             status = status.HTTP_204_NO_CONTENT
+        )
+
+class GradeEnrolmentView(generics.UpdateAPIView):
+
+    serializer_class = serializers.GradeEnrolmentSerializer
+    permission_classes = [permissions.IsTeacher]
+
+    def get_queryset(self):
+        return Enrolment.objects.filter(
+            course__teacher=self.request.user
         )

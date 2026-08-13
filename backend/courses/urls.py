@@ -49,6 +49,12 @@ urlpatterns = [
         name="teaching-courses",
     ),
 
+    path(
+        "teaching/progress/",
+        views.TeacherProgressView.as_view(),
+        name="teacher-progress"
+    ),
+
 
     # ======================
     # Enrolments
@@ -88,6 +94,12 @@ urlpatterns = [
         "enrolments/<int:pk>/delete/",
         views.EnrolmentDeleteView.as_view(),
         name="delete-enrolment"
+    ),
+
+    path(
+    "enrolments/<int:pk>/grade/",
+    views.GradeEnrolmentView.as_view(),
+    name="grade-enrolment"
     ),
 
 

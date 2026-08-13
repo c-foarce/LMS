@@ -11,14 +11,16 @@ import { useAuth } from "../context/AuthContext";
 function Navbar() {
 
     const navigate = useNavigate();
+
     const { user, setUser } = useAuth();
 
     const isLoggedIn = localStorage.getItem("access") !== null;
 
     const isAdmin = user?.role === "admin";
-    const isTeacher = user?.role ==="teacher"
-    const isTeacherOrAdmin = user?.role === "teacher" || user?.role === "admin";
+    const isTeacher = user?.role === "teacher"
     const isStudent = user?.role === "student"
+
+    const roleName = user.role.charAt(0).toUpperCase() + user.role.slice(1)
 
     function handleLogout() {
         localStorage.removeItem("access");
@@ -35,7 +37,7 @@ function Navbar() {
             {/* Later: add className={({ isActive }) => ... } using clsx */}
 
             {/* Dashboard - anyone can access */}
-            <NavLink to={isLoggedIn ? "/app/dashboard/" : "/"}>Home</NavLink>
+            <NavLink to={isLoggedIn ? "/app/dashboard/" : "/"}>{roleName} Home</NavLink>
 
             {/* Courses - anyone can access, currently admin have no use here */}
             <NavLink to="/app/courses/">My Courses</NavLink>
@@ -43,6 +45,12 @@ function Navbar() {
             {/* New Course- admin or teachers can access */}
             {(isTeacher || isAdmin) && (
                 <NavLink to="/app/courses/new/">New Course</NavLink>
+            )}
+
+            {isTeacher && (
+                <NavLink to="/app/courses/progress/">
+                    Student Progress
+                </NavLink>
             )}
 
             {/* New User - only Admin can access */}

@@ -16,6 +16,7 @@ function CourseList() {
     const { user } = useAuth()
 
     const [courses, setCourses] = useState([])
+    const [enrolments, setEnrolments] = useState([])
 
     const [loading, setLoading] = useState(true)
 
@@ -34,9 +35,25 @@ function CourseList() {
 
             try {
 
-                const response = await api.get("/courses/list/");
+
+                let endpoint = "/courses/list/"
+
+                if (user.role === "teacher") {
+                    endpoint = "/courses/teaching/"
+                }
+
+                const response = await api.get(endpoint);
 
                 setCourses(response.data)
+
+                if (user.role === "student") {
+
+                    const enrolmentResponse = await api.get(
+                        "/courses/enrolments/me"
+                    )
+
+                    setEnrolments(enrolmentResponse.data)
+                }
 
             } catch (error) {
 
@@ -49,7 +66,7 @@ function CourseList() {
         };
 
         fetchCourses();
-    }, [])
+    }, [user.role])
 
 
 
@@ -178,6 +195,21 @@ function CourseList() {
     }
 
 
+    const enrolledCourseIds = enrolments.map(
+        enrolment => enrolment.course
+    )
+
+    let displayedCourses = courses
+
+    if (user.role === "student") {
+        displayedCourses = courses.filter(
+            course =>
+                course.is_active &&
+                !enrolledCourseIds.includes(course.id)
+        )
+    }
+
+
     //EXTRACT COURSELIST FROM COURSES <<<---, THEN ALL CREATOIN/EDITING IS ADMIN CONTROLLED
 
     if (loading) {
@@ -189,21 +221,30 @@ function CourseList() {
                 Course List
             </h1>
 
-            {courses.map(course => (
-                <CourseCard
-                    key={course.id}
-                    course={course}
-                    role={user.role}
-                    onDelete={handleDelete}
-                    onToggleActive={handleToggleActive}
-                    onEdit={handleEdit}
-                    onEnrol={handleEnrol}
-                    error={error}
-                    errorCourseId={errorCourseId}
-                    enrolError={enrolError}
-                    enrolErrorCourseId={enrolErrorCourseId}
-                />
-            ))}
+            {displayedCourses.length === 0 ? (
+                <p>
+                    {user.role === "student"
+                        ? "There are currently no courses available to enrol on."
+                        : "No courses found."
+                    }
+                </p>
+            ) : (
+                displayedCourses.map(course => (
+                    <CourseCard
+                        key={course.id}
+                        course={course}
+                        role={user.role}
+                        onDelete={handleDelete}
+                        onToggleActive={handleToggleActive}
+                        onEdit={handleEdit}
+                        onEnrol={handleEnrol}
+                        error={error}
+                        errorCourseId={errorCourseId}
+                        enrolError={enrolError}
+                        enrolErrorCourseId={enrolErrorCourseId}
+                    />
+                ))
+            )}
 
 
         </>
