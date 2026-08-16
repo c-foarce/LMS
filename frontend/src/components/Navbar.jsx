@@ -42,6 +42,11 @@ function Navbar() {
             {/* Courses - anyone can access, currently admin have no use here */}
             <NavLink to="/app/courses/">My Courses</NavLink>
 
+            {/* MyGrades - Student view for their graded work */}
+            {isStudent && (
+                <NavLink to="/app/courses/grades">My Grades</NavLink>
+            )}
+
             {/* New Course- admin or teachers can access */}
             {(isTeacher || isAdmin) && (
                 <NavLink to="/app/courses/new/">New Course</NavLink>
@@ -49,7 +54,7 @@ function Navbar() {
 
             {isTeacher && (
                 <NavLink to="/app/courses/progress/">
-                    Student Progress
+                    Grading
                 </NavLink>
             )}
 

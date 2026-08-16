@@ -199,7 +199,7 @@ class CourseListView(generics.ListAPIView):
 # Creates an Enrolment (Admin method)
 class EnrolmentCreateView(generics.CreateAPIView):
     serializer_class = serializers.CreateEnrolmentSerializer
-    permission_classes = [permissions.IsAdmin]
+    permission_classes = [permissions.IsTeacherOrAdmin]
 
 
 # Creates an Enrolment (Student method)
@@ -236,6 +236,14 @@ class AvaliableCourseListView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
+
+        user = self.request.user
+
+        if user.role == "teacher":
+            return Course.objects.filter(
+                teacher=user,
+                is_active=True
+            )
         return Course.objects.filter(is_active=True)
 
 

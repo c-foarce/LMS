@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 import api from "../../services/api";
 
-function StudentProgress() {
+function Gradebook() {
 
     const [enrolments, setEnrolments] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -188,7 +188,7 @@ function StudentProgress() {
 
     return (
         <>
-            <h1>Student Progress</h1>
+            <h1>Courses to Grade</h1>
 
             {groupedCourses.map(course => (
 
@@ -328,4 +328,4 @@ function StudentProgress() {
     );
 }
 
-export default StudentProgress;
+export default Gradebook;

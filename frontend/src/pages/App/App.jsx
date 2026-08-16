@@ -28,8 +28,8 @@ import EditCourse from "../EditCourse/EditCourse";
 import EnrolmentList from "../EnrolmentList/EnrolmentList";
 import UserList from "../UserList/UserList";
 import CourseList from "../CourseList/CourseList";
-import StudentProgress from "../StudentProgress/StudentProgress";
-
+import Gradebook from "../Gradebook/Gradebook";
+import MyGrades from "../MyGrades/MyGrades";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -62,6 +62,15 @@ const router = createBrowserRouter(
         <Route
           path="courses/"
           element={<Courses />}
+        />
+
+        {/* Student facing page for their grades */}
+        <Route
+          path="courses/grades/"
+          element={<RoleRoute roles={["student"]}>
+            <MyGrades />
+          </RoleRoute>
+          }
         />
 
         {/*Only teachers or admins can access this */}
@@ -99,7 +108,7 @@ const router = createBrowserRouter(
           path="courses/progress/"
           element={
             <RoleRoute roles={["teacher"]}>
-              <StudentProgress />
+              <Gradebook />
             </RoleRoute>
           }
         />

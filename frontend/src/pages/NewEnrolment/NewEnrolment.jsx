@@ -123,7 +123,7 @@ function NewEnrolment() {
                     })}
                 </select>
 
-                <button onClick={handleSubmit}>Submit Enrolment</button>
+                <button type="submit">Submit Enrolment</button>
             </form>
             <pre>
                 {JSON.stringify(formData, null, 2)}

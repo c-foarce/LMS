@@ -91,10 +91,19 @@ class CreateEnrolmentSerializer(serializers.ModelSerializer):
 
     def validate_course(self, course):
 
+        request = self.context["request"]
+        user=request.user
+
         if not course.is_active:
             raise serializers.ValidationError(
-                "This course is no longer accepting enrolments"
+                "This course is no longer accepting enrolments."
             )
+
+        if user.role == "teacher" and course.teacher != user:
+            raise serializers.ValidationError(
+                "You can only create enrolments for your own courses."
+            )
+        
         return course
 
 
