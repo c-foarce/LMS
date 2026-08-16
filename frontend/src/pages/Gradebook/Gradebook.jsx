@@ -13,6 +13,9 @@ function Gradebook() {
     const [selectedGrades, setSelectedGrades] = useState({});
     const [editingGrades, setEditingGrades] = useState({});
 
+    const [selectedCourse, setSelectedCourse] = useState("all")
+    const [selectedGradeStatus, setSelectedGradeStatus] = useState("all")
+
 
     useEffect(() => {
 
@@ -144,12 +147,46 @@ function Gradebook() {
         });
     };
 
+    const availableCourses = new Map();
 
-    // Group enrolments by course.
+    enrolments.forEach(enrolment => {
+
+        if (!availableCourses.has(enrolment.course)) {
+
+            availableCourses.set(enrolment.course, {
+                id: enrolment.course,
+                name: enrolment.course_name,
+                code: enrolment.course_code
+            });
+
+        }
+
+    });
+
+    const courseOptions = Array.from(
+        availableCourses.values()
+    );
+
+
+    // Group enrolments by course, and those that need grading
+
+    const filteredEnrolments = enrolments.filter(enrolment => {
+
+        const matchesCourse =
+            selectedCourse === "all" ||
+            enrolment.course === Number(selectedCourse);
+
+        const matchesGrade =
+            selectedGradeStatus === "all" ||
+            (selectedGradeStatus === "graded" && enrolment.grade) ||
+            (selectedGradeStatus === "awaiting" && !enrolment.grade);
+
+        return matchesCourse && matchesGrade;
+    });
 
     const courses = new Map();
 
-    enrolments.forEach(enrolment => {
+    filteredEnrolments.forEach(enrolment => {
 
         if (!courses.has(enrolment.course)) {
 
@@ -192,7 +229,68 @@ function Gradebook() {
         <>
             <h1>Courses to Grade</h1>
 
-            {groupedCourses.map(course => (
+            <div>
+                <label htmlFor="course-filter">Course:</label>
+
+                <select
+                    id="course-filter"
+                    value={selectedCourse}
+                    onChange={(event) =>
+                        setSelectedCourse(event.target.value)
+                    }
+                >
+                    <option value="all">
+                        All Courses
+                    </option>
+
+                    {courseOptions.map(course => (
+                        <option
+                            key={course.id}
+                            value={course.id}
+                        >
+                            {course.name} ({course.code})
+                        </option>
+                    ))}
+
+                </select>
+
+            </div>
+
+            <div>
+
+                <label htmlFor="grade-filter">
+                    Grade Status:
+                </label>
+
+                <select
+                    id="grade-filter"
+                    value={selectedGradeStatus}
+                    onChange={(event) =>
+                        setSelectedGradeStatus(event.target.value)
+                    }
+                >
+                    <option value="all">
+                        All
+                    </option>
+
+                    <option value="awaiting">
+                        Awaiting Grade
+                    </option>
+
+                    <option value="graded">
+                        Graded
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            {groupedCourses.length === 0 ? (
+                <p>
+                    No student match the selected filters.
+                </p>
+            ) : (groupedCourses.map(course => (
 
                 <section key={course.id}>
 
@@ -201,127 +299,6 @@ function Gradebook() {
                     </h2>
 
                     {course.students.map(student => (
-
-                        // <div key={student.id}>
-
-                        //     <p>
-                        //         Student: {student.student_name}
-                        //     </p>
-
-                        //     <p>
-                        //         Progress: {student.progress}%
-                        //     </p>
-
-                        //     {/*The below should be extracted to it's own component. lots of condtionals and ternary stuff */}
-                        //     <p>
-
-                        //         {student.grade ? (
-
-                        //             <>
-                        //                 Grade: {student.grade}
-
-                        //                 {!editingGrades[student.id] && (
-                        //                     <button
-                        //                         onClick={() =>
-                        //                             handleEditGrade(student.id)
-                        //                         }
-                        //                     >
-                        //                         Change Grade
-                        //                     </button>
-                        //                 )}
-
-                        //                 {editingGrades[student.id] && (
-                        //                     <>
-                        //                         <select
-                        //                             value={selectedGrades[student.id] || ""}
-                        //                             onChange={(event) =>
-                        //                                 handleGradeChange(
-                        //                                     student.id,
-                        //                                     event.target.value
-                        //                                 )
-                        //                             }
-                        //                         >
-                        //                             <option value="" disabled>
-                        //                                 Select grade
-                        //                             </option>
-
-                        //                             <option value="A">A</option>
-                        //                             <option value="B">B</option>
-                        //                             <option value="C">C</option>
-                        //                             <option value="D">D</option>
-                        //                             <option value="F">F</option>
-                        //                         </select>
-
-                        //                         {selectedGrades[student.id] && (
-                        //                             <button
-                        //                                 onClick={() =>
-                        //                                     handleSaveGrade(student.id)
-                        //                                 }
-                        //                             >
-                        //                                 Save Grade
-                        //                             </button>
-                        //                         )}
-
-                        //                         <button
-                        //                             onClick={() =>
-                        //                                 handleCancelGradeEdit(student.id)
-                        //                             }
-                        //                         >
-                        //                             Cancel
-                        //                         </button>
-                        //                     </>
-                        //                 )}
-                        //             </>
-
-                        //         ) : student.progress === 100 ? (
-
-                        //             <>
-                        //                 Grade: Awaiting grade
-
-                        //                 <select
-                        //                     value={selectedGrades[student.id] || ""}
-                        //                     onChange={(event) =>
-                        //                         handleGradeChange(
-                        //                             student.id,
-                        //                             event.target.value
-                        //                         )
-                        //                     }
-                        //                 >
-                        //                     <option value="" disabled>
-                        //                         Select grade
-                        //                     </option>
-
-                        //                     <option value="A">A</option>
-                        //                     <option value="B">B</option>
-                        //                     <option value="C">C</option>
-                        //                     <option value="D">D</option>
-                        //                     <option value="F">F</option>
-                        //                 </select>
-
-                        //                 {selectedGrades[student.id] && (
-                        //                     <button
-                        //                         onClick={() =>
-                        //                             handleSaveGrade(student.id)
-                        //                         }
-                        //                     >
-                        //                         Save Grade
-                        //                     </button>
-                        //                 )}
-                        //             </>
-
-                        //         ) : (
-
-                        //             <>
-                        //                 Grade: Not available
-                        //             </>
-
-                        //         )}
-
-                        //     </p>
-
-                        //     <p>-----</p>
-
-                        // </div>
 
                         <StudentGradeCard
                             key={student.id}
@@ -344,7 +321,9 @@ function Gradebook() {
 
                 </section>
 
-            ))}
+            )))}
+
+
 
         </>
     );

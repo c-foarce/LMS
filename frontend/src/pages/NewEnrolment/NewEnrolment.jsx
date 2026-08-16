@@ -8,6 +8,7 @@ function NewEnrolment() {
     //These will capture all available students and all available courses to then populate dropdowns
 
     const [success, setSuccess] = useState(false) // used for ssuccessful POST, allows message and wipe of page
+    const [error, setError] = useState(null)
 
 
     const [formData, setFormData] = useState({
@@ -28,6 +29,8 @@ function NewEnrolment() {
     const handleSubmit = (event) => {
         event.preventDefault()
 
+        setError(null)
+
         api.post("/courses/enrolments/create/", formData)
             .then(response => {
                 console.log("New enrolment created", response.data);
@@ -35,17 +38,27 @@ function NewEnrolment() {
                 setSuccess(true);
 
                 setTimeout(() => {
-                    setFormData({});
+                    setFormData({
+                        student: "",
+                        course: ""
+                    });
+
                     setSuccess(false)
                 }, 3000)
             })
             .catch(error => {
-                console.error("Enrolment creation failure: ");
-                if (error.response) {
-                    console.error(error.response.data);
-                } else {
-                    console.error(error.message);
-                }
+
+                console.error("Enrolment creation failure:");
+
+                setError(
+                    error.response?.data?.non_field_errors?.[0] ||
+                    error.response?.data?.detail ||
+                    "Could not create enrolment."
+                )
+
+                setTimeout(() => {
+                    setError(null)
+                }, 2000);
             })
     }
 
@@ -58,15 +71,15 @@ function NewEnrolment() {
                 const studentsResponse = await api.get('/accounts/students/');
                 const coursesResponse = await api.get('/courses/available/');
 
-                console.log("Testing")
-                console.log(studentsResponse.data)
-                console.log(coursesResponse.data)
+                // console.log("Testing")
+                // console.log(studentsResponse.data)
+                // console.log(coursesResponse.data)
 
                 setStudentOptions(studentsResponse.data)
                 setCourseOptions(coursesResponse.data)
 
-                console.log("TESTING MORE")
-                console.log(studentsResponse.data)
+                // console.log("TESTING MORE")
+                // console.log(studentsResponse.data)
             } catch (error) {
                 console.error(error)
             }
@@ -86,10 +99,15 @@ function NewEnrolment() {
                 <p>Enrolment sucessfully created!</p>
             )}
 
+            {error && (
+                <p>{error}</p>
+            )}
+
             <form onSubmit={handleSubmit}>
                 <label htmlFor="student">Student</label>
 
                 <select
+                    id="student"
                     name="student"
                     value={formData.student || ""}
                     onChange={handleChange}
@@ -108,6 +126,7 @@ function NewEnrolment() {
                 <label htmlFor="course">Course</label>
 
                 <select
+                    id="course"
                     name="course"
                     value={formData.course || ""}
                     onChange={handleChange}

@@ -92,7 +92,7 @@ class CreateEnrolmentSerializer(serializers.ModelSerializer):
     def validate_course(self, course):
 
         request = self.context["request"]
-        user=request.user
+        user = request.user
 
         if not course.is_active:
             raise serializers.ValidationError(
@@ -103,8 +103,23 @@ class CreateEnrolmentSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(
                 "You can only create enrolments for your own courses."
             )
-        
+
         return course
+
+    def validate(self, attrs):
+
+        student = attrs["student"]
+        course = attrs["course"]
+
+        if Enrolment.objects.filter(
+            student=student,
+            course=course
+        ).exists():
+            raise serializers.ValidationError(
+                "This student is already enrolled on this course."
+            )
+
+        return attrs
 
 
 class StudentEnrolmentSerializer(serializers.ModelSerializer):

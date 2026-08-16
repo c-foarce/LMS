@@ -19,10 +19,6 @@ function StudentGradeCard({
             </p>
 
             <p>
-                Progress: {student.progress}%
-            </p>
-
-            <p>
 
                 {student.grade ? (
 
@@ -73,7 +69,7 @@ function StudentGradeCard({
                         )}
                     </>
 
-                ) : student.progress === 100 ? (
+                ) : (
 
                     <>
                         Grade: Awaiting grade
@@ -102,12 +98,6 @@ function StudentGradeCard({
                                 Save Grade
                             </button>
                         )}
-                    </>
-
-                ) : (
-
-                    <>
-                        Grade: Not available
                     </>
 
                 )}
