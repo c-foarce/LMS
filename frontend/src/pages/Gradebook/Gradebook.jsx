@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 
 import api from "../../services/api";
 
+import StudentGradeCard from "../../components/DisplayCards/StudentGradeCard";
+
 function Gradebook() {
 
     const [enrolments, setEnrolments] = useState([]);
@@ -200,126 +202,143 @@ function Gradebook() {
 
                     {course.students.map(student => (
 
-                        <div key={student.id}>
+                        // <div key={student.id}>
 
-                            <p>
-                                Student: {student.student_name}
-                            </p>
+                        //     <p>
+                        //         Student: {student.student_name}
+                        //     </p>
 
-                            <p>
-                                Progress: {student.progress}%
-                            </p>
+                        //     <p>
+                        //         Progress: {student.progress}%
+                        //     </p>
 
-                            {/*The below should be extracted to it's own component. lots of condtionals and ternary stuff */}
-                            <p>
+                        //     {/*The below should be extracted to it's own component. lots of condtionals and ternary stuff */}
+                        //     <p>
 
-                                {student.grade ? (
+                        //         {student.grade ? (
 
-                                    <>
-                                        Grade: {student.grade}
+                        //             <>
+                        //                 Grade: {student.grade}
 
-                                        {!editingGrades[student.id] && (
-                                            <button
-                                                onClick={() =>
-                                                    handleEditGrade(student.id)
-                                                }
-                                            >
-                                                Change Grade
-                                            </button>
-                                        )}
+                        //                 {!editingGrades[student.id] && (
+                        //                     <button
+                        //                         onClick={() =>
+                        //                             handleEditGrade(student.id)
+                        //                         }
+                        //                     >
+                        //                         Change Grade
+                        //                     </button>
+                        //                 )}
 
-                                        {editingGrades[student.id] && (
-                                            <>
-                                                <select
-                                                    value={selectedGrades[student.id] || ""}
-                                                    onChange={(event) =>
-                                                        handleGradeChange(
-                                                            student.id,
-                                                            event.target.value
-                                                        )
-                                                    }
-                                                >
-                                                    <option value="" disabled>
-                                                        Select grade
-                                                    </option>
+                        //                 {editingGrades[student.id] && (
+                        //                     <>
+                        //                         <select
+                        //                             value={selectedGrades[student.id] || ""}
+                        //                             onChange={(event) =>
+                        //                                 handleGradeChange(
+                        //                                     student.id,
+                        //                                     event.target.value
+                        //                                 )
+                        //                             }
+                        //                         >
+                        //                             <option value="" disabled>
+                        //                                 Select grade
+                        //                             </option>
 
-                                                    <option value="A">A</option>
-                                                    <option value="B">B</option>
-                                                    <option value="C">C</option>
-                                                    <option value="D">D</option>
-                                                    <option value="F">F</option>
-                                                </select>
+                        //                             <option value="A">A</option>
+                        //                             <option value="B">B</option>
+                        //                             <option value="C">C</option>
+                        //                             <option value="D">D</option>
+                        //                             <option value="F">F</option>
+                        //                         </select>
 
-                                                {selectedGrades[student.id] && (
-                                                    <button
-                                                        onClick={() =>
-                                                            handleSaveGrade(student.id)
-                                                        }
-                                                    >
-                                                        Save Grade
-                                                    </button>
-                                                )}
+                        //                         {selectedGrades[student.id] && (
+                        //                             <button
+                        //                                 onClick={() =>
+                        //                                     handleSaveGrade(student.id)
+                        //                                 }
+                        //                             >
+                        //                                 Save Grade
+                        //                             </button>
+                        //                         )}
 
-                                                <button
-                                                    onClick={() =>
-                                                        handleCancelGradeEdit(student.id)
-                                                    }
-                                                >
-                                                    Cancel
-                                                </button>
-                                            </>
-                                        )}
-                                    </>
+                        //                         <button
+                        //                             onClick={() =>
+                        //                                 handleCancelGradeEdit(student.id)
+                        //                             }
+                        //                         >
+                        //                             Cancel
+                        //                         </button>
+                        //                     </>
+                        //                 )}
+                        //             </>
 
-                                ) : student.progress === 100 ? (
+                        //         ) : student.progress === 100 ? (
 
-                                    <>
-                                        Grade: Awaiting grade
+                        //             <>
+                        //                 Grade: Awaiting grade
 
-                                        <select
-                                            value={selectedGrades[student.id] || ""}
-                                            onChange={(event) =>
-                                                handleGradeChange(
-                                                    student.id,
-                                                    event.target.value
-                                                )
-                                            }
-                                        >
-                                            <option value="" disabled>
-                                                Select grade
-                                            </option>
+                        //                 <select
+                        //                     value={selectedGrades[student.id] || ""}
+                        //                     onChange={(event) =>
+                        //                         handleGradeChange(
+                        //                             student.id,
+                        //                             event.target.value
+                        //                         )
+                        //                     }
+                        //                 >
+                        //                     <option value="" disabled>
+                        //                         Select grade
+                        //                     </option>
 
-                                            <option value="A">A</option>
-                                            <option value="B">B</option>
-                                            <option value="C">C</option>
-                                            <option value="D">D</option>
-                                            <option value="F">F</option>
-                                        </select>
+                        //                     <option value="A">A</option>
+                        //                     <option value="B">B</option>
+                        //                     <option value="C">C</option>
+                        //                     <option value="D">D</option>
+                        //                     <option value="F">F</option>
+                        //                 </select>
 
-                                        {selectedGrades[student.id] && (
-                                            <button
-                                                onClick={() =>
-                                                    handleSaveGrade(student.id)
-                                                }
-                                            >
-                                                Save Grade
-                                            </button>
-                                        )}
-                                    </>
+                        //                 {selectedGrades[student.id] && (
+                        //                     <button
+                        //                         onClick={() =>
+                        //                             handleSaveGrade(student.id)
+                        //                         }
+                        //                     >
+                        //                         Save Grade
+                        //                     </button>
+                        //                 )}
+                        //             </>
 
-                                ) : (
+                        //         ) : (
 
-                                    <>
-                                        Grade: Not available
-                                    </>
+                        //             <>
+                        //                 Grade: Not available
+                        //             </>
 
-                                )}
+                        //         )}
 
-                            </p>
+                        //     </p>
 
-                            <p>-----</p>
+                        //     <p>-----</p>
 
-                        </div>
+                        // </div>
+
+                        <StudentGradeCard
+                            key={student.id}
+                            student={student}
+                            editing={editingGrades[student.id]}
+                            selectedGrade={selectedGrades[student.id]}
+                            onEdit={() => handleEditGrade(student.id)}
+                            onGradeChange={(grade) =>
+                                handleGradeChange(student.id, grade)
+                            }
+                            onSave={() =>
+                                handleSaveGrade(student.id)
+                            }
+                            onCancel={() =>
+                                handleCancelGradeEdit(student.id)
+                            }
+                        />
 
                     ))}
 
