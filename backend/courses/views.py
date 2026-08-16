@@ -291,3 +291,16 @@ class GradeEnrolmentView(generics.UpdateAPIView):
         return Enrolment.objects.filter(
             course__teacher=self.request.user
         )
+
+class StudentGradeView(generics.ListAPIView):
+    serializer_class= serializers.EnrolmentSerializer
+    permission_classes=[permissions.IsStudent]
+
+    def get_queryset(self):
+        return Enrolment.objects.filter(
+            student=self.request.user,
+            status=Enrolment.Status.COMPLETED,
+        ).exclude(
+            grade=""
+        )
+    pass

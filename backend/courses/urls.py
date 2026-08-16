@@ -97,9 +97,9 @@ urlpatterns = [
     ),
 
     path(
-    "enrolments/<int:pk>/grade/",
-    views.GradeEnrolmentView.as_view(),
-    name="grade-enrolment"
+        "enrolments/<int:pk>/grade/",
+        views.GradeEnrolmentView.as_view(),
+        name="grade-enrolment"
     ),
 
 
@@ -135,5 +135,17 @@ urlpatterns = [
         views.CourseDetailView.as_view(),
         name="course-details",
     ),
+
+
+    # ======================
+    # Grading/Viewing grades
+    # ======================
+
+    path(
+        "enrolments/my-grades/",
+        views.StudentGradeView.as_view(),
+        name="my-grades"
+    ),
+
 
 ]
