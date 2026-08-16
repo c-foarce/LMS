@@ -33,6 +33,13 @@ function CourseCard({
         })
     }
 
+    if (role === "student") {
+        details.push({
+            label: "Required Submissions",
+            value: course.total_submissions, 
+        })
+    }
+
 
     const errorMessage =
         error && errorCourseId === course.id && (

@@ -78,7 +78,7 @@ class CourseListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Course
-        fields = ["id", "subject_name", "code", "is_active", "teacher_name"]
+        fields = ["id", "subject_name", "code", "is_active", "teacher_name", "total_submissions"]
 
 class CreateEnrolmentSerializer(serializers.ModelSerializer):
 

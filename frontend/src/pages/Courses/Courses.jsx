@@ -12,8 +12,11 @@ function Courses() {
   const { user } = useAuth()
 
   const [items, setItems] = useState([])
+
   const [loading, setLoading] = useState(true)
+
   const [error, setError] = useState(null)
+  const [success, setSuccess] = useState(null)
 
   //on initial mounting, get the enrolment data to render
   useEffect(() => {
@@ -66,6 +69,16 @@ function Courses() {
 
 
   const handleSubmitProgress = async (enrolmentId) => {
+
+    const confirmed = window.confirm(
+      "Submit progress for this course?"
+    )
+
+    if (!confirmed) {
+      return
+    }
+
+
     try {
 
       setError(null)
@@ -83,6 +96,12 @@ function Courses() {
             : enrolment
         )
       )
+
+      setSuccess("Progress submitted successfully")
+
+      setTimeout(() => {
+        setSuccess(null)
+      }, 2000);
 
     } catch (error) {
 
@@ -143,7 +162,7 @@ function Courses() {
     return <p>Loading...</p>
   }
 
-  {/* Later, extract this whole chunk into a couple of component Cards, similar to KingdomCards from MoonTracker */}
+  {/* Later, extract this whole chunk into a couple of component Cards, similar to KingdomCards from MoonTracker */ }
   return (
     <>
       <div>
@@ -152,6 +171,11 @@ function Courses() {
         {error && (
           <p>{error}</p>
         )}
+
+        {success && (
+          <p>{success}</p>
+        )}
+        {/* The above will have to be sent down to the component that gets made */}
 
         {items.length === 0 ? (
           <p>No courses found.</p>
@@ -168,25 +192,36 @@ function Courses() {
 
                   <p>Code: {item.course_code}</p>
 
-                  <p>Teacher: {item.teacher_name}</p>
+                  <p>Teacher: {item.teacher}</p>
 
                   <p>Status: {item.status}</p>
 
                   <p>Progress: {item.progress}%</p>
 
-                  <button
-                    onClick={() => handleSubmitProgress(item.id)}
-                  >
-                    Submit Progress
-                  </button>
+                  {item.progress === 100 ? (
+                    <p>
+                      Grade: {item.grade || "Awaiting grade"}
+                    </p>
+                  ) : (
+                    <>
+                      <button
+                        onClick={() => handleSubmitProgress(item.id)}
+                      >
+                        Submit Progress
+                      </button>
 
-                  <p>Grade: {item.grade || "Not graded"}</p>
+                      <p>
+                        Grade: {item.grade || "Not graded"}
+                      </p>
+                    </>
+                  )}
+
                 </div>
               )
 
             } else {
 
-              {/* Having this work for admin kind of doesnt make sense, there's the EnrolmentList page now. maybe move all admin related work there ie delete, deactivate etc */}
+              {/* Having this work for admin kind of doesnt make sense, there's the EnrolmentList page now. maybe move all admin related work there ie delete, deactivate etc */ }
               return (
                 <div key={item.id}>
                   <h3>{item.subject_name}</h3>

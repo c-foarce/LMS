@@ -26,6 +26,8 @@ function CourseList() {
     const [enrolError, setEnrolError] = useState(null)
     const [enrolErrorCourseId, setEnrolErrorCourseId] = useState(null)
 
+    const [enrolSuccess, setEnrolSuccess] = useState(null)
+
 
     // INITIAL MOUNTING
 
@@ -162,6 +164,14 @@ function CourseList() {
 
     const handleEnrol = async (courseId) => {
 
+        const confirmed = window.confirm(
+            "Are you sure you want to enrol in this course?"
+        )
+
+        if (!confirmed) {
+            return
+        }
+
         try {
 
             setEnrolError(null)
@@ -175,6 +185,18 @@ function CourseList() {
             )
 
             console.log("Enrolment created: ", response.data)
+
+            setEnrolments(previousEnrolments => [
+                ...previousEnrolments,
+                response.data
+            ])
+
+            setEnrolSuccess("Successfully Enrolled")
+
+            setTimeout(() => {
+                setEnrolSuccess(null)
+            }, 2000);
+
 
         } catch (error) {
 
@@ -190,7 +212,7 @@ function CourseList() {
             setTimeout(() => {
                 setEnrolError(null)
                 setEnrolErrorCourseId(null)
-            }, 3000);
+            }, 2000);
         }
     }
 
@@ -220,6 +242,10 @@ function CourseList() {
             <h1>
                 Course List
             </h1>
+
+            {enrolSuccess && (
+                <p>{enrolSuccess}</p>
+            )}
 
             {displayedCourses.length === 0 ? (
                 <p>

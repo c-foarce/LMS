@@ -210,6 +210,7 @@ function Gradebook() {
                                 Progress: {student.progress}%
                             </p>
 
+                            {/*The below should be extracted to it's own component. lots of condtionals and ternary stuff */}
                             <p>
 
                                 {student.grade ? (
@@ -315,6 +316,8 @@ function Gradebook() {
                                 )}
 
                             </p>
+
+                            <p>-----</p>
 
                         </div>
 
