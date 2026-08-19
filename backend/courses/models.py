@@ -70,8 +70,43 @@ class Enrolment(models.Model):
         blank=True
     )
 
+    student_completed = models.BooleanField(default=False)
+
     class Meta:
         unique_together = ("student", "course")
 
     def __str__(self):
         return f"{self.student.username} enrolled in {self.course.subject_name}"
+
+
+class CompletedEnrolment(models.Model):
+
+    student = models.ForeignKey(
+        'accounts.User',
+        on_delete=models.SET_NULL,
+        null=True,
+        related_name='completed_enrolments'
+    )
+
+    course_name = models.CharField(max_length=100)
+
+    course_code = models.CharField(
+        max_length=20,
+        null=True,
+        blank=True
+    )
+
+    teacher_name = models.CharField(
+        max_length=150,
+        null=True,
+        blank=True
+    )
+
+    grade = models.CharField(
+        max_length=1
+    )
+
+    completed_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.student.username} - {self.course_name}"

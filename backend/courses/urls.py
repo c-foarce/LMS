@@ -138,13 +138,19 @@ urlpatterns = [
 
 
     # ======================
-    # Grading/Viewing grades
+    # Grading/Completion
     # ======================
 
     path(
         "enrolments/my-grades/",
         views.StudentGradeView.as_view(),
         name="my-grades"
+    ),
+
+    path(
+        "enrolments/<int:pk>/acknowledge/",
+        views.AcknoweldgeCompletionView.as_view(),
+        name="acknowledge-completion"
     ),
 
 

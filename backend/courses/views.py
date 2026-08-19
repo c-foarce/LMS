@@ -304,3 +304,39 @@ class StudentGradeView(generics.ListAPIView):
             grade=""
         )
     pass
+
+
+class AcknoweldgeCompletionView(generics.UpdateAPIView):
+    serializer_class=serializers.EnrolmentSerializer
+    permission_classes=[permissions.IsStudent]
+
+    def get_queryset(self):
+        return Enrolment.objects.filter(
+            student=self.request.user
+        )
+    def update(self, request, *args, **kwargs):
+
+        enrolment = self.get_object()
+
+        if enrolment.completed_submissions < enrolment.course.total_submissions:
+            return Response(
+                {
+                    "detail": "You cannot acknowledge completion until all submissions are complete."
+                },
+                statut=status.HTTP_400_BAD_REQUEST
+            )
+
+        if not enrolment.grade:
+            return Response(
+                {
+                    "detail": "You cannot acknowledge completion until your course has been graded."
+                },
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        enrolment.student_completed = True
+        enrolment.save()
+
+        serializer = self.get_serializer(enrolment)
+
+        return Response(serializer.data)

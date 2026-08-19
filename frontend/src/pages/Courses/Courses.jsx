@@ -120,6 +120,44 @@ function Courses() {
     }
   }
 
+  const handleAcknowledeCompletion = async (enrolmentId) => {
+
+    try {
+
+      setError(null)
+
+      const response = await api.patch(
+        `/courses/enrolments/${enrolmentId}/acknowledge/`
+      )
+
+      console.log("COMPLETION ACKNOWLEDGED:", response.data)
+
+      setItems(previousItems =>
+        previousItems.map(enrolment =>
+          enrolment.id === enrolmentId
+            ? {
+              ...enrolment,
+              student_completed: true
+            }
+            : enrolment
+        )
+      )
+
+    } catch (error) {
+
+      console.error(
+        "Completion acknowledgement failed:",
+        error
+      )
+
+      setError(
+        error.response?.data?.detail ||
+        "Something went wrong when acknowledging completion."
+      )
+    }
+
+  }
+
   const handleToggleActive = async (courseId) => {
 
     try {
@@ -199,9 +237,27 @@ function Courses() {
                   <p>Progress: {item.progress}%</p>
 
                   {item.progress === 100 ? (
-                    <p>
-                      Grade: {item.grade || "Awaiting grade"}
-                    </p>
+                    <>
+                      <p>
+                        Grade: {item.grade || "Awaiting grade"}
+                      </p>
+
+                      {item.grade && !item.student_completed && (
+                        <button
+                          onClick={() =>
+                            handleAcknowledeCompletion(item.id)
+                          }
+                        >
+                          Confirm Course Completion
+                        </button>
+                      )}
+
+                      {item.student_completed && (
+                        <p>
+                          Course completion acknowledged.
+                        </p>
+                      )}
+                    </>
                   ) : (
                     <>
                       <button
@@ -235,6 +291,7 @@ function Courses() {
                   {user.role === "admin" && (
                     <button>Delete Course</button>
                   )}
+
                   <button
                     onClick={() => handleToggleActive(item.id)}
                   >

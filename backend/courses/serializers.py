@@ -37,6 +37,7 @@ class EnrolmentSerializer(serializers.ModelSerializer):
             "completed_submissions",
             "progress",
             "grade",
+            "student_completed",
             "enrolled_at",
         ]
 
