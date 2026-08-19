@@ -92,12 +92,12 @@ class SubmitProgress(APIView):
 
 
 class TeacherProgressView(generics.ListAPIView):
-    serializer_class=serializers.EnrolmentSerializer
-    permission_classes=[permissions.IsTeacher]
+    serializer_class = serializers.TeacherCourseProgressSerializer
+    permission_classes = [permissions.IsTeacher]
 
     def get_queryset(self):
-        return Enrolment.objects.filter(
-            course__teacher=self.request.user
+        return Course.objects.filter(
+            teacher=self.request.user
         )
 
     

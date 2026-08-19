@@ -6,15 +6,15 @@ import StudentGradeCard from "../../components/DisplayCards/StudentGradeCard";
 
 function Gradebook() {
 
-    const [enrolments, setEnrolments] = useState([]);
+    const [courses, setCourses] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
     const [selectedGrades, setSelectedGrades] = useState({});
     const [editingGrades, setEditingGrades] = useState({});
 
-    const [selectedCourse, setSelectedCourse] = useState("all")
-    const [selectedGradeStatus, setSelectedGradeStatus] = useState("all")
+    const [selectedCourse, setSelectedCourse] = useState("all");
+    const [selectedGradeStatus, setSelectedGradeStatus] = useState("all");
 
 
     useEffect(() => {
@@ -32,7 +32,7 @@ function Gradebook() {
                     response.data
                 );
 
-                setEnrolments(response.data);
+                setCourses(response.data);
 
             } catch (error) {
 
@@ -53,6 +53,7 @@ function Gradebook() {
 
     }, []);
 
+
     const handleSaveGrade = async (enrolmentId) => {
 
         try {
@@ -66,15 +67,19 @@ function Gradebook() {
 
             console.log("patch success");
 
-            setEnrolments(previousEnrolments =>
-                previousEnrolments.map(enrolment =>
-                    enrolment.id === enrolmentId
-                        ? {
-                            ...enrolment,
-                            grade: selectedGrades[enrolmentId]
-                        }
-                        : enrolment
-                )
+            setCourses(previousCourses =>
+                previousCourses.map(course => ({
+                    ...course,
+                    completed_students:
+                        course.completed_students.map(student =>
+                            student.id === enrolmentId
+                                ? {
+                                    ...student,
+                                    grade: selectedGrades[enrolmentId]
+                                }
+                                : student
+                        )
+                }))
             );
 
             setSelectedGrades(previousGrades => {
@@ -103,6 +108,7 @@ function Gradebook() {
         }
     };
 
+
     // Stores the grade currently selected
     // for each enrolment.
 
@@ -114,6 +120,7 @@ function Gradebook() {
         }));
 
     };
+
 
     const handleEditGrade = (enrolmentId) => {
 
@@ -127,6 +134,7 @@ function Gradebook() {
             [enrolmentId]: ""
         }));
     };
+
 
     const handleCancelGradeEdit = (enrolmentId) => {
 
@@ -147,68 +155,49 @@ function Gradebook() {
         });
     };
 
-    const availableCourses = new Map();
 
-    enrolments.forEach(enrolment => {
-
-        if (!availableCourses.has(enrolment.course)) {
-
-            availableCourses.set(enrolment.course, {
-                id: enrolment.course,
-                name: enrolment.course_name,
-                code: enrolment.course_code
-            });
-
-        }
-
-    });
-
-    const courseOptions = Array.from(
-        availableCourses.values()
-    );
+    const courseOptions = courses;
 
 
-    // Group enrolments by course, and those that need grading
+    /*
+     * Filter the courses based on the selected course.
+     *
+     * Then filter the completed students inside each course
+     * based on their grade status.
+     *
+     * Importantly, the course itself is NOT removed when it
+     * has no students matching the grade filter.
+     */
 
-    const filteredEnrolments = enrolments.filter(enrolment => {
-
-        const matchesCourse =
+    const filteredCourses = courses
+        .filter(course =>
             selectedCourse === "all" ||
-            enrolment.course === Number(selectedCourse);
+            course.id === Number(selectedCourse)
+        )
+        .map(course => {
 
-        const matchesGrade =
-            selectedGradeStatus === "all" ||
-            (selectedGradeStatus === "graded" && enrolment.grade) ||
-            (selectedGradeStatus === "awaiting" && !enrolment.grade);
+            const students = course.completed_students.filter(student => {
 
-        return matchesCourse && matchesGrade;
-    });
+                if (selectedGradeStatus === "all") {
+                    return true;
+                }
 
-    const courses = new Map();
+                if (selectedGradeStatus === "graded") {
+                    return Boolean(student.grade);
+                }
 
-    filteredEnrolments.forEach(enrolment => {
+                if (selectedGradeStatus === "awaiting") {
+                    return !student.grade;
+                }
 
-        if (!courses.has(enrolment.course)) {
-
-            courses.set(enrolment.course, {
-                id: enrolment.course,
-                name: enrolment.course_name,
-                code: enrolment.course_code,
-                students: []
+                return true;
             });
 
-        }
-
-        courses
-            .get(enrolment.course)
-            .students
-            .push(enrolment);
-
-    });
-
-    const groupedCourses = Array.from(
-        courses.values()
-    );
+            return {
+                ...course,
+                completed_students: students
+            };
+        });
 
 
     // Loading state.
@@ -229,8 +218,11 @@ function Gradebook() {
         <>
             <h1>Courses to Grade</h1>
 
+
             <div>
-                <label htmlFor="course-filter">Course:</label>
+                <label htmlFor="course-filter">
+                    Course:
+                </label>
 
                 <select
                     id="course-filter"
@@ -248,13 +240,14 @@ function Gradebook() {
                             key={course.id}
                             value={course.id}
                         >
-                            {course.name} ({course.code})
+                            {course.subject_name} ({course.code})
                         </option>
                     ))}
 
                 </select>
 
             </div>
+
 
             <div>
 
@@ -286,44 +279,58 @@ function Gradebook() {
             </div>
 
 
-            {groupedCourses.length === 0 ? (
-                <p>
-                    No student match the selected filters.
-                </p>
-            ) : (groupedCourses.map(course => (
+            {filteredCourses.map(course => (
 
                 <section key={course.id}>
 
                     <h2>
-                        {course.name} ({course.code})
+                        {course.subject_name} ({course.code})
                     </h2>
 
-                    {course.students.map(student => (
 
-                        <StudentGradeCard
-                            key={student.id}
-                            student={student}
-                            editing={editingGrades[student.id]}
-                            selectedGrade={selectedGrades[student.id]}
-                            onEdit={() => handleEditGrade(student.id)}
-                            onGradeChange={(grade) =>
-                                handleGradeChange(student.id, grade)
-                            }
-                            onSave={() =>
-                                handleSaveGrade(student.id)
-                            }
-                            onCancel={() =>
-                                handleCancelGradeEdit(student.id)
-                            }
-                        />
+                    {course.completed_students.length === 0 ? (
 
-                    ))}
+                        <p>
+                            No students match the selected filters.
+                        </p>
+
+                    ) : (
+
+                        course.completed_students.map(student => (
+
+                            <StudentGradeCard
+                                key={student.id}
+                                student={student}
+                                editing={editingGrades[student.id]}
+                                selectedGrade={
+                                    selectedGrades[student.id]
+                                }
+                                onEdit={() =>
+                                    handleEditGrade(student.id)
+                                }
+                                onGradeChange={(grade) =>
+                                    handleGradeChange(
+                                        student.id,
+                                        grade
+                                    )
+                                }
+                                onSave={() =>
+                                    handleSaveGrade(student.id)
+                                }
+                                onCancel={() =>
+                                    handleCancelGradeEdit(
+                                        student.id
+                                    )
+                                }
+                            />
+
+                        ))
+
+                    )}
 
                 </section>
 
-            )))}
-
-
+            ))}
 
         </>
     );

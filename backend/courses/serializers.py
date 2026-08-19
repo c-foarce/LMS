@@ -153,3 +153,27 @@ class GradeEnrolmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Enrolment
         fields = ["grade"]
+
+class TeacherCourseProgressSerializer(serializers.ModelSerializer):
+
+    completed_students = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Course
+        fields = [
+            "id",
+            "subject_name",
+            "code",
+            "completed_students",
+        ]
+
+    def get_completed_students(self, obj):
+
+        enrolments = obj.enrolments.filter(
+            status=Enrolment.Status.COMPLETED
+        )
+
+        return EnrolmentSerializer(
+            enrolments,
+            many=True
+        ).data
