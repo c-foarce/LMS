@@ -118,7 +118,12 @@ function EditCourse() {
                     name={field.name}
                     value={formData[field.name] || ""}
                     onChange={handleChange}
+                    required={field.required}
                 >
+                    <option value="">
+                        Select teacher:
+                    </option>
+
                     {teacherOptions.map((teacher) => (
                         <option
                             key={teacher.id}

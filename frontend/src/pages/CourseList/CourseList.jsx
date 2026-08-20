@@ -231,9 +231,6 @@ function CourseList() {
         )
     }
 
-
-    //EXTRACT COURSELIST FROM COURSES <<<---, THEN ALL CREATOIN/EDITING IS ADMIN CONTROLLED
-
     if (loading) {
         return <p>Loading...</p>
     }

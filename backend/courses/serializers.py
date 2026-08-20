@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Enrolment, Course
+from .models import Enrolment, Course, CompletedEnrolment
 
 class EnrolmentSerializer(serializers.ModelSerializer):
     student_name = serializers.CharField(
@@ -178,3 +178,54 @@ class TeacherCourseProgressSerializer(serializers.ModelSerializer):
             enrolments,
             many=True
         ).data
+
+class CompletedEnrolmentSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = CompletedEnrolment
+
+        fields = [
+            "id",
+
+            "original_enrolment_id",
+
+            "student_id",
+            "student_username",
+            "student_first_name",
+            "student_last_name",
+
+            "teacher_id",
+            "teacher_username",
+            "teacher_first_name",
+            "teacher_last_name",
+
+            "course_id",
+            "course_name",
+            "course_code",
+
+            "grade",
+            "completed_at",
+        ]
+
+        read_only_fields = [
+            "id",
+
+            "original_enrolment_id",
+
+            "student_id",
+            "student_username",
+            "student_first_name",
+            "student_last_name",
+
+            "teacher_id",
+            "teacher_username",
+            "teacher_first_name",
+            "teacher_last_name",
+
+            "course_id",
+            "course_name",
+            "course_code",
+
+            "grade",
+            "completed_at",
+        ]

@@ -153,5 +153,11 @@ urlpatterns = [
         name="acknowledge-completion"
     ),
 
+    path(
+        "enrolments/<int:pk>/complete/",
+        views.CompleteEnrolmentView.as_view(),
+        name="complete-enrolment"
+    ),
+
 
 ]

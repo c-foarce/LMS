@@ -6,7 +6,7 @@ from rest_framework.permissions import IsAuthenticated
 
 from django.shortcuts import get_object_or_404
 
-from .models import Enrolment, Course
+from .models import Enrolment, Course, CompletedEnrolment
 from . import serializers
 
 from accounts.models import User
@@ -340,3 +340,117 @@ class AcknoweldgeCompletionView(generics.UpdateAPIView):
         serializer = self.get_serializer(enrolment)
 
         return Response(serializer.data)
+
+class CompleteEnrolmentView(generics.CreateAPIView):
+
+    serializer_class=serializers.CompletedEnrolmentSerializer
+    permission_classes=[IsAuthenticated]
+
+    def create(self, request, *args, **kwargs):
+
+        enrolment = get_object_or_404(
+            Enrolment,
+            pk=self.kwargs["pk"],
+        )
+
+        # Check if this enrolment has already been archived
+        if CompletedEnrolment.objects.filter(original_enrolment_id=enrolment.id).exists():
+            return Response(
+                {
+                    "detail":
+                    "This enrolment has already been archived."
+                },
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        #Check if logged in user owns enrolment
+        if enrolment.student != request.user:
+            return Response(
+                {
+                    "detail":
+                    "You can only complete your own enrolments"
+                },
+                status=status.HTTP_403_FORBIDDEN
+            )
+
+        #Check all submissions completed
+        if enrolment.completed_submissions < enrolment.course.total_submissions:
+            return Response(
+                {
+                    "detail":
+                    "This course has not been completed yet."
+                },
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        #Check for grade, no grade = no archival
+        if not enrolment.grade:
+            return Response(
+                {
+                    "detail":
+                    "Enrolment must be graded before archiving"
+                },
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        #Check student has acknowledged the completion
+        if not enrolment.student_completed:
+            return Response(
+                {
+                    "detail":
+                    "Student completion has not been acknowledged"
+                },
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        student=enrolment.student
+        teacher=enrolment.course.teacher
+        course=enrolment.course
+
+        completed_enrolment=CompletedEnrolment.objects.create(
+
+            original_enrolment_id=enrolment.id,
+
+            student_id=student.id,
+            student_username=student.username,
+            student_first_name=student.first_name,
+            student_last_name=student.last_name,
+
+            teacher_id = teacher.id if teacher else None,
+
+            teacher_username=(
+                teacher.username
+                if teacher
+                else "Unknown"
+            ),
+
+            teacher_first_name=(
+                teacher.first_name
+                if teacher
+                else "Unknown"
+            ),
+
+            teacher_last_name=(
+                teacher.last_name
+                if teacher
+                else "Unknown"
+            ),
+
+            course_id=course.id,
+            course_name=course.subject_name,
+            course_code=course.code,
+
+            grade=enrolment.grade,
+        )
+
+        serializer = self.get_serializer(
+            completed_enrolment
+        )
+
+        enrolment.delete()
+
+        return Response(
+            serializer.data,
+            status=status.HTTP_201_CREATED
+        )
+        

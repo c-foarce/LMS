@@ -17,7 +17,7 @@ class Course(models.Model):
         'accounts.User',
         on_delete=models.SET_NULL,
         null=True,
-        blank=True,
+        blank=False,
         related_name='courses_taught'
     )
 
@@ -81,12 +81,24 @@ class Enrolment(models.Model):
 
 class CompletedEnrolment(models.Model):
 
-    student = models.ForeignKey(
-        'accounts.User',
-        on_delete=models.SET_NULL,
+    original_enrolment_id=models.IntegerField(unique=True)
+
+    student_id = models.IntegerField()
+
+    student_username = models.CharField(max_length=150)
+    student_first_name = models.CharField(max_length=150)
+    student_last_name = models.CharField(max_length=150)
+
+    teacher_id = models.IntegerField(
         null=True,
-        related_name='completed_enrolments'
+        blank=True
     )
+
+    teacher_username = models.CharField(max_length=150)
+    teacher_first_name = models.CharField(max_length=150)
+    teacher_last_name = models.CharField(max_length=150)
+
+    course_id = models.IntegerField()
 
     course_name = models.CharField(max_length=100)
 
@@ -96,17 +108,9 @@ class CompletedEnrolment(models.Model):
         blank=True
     )
 
-    teacher_name = models.CharField(
-        max_length=150,
-        null=True,
-        blank=True
-    )
-
-    grade = models.CharField(
-        max_length=1
-    )
+    grade = models.CharField(max_length=1)
 
     completed_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.student.username} - {self.course_name}"
+        return f"{self.student_username} - {self.course_name}"

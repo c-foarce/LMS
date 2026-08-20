@@ -80,7 +80,11 @@ function Navbar() {
 
             {/* Course List - different form S+T view, this is a list of all courses, for admin editing purposes */}
             {(isAdmin || isStudent) && (
-                <NavLink to="/app/courses/all">Course List</NavLink>
+                <NavLink to="/app/courses/all/">Course List</NavLink>
+            )}
+
+            {isStudent && (
+                <NavLink to="/app/courses/enrolments/complete/">Completion</NavLink>
             )}
 
             {isLoggedIn ? (

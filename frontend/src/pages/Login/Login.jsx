@@ -27,6 +27,7 @@ function Login() {
   const { setUser } = useAuth()
 
   const handleLogin = async () => {
+    event.preventDefault()
     try {
       const res = await api.post("accounts/login/", {
         username,
@@ -73,22 +74,25 @@ function Login() {
     <div>
       <h1>Login</h1>
 
-      <label htmlFor="username">Username:</label>
-      <input
-        id="username"
-        placeholder="username"
-        onChange={(e) => setUsername(e.target.value)}
-      />
+      <form onSubmit={handleLogin}>
+        <label htmlFor="username">Username:</label>
+        <input
+          id="username"
+          placeholder="username"
+          onChange={(e) => setUsername(e.target.value)}
+        />
 
-      <input
-        placeholder="password"
-        /*TO DO, REMOVE COMMENT FOR PRODUCTION*/
-        /* type="password" */
-        onChange={(e) => setPassword(e.target.value)}
-      />
+        <label htmlFor="password">Password:</label>
+        <input
+          id="password"
+          placeholder="password"
+          /*TO DO, REMOVE COMMENT FOR PRODUCTION*/
+          /* type="password" */
+          onChange={(e) => setPassword(e.target.value)}
+        />
 
-      <button onClick={handleLogin}>Login</button>
-
+        <button type="submit">Login</button>
+      </form>
       {loginState.message && (
         <p className={`message ${loginState.type}`}>
           {loginState.message}

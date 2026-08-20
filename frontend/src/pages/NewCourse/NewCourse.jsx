@@ -139,6 +139,10 @@ function NewCourse() {
           value={formData[field.name] || ""}
           required={field.required}
         >
+          <option value="">
+            Select teacher:
+          </option>
+
           {teacherOptions.map((teacher) => (
             <option
               key={teacher.id}
@@ -178,13 +182,15 @@ function NewCourse() {
 
   return (
     <>
+
+      <h1>New Course Page</h1>
+
       {success && (
         <p>Course sucessfully created!</p>
       )}
-      <h1>New Course Page</h1>
 
       <form onSubmit={handleSubmit}>
-  
+
         {fields.map((field) => {
 
           {/* Teachers should not choose a teacher. Their own user account will eventually be assigned by the backend. */ }
