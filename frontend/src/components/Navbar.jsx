@@ -87,6 +87,10 @@ function Navbar() {
                 <NavLink to="/app/courses/enrolments/complete/">Completion</NavLink>
             )}
 
+            {isAdmin && (
+                <NavLink to="/app/courses/enrolments/history/">History</NavLink>
+            )}
+
             {isLoggedIn ? (
                 <button onClick={handleLogout}>Logout</button>
             ) : (

@@ -31,6 +31,7 @@ import CourseList from "../CourseList/CourseList";
 import Gradebook from "../Gradebook/Gradebook";
 import MyGrades from "../MyGrades/MyGrades";
 import Completion from "../Completion/Completion";
+import History from "../History/History";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -154,12 +155,21 @@ const router = createBrowserRouter(
         />
 
         <Route
-        path="courses/enrolments/complete/"
-        element={
-          <RoleRoute roles={["student"]}>
-            <Completion />
-          </RoleRoute>
-        }
+          path="courses/enrolments/complete/"
+          element={
+            <RoleRoute roles={["student"]}>
+              <Completion />
+            </RoleRoute>
+          }
+        />
+
+        <Route
+          path="courses/enrolments/history/"
+          element={
+            <RoleRoute roles={["admin"]}>
+              <History />
+            </RoleRoute>
+          }
         />
 
       </Route>

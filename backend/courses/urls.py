@@ -159,5 +159,11 @@ urlpatterns = [
         name="complete-enrolment"
     ),
 
+    path(
+        "enrolments/history/",
+        views.CompleteEnrolmentHistoryView.as_view(),
+        name="complete-enrolment-history"
+    ),
+
 
 ]

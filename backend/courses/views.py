@@ -453,4 +453,11 @@ class CompleteEnrolmentView(generics.CreateAPIView):
             serializer.data,
             status=status.HTTP_201_CREATED
         )
-        
+
+class CompleteEnrolmentHistoryView(generics.ListAPIView):
+
+    serializer_class=serializers.CompletedEnrolmentSerializer
+    permission_classes=[permissions.IsAdmin]
+
+    def get_queryset(self):
+        return CompletedEnrolment.objects.all()
