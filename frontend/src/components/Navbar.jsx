@@ -32,24 +32,32 @@ function Navbar() {
     }
 
     return (
-        <nav style={{ display: "flex", gap: "12px", padding: "10px" }}>
+        <nav style={{ display: "flex", gap: "12px", padding: "10px", border: "dotted" }}>
 
             {/* Later: add className={({ isActive }) => ... } using clsx */}
 
             {/* Dashboard - anyone can access */}
-            <NavLink to={isLoggedIn ? "/app/dashboard/" : "/"}>{roleName} Home</NavLink>
+            <NavLink to={isLoggedIn ? "/app/dashboard/" : "/"}>
+                {roleName} Home
+            </NavLink>
 
             {/* Courses - anyone can access, currently admin have no use here */}
-            <NavLink to="/app/courses/">My Courses</NavLink>
+            <NavLink to="/app/courses/">
+                My Courses
+            </NavLink>
 
             {/* MyGrades - Student view for their graded work */}
             {isStudent && (
-                <NavLink to="/app/courses/grades">My Grades</NavLink>
+                <NavLink to="/app/courses/grades">
+                    My Grades
+                </NavLink>
             )}
 
             {/* New Course- admin or teachers can access */}
             {(isTeacher || isAdmin) && (
-                <NavLink to="/app/courses/new/">New Course</NavLink>
+                <NavLink to="/app/courses/new/">
+                    New Course
+                </NavLink>
             )}
 
             {isTeacher && (
@@ -60,35 +68,49 @@ function Navbar() {
 
             {/* New User - only Admin can access */}
             {isAdmin && (
-                <NavLink to="/app/accounts/new/">New User</NavLink>
+                <NavLink to="/app/accounts/new/">
+                    New User
+                </NavLink>
             )}
 
             {/* New Enrolments - admin or teacher can access */}
             {(isTeacher || isAdmin) && (
-                <NavLink to="/app/courses/enrolments/new/">New Enrolment</NavLink>
+                <NavLink to="/app/courses/enrolments/new/">
+                    New Enrolment
+                </NavLink>
             )}
 
             {/* Enrolment List - admin only view */}
             {isAdmin && (
-                <NavLink to="/app/courses/enrolments/all/">Enrolments List</NavLink>
+                <NavLink to="/app/courses/enrolments/all/">
+                    Enrolments List
+                </NavLink>
             )}
 
             {/* Users List - admin view only */}
             {isAdmin && (
-                <NavLink to="/app/accounts/all/">User List</NavLink>
+                <NavLink to="/app/accounts/all/">
+                    User List
+                </NavLink>
             )}
 
             {/* Course List - different form S+T view, this is a list of all courses, for admin editing purposes */}
             {(isAdmin || isStudent) && (
-                <NavLink to="/app/courses/all/">Course List</NavLink>
+                <NavLink to="/app/courses/all/">
+                    Course List
+                </NavLink>
             )}
 
             {isStudent && (
-                <NavLink to="/app/courses/enrolments/complete/">Completion</NavLink>
+                <NavLink to="/app/courses/enrolments/complete/">
+                    Completion
+                </NavLink>
             )}
 
-            {isAdmin && (
-                <NavLink to="/app/courses/enrolments/history/">History</NavLink>
+            {(isAdmin || isTeacher) && (
+                <NavLink to="/app/courses/enrolments/history/">
+                    {isAdmin ? "History" : "My History"}
+                </NavLink>
             )}
 
             {isLoggedIn ? (
