@@ -460,4 +460,15 @@ class CompleteEnrolmentHistoryView(generics.ListAPIView):
     permission_classes=[permissions.IsAdmin]
 
     def get_queryset(self):
-        return CompletedEnrolment.objects.all()
+
+        user = self.request.user
+
+        if user.role == "admin":
+            return CompletedEnrolment.objects.all()
+
+        if user.role == "teacher":
+            return CompletedEnrolment.objects.filter(
+                teacher_id=user.id
+            )
+
+        return CompletedEnrolment.objects.none()
