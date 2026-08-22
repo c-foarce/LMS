@@ -70,4 +70,18 @@ urlpatterns = [
         name = "all-users"
     ),
 
+    # User editing for Admins
+    path(
+        "users/<int:pk>/edit/",
+        views.AdminUserEditView.as_view(),
+        name = "admin-user-edit"
+    ),
+
+    # Single User info for Admins
+    path(
+        "users/<int:pk>/",
+        views.UserDetailView.as_view(),
+        name="admin-user-detail"
+    ),
+
 ]
