@@ -1,12 +1,14 @@
 import { useState, useEffect } from "react";
 
-import { useParams } from "react-router-dom"
+import { useParams, useNavigate } from "react-router-dom"
 
 import { useAuth } from '../../context/AuthContext'
 
 import api from '../../services/api'
 
 function EditCourse() {
+
+    const navigate = useNavigate()
 
     //stores the id of the course being asked for by extracting it from the URL
     const { id } = useParams();
@@ -85,17 +87,8 @@ function EditCourse() {
 
                 setSuccess(true);
 
-                // if (user.role === "teacher") {
-                //     setFormData({
-                //         ...response.data,
-                //         teacher: user.id
-                //     });
-                // } else {
-                //     setFormData(response.data);
-                // }
-
                 setTimeout(() => {
-                    setSuccess(false);
+                    navigate(-1)
                 }, 2000);
 
             })
@@ -162,11 +155,6 @@ function EditCourse() {
     return (
         <>
             <h1>Edit Course</h1>
-            {success && (
-                <p>
-                    Course updated successfully!
-                </p>
-            )}
 
             <p>Editing Course: {id}</p>
             <form onSubmit={handleSubmit}>
@@ -197,9 +185,20 @@ function EditCourse() {
                 })}
 
 
-                <button type="submit">
-                    Save changes
-                </button>
+                <div>
+                    <button
+                        type="submit"
+                        disabled={success}
+                    >
+                        {success ? "Saved!" : "Save changes"}
+                    </button>
+
+                    {success && (
+                        <span>
+                            Course updated successfully!
+                        </span>
+                    )}
+                </div>
 
             </form>
             <pre>
