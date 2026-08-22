@@ -1,6 +1,10 @@
+import { useNavigate } from "react-router-dom";
+
 import RenderCard from "./RenderCard";
 
-function UserCard({ user, role, onDelete }) {
+function UserCard({ user }) {
+
+    const navigate = useNavigate();
 
     const details = [
         {
@@ -15,20 +19,16 @@ function UserCard({ user, role, onDelete }) {
             label: "Role",
             value: user.role
         }
-    ]
+    ];
 
-    const actions = []
-
-    if (role === "admin") {
-        actions.push(
-            <button
-                key="delete"
-                onClick={() => onDelete(user.id)}
-            >
-                Delete User
-            </button>
-        )
-    }
+    const actions = [
+        <button
+            key="edit"
+            onClick={() => navigate(`/app/accounts/${user.id}/edit/`)}
+        >
+            Edit User
+        </button>
+    ];
 
     return (
         <RenderCard
@@ -36,7 +36,7 @@ function UserCard({ user, role, onDelete }) {
             details={details}
             actions={actions}
         />
-    )
+    );
 }
 
-export default UserCard
+export default UserCard;
