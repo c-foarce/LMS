@@ -2,7 +2,7 @@ from django.shortcuts import render
 
 from rest_framework import generics
 from rest_framework.views import APIView
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.exceptions import PermissionDenied
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
@@ -45,6 +45,7 @@ class UserRoleView(APIView):
 
     def get(self, request):
         return Response({
+            "id": request.user.id,
             "username": request.user.username,
             "role": request.user.role
         })
@@ -130,5 +131,27 @@ class AllUserListView(generics.ListAPIView):
 
 class UserDeleteView(generics.DestroyAPIView):
 
-    queryset=User.objects.all()
+    queryset = User.objects.all()
+    permission_classes = [permissions.IsAdmin]
+
+    def perform_destroy(self, instance):
+
+        if instance == self.request.user:
+            raise PermissionDenied(
+                "You cannot delete your own account."
+            )
+
+        instance.delete()
+
+
+class AdminUserEditView(generics.UpdateAPIView):
+
+    queryset = User.objects.all()
+    serializer_class = serializers.AdminUserEditSerializer
+    permission_classes = [permissions.IsAdmin]
+
+class UserDetailView(generics.RetrieveAPIView):
+
+    queryset = User.objects.all()
+    serializer_class = serializers.AllUsersListSerializer
     permission_classes=[IsAuthenticated, permissions.IsAdmin]
