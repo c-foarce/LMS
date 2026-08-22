@@ -32,6 +32,7 @@ import Gradebook from "../Gradebook/Gradebook";
 import MyGrades from "../MyGrades/MyGrades";
 import Completion from "../Completion/Completion";
 import History from "../History/History";
+import EditUser from "../EditUser/EditUser";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -121,6 +122,15 @@ const router = createBrowserRouter(
           element={
             <RoleRoute roles={["teacher", "admin"]}>
               <EditCourse />
+            </RoleRoute>
+          }
+        />
+
+        <Route
+          path="accounts/:id/edit/"
+          element={
+            <RoleRoute roles={["admin"]}>
+              <EditUser />
             </RoleRoute>
           }
         />
