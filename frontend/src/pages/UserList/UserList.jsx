@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 
 import { useAuth } from '../../context/AuthContext'
 
@@ -23,8 +22,6 @@ function UserList() {
             try {
                 const response = await api.get("/accounts/all/");
 
-                console.log("ALL USERS", response.data);
-
                 setUsers(response.data)
             } catch (error) {
 
@@ -37,38 +34,6 @@ function UserList() {
 
         fetchUsers()
     }, [])
-
-
-    const handleDelete = async (userId) => {
-
-        console.log("DEL USER ID:", userId)
-
-        const confirmed = window.confirm(
-            "Are you sure you want to delete this user?"
-        )
-
-        if (!confirmed) {
-            return;
-        }
-
-        try {
-
-            await api.delete(`/accounts/${userId}/delete/`)
-
-            setUsers(previousUsers =>
-                previousUsers.filter(
-                    user => user.id !== userId
-                )
-            )
-
-        } catch (error) {
-
-            console.error(error)
-            setError("Could not delete user.")
-
-        }
-    }
-
 
 
     if (loading) {
@@ -90,8 +55,7 @@ function UserList() {
                     <UserCard
                         key={user.id}
                         user={user}
-                        role={user.role}
-                        onDelete={handleDelete}
+
                     />
                 ))
             )}
