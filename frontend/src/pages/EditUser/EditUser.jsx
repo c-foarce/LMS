@@ -19,9 +19,19 @@ function EditUser() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
+    const [success, setSuccess] = useState(null)
+    const [updating, setUpdating] = useState(false)
+
     const [deleting, setDeleting] = useState(false);
     const [deleted, setDeleted] = useState(false);
 
+    const [formData, setFormData] = useState({
+        username: "",
+        first_name: "",
+        last_name: "",
+        password: "",
+        confirm_password: "",
+    });
 
     useEffect(() => {
 
@@ -34,6 +44,14 @@ function EditUser() {
                 );
 
                 setUser(response.data);
+
+                setFormData({
+                    username: response.data.username,
+                    first_name: response.data.first_name,
+                    last_name: response.data.last_name,
+                    password: "",
+                });
+
 
             } catch (error) {
 
@@ -55,6 +73,82 @@ function EditUser() {
         fetchUser();
 
     }, [id]);
+
+    const handleChange = (event) => {
+
+        const { name, value } = event.target;
+
+        setFormData(previous => ({
+            ...previous,
+            [name]: value
+        }))
+    }
+
+    const handleSubmit = async (event) => {
+
+        event.preventDefault();
+
+        setError(null);
+        setSuccess(null);
+        setUpdating(true)
+
+        // Password validation
+        if (
+            !formData.password &&
+            formData.confirm_password
+        ) {
+            setError("Please enter a new password.");
+            setUpdating(false);
+            return;
+        }
+
+        if (
+            formData.password &&
+            formData.password !== formData.confirm_password
+        ) {
+            setError("Passwords do not match.");
+            setUpdating(false);
+            return;
+        }
+
+        try {
+
+            const dataToSend = {
+                username: formData.username,
+                first_name: formData.first_name,
+                last_name: formData.last_name,
+            };
+
+            // Only send password if the admin actually entered one
+            if (formData.password) {
+                dataToSend.password = formData.password;
+            }
+
+            await api.patch(
+                `/accounts/users/${id}/edit/`,
+                dataToSend
+            );
+
+            setUpdating(true)
+            setSuccess("User updated successfully!")
+
+            setTimeout(() => {
+                navigate("/app/accounts/all/");
+            }, 2000);
+
+
+        } catch (error) {
+
+            console.error("Failed to update user:", error);
+
+            setError(
+                error.response?.data?.detail ||
+                "Failed to update user."
+            );
+
+            setUpdating(false);
+        }
+    };
 
     const handleDelete = async () => {
 
@@ -106,13 +200,98 @@ function EditUser() {
 
                 <h1>Edit User</h1>
 
-                <p>Username: {user.username}</p>
+                <form onSubmit={handleSubmit}>
 
-                <p>First Name: {user.first_name}</p>
+                    <div>
+                        <label htmlFor="username">
+                            Username:
+                        </label>
 
-                <p>Last Name: {user.last_name}</p>
+                        <input
+                            id="username"
+                            type="text"
+                            name="username"
+                            value={formData.username}
+                            onChange={handleChange}
+                        />
+                    </div>
 
-                <p>Role: {user.role}</p>
+                    <div>
+                        <label htmlFor="first_name">
+                            First Name:
+                        </label>
+
+                        <input
+                            id="first_name"
+                            type="text"
+                            name="first_name"
+                            value={formData.first_name}
+                            onChange={handleChange}
+                        />
+                    </div>
+
+                    <div>
+                        <label htmlFor="last_name">
+                            Last Name:
+                        </label>
+
+                        <input
+                            id="last_name"
+                            type="text"
+                            name="last_name"
+                            value={formData.last_name}
+                            onChange={handleChange}
+                        />
+                    </div>
+
+                    <div>
+                        <label htmlFor="password">
+                            New Password:
+                        </label>
+
+                        <input
+                            id="password"
+                            type="text"
+                            name="password"
+                            value={formData.password}
+                            onChange={handleChange}
+                            placeholder="Leave blank to keep current password"
+                        />
+                    </div>
+
+                    <div>
+                        <label htmlFor="confirm_password">
+                            Confirm New Password:
+                        </label>
+
+                        <input
+                            id="confirm_password"
+                            type="text"
+                            name="confirm_password"
+                            value={formData.confirm_password}
+                            onChange={handleChange}
+                            placeholder="Repeat new password"
+                        />
+                    </div>
+
+                    <p>Role: {user.role}</p>
+
+                    <div>
+                        <button
+                            type="submit"
+                            disabled={updating}
+                        >
+                            {updating ? "Saving..." : "Save Changes"}
+                        </button>
+
+                        {success && (
+                            <span>
+                                {success}
+                            </span>
+                        )}
+                    </div>
+
+                </form>
 
             </div>
 
