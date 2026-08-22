@@ -457,7 +457,7 @@ class CompleteEnrolmentView(generics.CreateAPIView):
 class CompleteEnrolmentHistoryView(generics.ListAPIView):
 
     serializer_class=serializers.CompletedEnrolmentSerializer
-    permission_classes=[permissions.IsAdmin]
+    permission_classes=[permissions.IsTeacherOrAdmin]
 
     def get_queryset(self):
 
