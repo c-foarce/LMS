@@ -1,27 +1,33 @@
-//important imports
-import { useState, useEffect } from "react";
-import api from '../../services/api'
+import StudentDashboard from "../../components/Dashboards/StudentDashboard";
+import TeacherDashboard from "../../components/Dashboards/TeacherDashBoard";
+import AdminDashboard from "../../components/Dashboards/AdminDashboard";
 
 import { useAuth } from "../../context/AuthContext";
 
-
 function Dashboard() {
 
-    const { user, loading } = useAuth()
+    const { user } = useAuth();
 
-    // info will contain {"username", "role" of logged in user}
-    const [info, setInfo] = useState(null);
-
-    //[] means once upon component render
+    if (!user) {
+        return <p>Loading...</p>;
+    }
 
     return (
-        <div>
-            <h1>Dashboard {user?.role} view - Welcome, {user?.username}!</h1>
-            <h2>The below is for testing endpoint success</h2>
+        <>
+            <h1>{user.username}'s Dashboard</h1>
 
-            <p>{user?.username}</p>
-            <p>{user?.role}</p>
-        </div>
+            {user.role === "student" && (
+                <StudentDashboard />
+            )}
+
+            {user.role === "teacher" && (
+                <TeacherDashboard />
+            )}
+
+            {user.role === "admin" && (
+                <AdminDashboard />
+            )}
+        </>
     );
 }
 
