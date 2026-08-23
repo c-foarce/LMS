@@ -70,6 +70,19 @@ function TeacherDashboard() {
         );
     };
 
+    const totalCourses = courseStats.length
+
+    const totalStudents = courseStats.reduce(
+        (total, course) => total + course.total_students,
+        0
+    );
+
+    const awaitingGrading = progress.flatMap(
+        course => course.completed_students
+    ).filter(
+        student => !student.grade
+    );
+
 
     if (loading) {
         return <p>Loading...</p>
@@ -82,7 +95,14 @@ function TeacherDashboard() {
     return (
         <div>
 
-            <h2>My Teaching</h2>
+            <div>
+                <h3>Overview</h3>
+
+                <p>Courses Taught: {totalCourses}</p>
+                <p>Total Students: {totalStudents}</p>
+                <p>Awaiting Grading: {awaitingGrading.length}</p>
+                
+            </div>
 
             <div>
 
