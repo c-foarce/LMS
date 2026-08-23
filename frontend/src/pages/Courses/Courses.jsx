@@ -34,12 +34,7 @@ function Courses() {
             break;
 
           case "teacher":
-            response = await api.get("/courses/teaching/")
-            break;
-
-          case "admin": //this should probably be a redirect to /courses/all, not sure on implementing a navigatge in switch case tho
-            response = await api.get("/courses/list/")
-            console.log(response.data)
+            response = await api.get("/courses/teaching/dashboard/")
             break;
 
           default:
@@ -48,19 +43,21 @@ function Courses() {
 
         }
 
-        // const response = await api.get("/courses/enrolments/me/")
 
         setItems(response.data)
         console.log(response.data)
 
       } catch (error) {
 
-        console.error(error)
+        console.error("Failed to retrieve courses:", error);
+
+        setError(
+          error.response?.data?.detail ||
+          "Failed to retrieve courses."
+        );
 
       } finally {
-
-        setLoading(false)
-
+        setLoading(false);
       }
 
     };
@@ -134,8 +131,11 @@ function Courses() {
 
       setItems(previousItems =>
         previousItems.map(course =>
-          course.id === response.data.id
-            ? response.data
+          course.id === courseId
+            ? {
+              ...course,
+              is_active: response.data.is_active
+            }
             : course
         )
       )
@@ -151,12 +151,9 @@ function Courses() {
 
       setTimeout(() => {
         setError(null)
-
-      }, 3000);
+      }, 3000)
 
     }
-
-
   }
 
 
@@ -221,34 +218,55 @@ function Courses() {
                 </div>
               )
 
-            } else {
+            }
 
-              {/* Having this work for admin kind of doesnt make sense, there's the EnrolmentList page now. maybe move all admin related work there ie delete, deactivate etc */ }
+            if (user.role === "teacher") {
+
               return (
+
                 <div key={item.id}>
-                  <h3>{item.subject_name}</h3>
 
-                  <p>Code: {item.code}</p>
+                  <h3>
+                    {item.subject_name}
+                    {item.code && ` (${item.code})`}
+                  </h3>
 
-                  <p>Teacher: {item.teacher_name}</p>
+                  <p>
+                    Status: {item.is_active ? "Active" : "Inactive"}
+                  </p>
 
-                  <p>Status: {item.is_active ? "Active" : "Inactive"}</p>
+                  <p>
+                    Total Students: {item.total_students}
+                  </p>
 
-                  {user.role === "admin" && (
-                    <button>Delete Course</button>
-                  )}
+                  <p>
+                    Active Students: {item.active_students}
+                  </p>
 
-                  <button
-                    onClick={() => handleToggleActive(item.id)}
-                  >
-                    {item.is_active ? "Deactivate" : "Activate"}
-                  </button>
+                  <p>
+                    Completed Students: {item.completed_students}
+                  </p>
 
-                  <button
-                    onClick={() => navigate(`/app/courses/${item.id}/edit`)}
-                  >
-                    Edit
-                  </button>
+                  <p>
+                    Dropped Students: {item.dropped_students}
+                  </p>
+
+                  <div>
+                    <button
+                      onClick={() => handleToggleActive(item.id)}
+                    >
+                      {item.is_active ? "Deactivate Course" : "Activate Course"}
+                    </button>
+
+                    <button
+                      onClick={() =>
+                        navigate(`/app/courses/${item.id}/edit`)
+                      }
+                    >
+                      Edit Course
+                    </button>
+                  </div>
+
                 </div>
               )
 
