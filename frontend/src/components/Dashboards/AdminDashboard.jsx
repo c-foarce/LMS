@@ -169,20 +169,6 @@ function AdminDashboard() {
 
             </div>
 
-            {/* <div>
-                <h3>Administrative Attention</h3>
-
-                {coursesWithoutTeacher.length === 0 ? (
-                    <p>No issues requiring attention.</p>
-                ) : (
-                    <p>
-                        {coursesWithoutTeacher.length} course
-                        {coursesWithoutTeacher.length !== 1 ? "s" : ""}
-                        {" "}without an assigned teacher.
-                    </p>
-                )}
-            </div> */}
-
             <div>
                 <h3>Administrative Attention</h3>
 
