@@ -52,7 +52,7 @@ class CourseEditView(generics.UpdateAPIView):
     
 # Gets all Courses a "teacher" User owns
 class TeachingCoursesView(generics.ListAPIView):
-    serializer_class = serializers.CourseSerializer
+    serializer_class = serializers.TeacherCourseSerializer
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
@@ -472,3 +472,13 @@ class CompleteEnrolmentHistoryView(generics.ListAPIView):
             )
 
         return CompletedEnrolment.objects.none()
+
+class TeacherDashboardView(generics.ListAPIView):
+
+    serializer_class = serializers.TeacherDashboardSerializer
+    permission_classes = [permissions.IsTeacher]
+
+    def get_queryset(self):
+        return Course.objects.filter(
+            teacher=self.request.user
+        )

@@ -166,4 +166,17 @@ urlpatterns = [
     ),
 
 
+    # ======================
+    # Grading/Completion
+    # ======================
+
+    path(
+        "teaching/dashboard/",
+        views.TeacherDashboardView.as_view(),
+        name="teacher-dashboard",
+    ),
+
+
+
+
 ]
