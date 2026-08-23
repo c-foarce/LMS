@@ -127,9 +127,6 @@ FIELD_ORDER = [
 
 # Gets name, type, and required Course fields
 ## USES WIDGET_TYPES
-
-
-
 class CourseFieldsView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -170,20 +167,6 @@ class CourseFieldsView(APIView):
             "teacher_id": request.user.id,
             "teacher_options": teacher_options,
         })
-
-# Gets a list of all Courses
-#this will be changed to a geneircs.apiview
-
-
-# @api_view(["GET"])
-# @permission_classes([IsAuthenticated])
-# def course_list(request):
-
-#     courses = Course.objects.all()
-#     serializer = serializers.CourseListSerializer(courses, many=True)
-
-#     return Response(serializer.data)
-
 
 
 # As above but as a class, keep to show/ask
@@ -481,4 +464,13 @@ class TeacherDashboardView(generics.ListAPIView):
     def get_queryset(self):
         return Course.objects.filter(
             teacher=self.request.user
+        )
+
+class MyCompletedEnrolmentsView(generics.ListAPIView):
+    serializer_class = serializers.CompletedEnrolmentSerializer
+    permission_classes = [permissions.IsStudent]
+
+    def get_queryset(self):
+        return CompletedEnrolment.objects.filter(
+            student_id=self.request.user.id
         )

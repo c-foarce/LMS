@@ -167,13 +167,19 @@ urlpatterns = [
 
 
     # ======================
-    # Grading/Completion
+    # Dashboards
     # ======================
 
     path(
         "teaching/dashboard/",
         views.TeacherDashboardView.as_view(),
         name="teacher-dashboard",
+    ),
+
+    path(
+        "enrolments/completed/me/",
+        views.MyCompletedEnrolmentsView.as_view(),
+        name="my-completed-enrolments"
     ),
 
 
