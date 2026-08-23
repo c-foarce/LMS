@@ -16,7 +16,7 @@ function AdminDashboard() {
 
     useEffect(() => {
 
-        const fetchUsers = async () => {
+        const fetchDashboardData = async () => {
 
             try {
 
@@ -43,7 +43,7 @@ function AdminDashboard() {
             }
         };
 
-        fetchUsers();
+        fetchDashboardData();
 
     }, []);
 
