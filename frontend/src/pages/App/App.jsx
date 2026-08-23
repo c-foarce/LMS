@@ -61,10 +61,14 @@ const router = createBrowserRouter(
           element={<Dashboard />}
         />
 
-        {/*Anyone can access this */}
+        {/*Only Students or Teachers can access this */}
         <Route
           path="courses/"
-          element={<Courses />}
+          element={
+            <RoleRoute roles={["student", "teacher"]}>
+              <Courses />
+            </RoleRoute>
+          }
         />
 
         {/* Student facing page for their grades */}

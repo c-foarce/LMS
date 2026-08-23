@@ -41,10 +41,12 @@ function Navbar() {
                 {roleName} Home
             </NavLink>
 
-            {/* Courses - anyone can access, currently admin have no use here */}
-            <NavLink to="/app/courses/">
-                My Courses
-            </NavLink>
+            {/* Courses - Student and Teacher access */}
+            {(isStudent || isTeacher) && (
+                <NavLink to="/app/courses/">
+                    My Courses
+                </NavLink>
+            )}
 
             {/* MyGrades - Student view for their graded work */}
             {isStudent && (
