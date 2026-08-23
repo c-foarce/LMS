@@ -5,6 +5,9 @@ import { useAuth } from '../../context/AuthContext'
 
 import api from '../../services/api'
 
+import StudentCourseCard from "../../components/DisplayCards/StudentCourseCard";
+import TeacherCourseCard from "../../components/DisplayCards/TeacherCourseCard";
+
 function Courses() {
 
   const navigate = useNavigate()
@@ -156,12 +159,15 @@ function Courses() {
     }
   }
 
+  //--------------------------------------------------------
+  //---------------------RENDER RETURNS---------------------
+  //--------------------------------------------------------
+
 
   if (loading) {
     return <p>Loading...</p>
   }
 
-  {/* Later, extract this whole chunk into a couple of component Cards, similar to KingdomCards from MoonTracker */ }
   return (
     <>
       <div>
@@ -174,7 +180,6 @@ function Courses() {
         {success && (
           <p>{success}</p>
         )}
-        {/* The above will have to be sent down to the component that gets made */}
 
         {items.length === 0 ? (
           <p>No courses found.</p>
@@ -183,95 +188,29 @@ function Courses() {
           items.map((item) => {
 
             if (user.role === "student") {
-
               return (
-
-                <div key={item.id}>
-                  <h3>{item.course_name}</h3>
-
-                  <p>Code: {item.course_code}</p>
-
-                  <p>Teacher: {item.teacher}</p>
-
-                  <p>Status: {item.status}</p>
-
-                  <p>Progress: {item.progress}%</p>
-
-                  {item.progress === 100 ? (
-                    <p>
-                      Grade: {item.grade || "Awaiting grade"}
-                    </p>
-                  ) : (
-                    <>
-                      <button
-                        onClick={() => handleSubmitProgress(item.id)}
-                      >
-                        Submit Progress
-                      </button>
-
-                      <p>
-                        Grade: {item.grade || "Not graded"}
-                      </p>
-                    </>
-                  )}
-
-                </div>
-              )
-
+                <StudentCourseCard
+                  key={item.id}
+                  course={item}
+                  onSubmitProgress={handleSubmitProgress}
+                />
+              );
             }
 
             if (user.role === "teacher") {
-
               return (
-
-                <div key={item.id}>
-
-                  <h3>
-                    {item.subject_name}
-                    {item.code && ` (${item.code})`}
-                  </h3>
-
-                  <p>
-                    Status: {item.is_active ? "Active" : "Inactive"}
-                  </p>
-
-                  <p>
-                    Total Students: {item.total_students}
-                  </p>
-
-                  <p>
-                    Active Students: {item.active_students}
-                  </p>
-
-                  <p>
-                    Completed Students: {item.completed_students}
-                  </p>
-
-                  <p>
-                    Dropped Students: {item.dropped_students}
-                  </p>
-
-                  <div>
-                    <button
-                      onClick={() => handleToggleActive(item.id)}
-                    >
-                      {item.is_active ? "Deactivate Course" : "Activate Course"}
-                    </button>
-
-                    <button
-                      onClick={() =>
-                        navigate(`/app/courses/${item.id}/edit`)
-                      }
-                    >
-                      Edit Course
-                    </button>
-                  </div>
-
-                </div>
-              )
-
+                <TeacherCourseCard
+                  key={item.id}
+                  course={item}
+                  onToggleActive={handleToggleActive}
+                  onEdit={() =>
+                    navigate(`/app/courses/${item.id}/edit`)
+                  }
+                />
+              );
             }
 
+            return null;
           })
         )}
       </div>
