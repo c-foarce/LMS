@@ -1,5 +1,5 @@
 
-function HistoryRecord({ record }) {
+function HistoryRecordCard({ record }) {
 
     const formattedDate = new Date(
         record.completed_at
@@ -28,4 +28,4 @@ function HistoryRecord({ record }) {
     )
 }
 
-export default HistoryRecord
+export default HistoryRecordCard

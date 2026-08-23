@@ -4,7 +4,7 @@ import { useAuth } from "../../context/AuthContext";
 
 import api from "../../services/api";
 
-import HistoryRecord from "../../components/DisplayCards/HistoryRecord";
+import HistoryRecordCard from "../../components/DisplayCards/HistoryRecordCard";
 
 import FilterDropdown from "../../components/Filters/FilterDropdown";
 
@@ -264,7 +264,7 @@ function History() {
                 ) : (
 
                     filteredRecords.map(record => (
-                        <HistoryRecord
+                        <HistoryRecordCard
                             key={record.id}
                             record={record}
                         />
