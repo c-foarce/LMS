@@ -21,12 +21,9 @@ function Login() {
     }
   )
 
-  const [success, setSuccess] = useState(false);
-  const [message, setMessage] = useState("");
-
   const { setUser } = useAuth()
 
-  const handleLogin = async () => {
+  const handleLogin = async (event) => {
     event.preventDefault()
     try {
       const res = await api.post("accounts/login/", {
