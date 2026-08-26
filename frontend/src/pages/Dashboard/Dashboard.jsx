@@ -1,5 +1,5 @@
 import StudentDashboard from "../../components/Dashboards/StudentDashboard";
-import TeacherDashboard from "../../components/Dashboards/TeacherDashBoard";
+import TeacherDashboard from "../../components/Dashboards/TeacherDashboard";
 import AdminDashboard from "../../components/Dashboards/AdminDashboard";
 
 import { useAuth } from "../../context/AuthContext";

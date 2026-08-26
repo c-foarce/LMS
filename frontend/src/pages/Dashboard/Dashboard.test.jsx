@@ -25,7 +25,7 @@ vi.mock("../../components/Dashboards/StudentDashboard", () => ({
   default: () => <div>Student Dashboard Mock</div>,
 }));
 
-vi.mock("../../components/Dashboards/TeacherDashBoard", () => ({
+vi.mock("../../components/Dashboards/TeacherDashboard", () => ({
   default: () => <div>Teacher Dashboard Mock</div>,
 }));
 
