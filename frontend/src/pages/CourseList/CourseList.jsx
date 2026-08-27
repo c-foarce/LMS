@@ -37,14 +37,7 @@ function CourseList() {
 
             try {
 
-
-                let endpoint = "/courses/list/"
-
-                if (user.role === "teacher") {
-                    endpoint = "/courses/teaching/"
-                }
-
-                const response = await api.get(endpoint);
+                const response = await api.get("/courses/list/");
 
                 setCourses(response.data)
 
