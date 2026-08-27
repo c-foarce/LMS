@@ -217,6 +217,18 @@ export const mockAdminCourses = [
     },
 ];
 
+export const mockAdminCoursesWithIssues = [
+    ...mockAdminCourses,
+    {
+        id: 3,
+        subject_name: "Unassigned Course",
+        code: "NONE101",
+        is_active: true,
+        teacher_name: null,
+        total_submissions: 4,
+    },
+];
+
 
 export const mockAdminEnrolments = [
     {
