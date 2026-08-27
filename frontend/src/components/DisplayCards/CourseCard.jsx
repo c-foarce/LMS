@@ -77,7 +77,7 @@ function CourseCard({
     }
 
     // Teacher + Admin
-    if (role === "admin" || role === "teacher") {
+    if (role === "admin") {
         actions.push(
             <button
                 key="edit"
