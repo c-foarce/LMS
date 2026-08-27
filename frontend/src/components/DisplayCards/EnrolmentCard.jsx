@@ -11,11 +11,7 @@ function EnrolmentCard({ enrolment, role, onDelete }) {
         { label: "Grade", value: enrolment.grade || "Not graded" }
     ]
 
-    // const actions = (
-    //     <button onClick={() => onDelete(enrolment.id)}>
-    //         Delete
-    //     </button>
-    // )
+
     const actions = []
 
     actions.push(
@@ -26,10 +22,6 @@ function EnrolmentCard({ enrolment, role, onDelete }) {
             Delete
         </button>
     )
-
-
-
-    // console.log("EnrolmentCard:", enrolment)
 
     return (
         <RenderCard
