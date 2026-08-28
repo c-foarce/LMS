@@ -1,4 +1,4 @@
-import { afterEach, expect, test, vi } from "vitest";
+import { afterEach, describe, expect, test, vi } from "vitest";
 import { render } from "vitest-browser-react";
 import {
     MemoryRouter,
@@ -21,540 +21,557 @@ afterEach(() => {
 });
 
 
-test("displays loading while dashboard data is being retrieved", async () => {
-    vi.spyOn(api, "get")
-        .mockImplementation(
-            () => new Promise(() => { })
+describe("Dashboard loading and errors", () => {
+
+    test("displays loading while dashboard data is being retrieved", async () => {
+        vi.spyOn(api, "get")
+            .mockImplementation(
+                () => new Promise(() => { })
+            );
+
+        const screen = await render(
+            <MemoryRouter>
+                <AdminDashboard />
+            </MemoryRouter>
         );
 
-    const screen = await render(
-        <MemoryRouter>
-            <AdminDashboard />
-        </MemoryRouter>
-    );
+        await expect.element(
+            screen.getByText("Loading...", { exact: true })
+        ).toBeInTheDocument();
+    });
 
-    await expect.element(
-        screen.getByText("Loading...", { exact: true })
-    ).toBeInTheDocument();
+
+    test("displays an error when dashboard data cannot be retrieved", async () => {
+        vi.spyOn(api, "get")
+            .mockRejectedValue(
+                new Error("Failed to retrieve dashboard data")
+            );
+
+        const screen = await render(
+            <MemoryRouter>
+                <AdminDashboard />
+            </MemoryRouter>
+        );
+
+        await expect.element(
+            screen.getByText(
+                "Failed to retrieve dashboard data.", { exact: true }
+            )
+        ).toBeInTheDocument();
+    });
+
 });
 
 
-test("displays an error when dashboard data cannot be retrieved", async () => {
-    vi.spyOn(api, "get")
-        .mockRejectedValue(
-            new Error("Failed to retrieve dashboard data")
+describe("Dashboard data fetching", () => {
+
+    test("requests users, courses and enrolments", async () => {
+        const getMock = vi
+            .spyOn(api, "get")
+            .mockImplementation((url) => {
+
+                if (url === "/accounts/all/") {
+                    return Promise.resolve({
+                        data: mockAdminUsers,
+                    });
+                }
+
+                if (url === "/courses/list/") {
+                    return Promise.resolve({
+                        data: mockAdminCourses,
+                    });
+                }
+
+                if (url === "/courses/enrolments/all/") {
+                    return Promise.resolve({
+                        data: mockAdminEnrolments,
+                    });
+                }
+
+                return Promise.reject(
+                    new Error(`Unexpected URL: ${url}`)
+                );
+            });
+
+        await render(
+            <MemoryRouter>
+                <AdminDashboard />
+            </MemoryRouter>
         );
 
-    const screen = await render(
-        <MemoryRouter>
-            <AdminDashboard />
-        </MemoryRouter>
-    );
+        expect(getMock).toHaveBeenCalledWith(
+            "/accounts/all/"
+        );
 
-    await expect.element(
-        screen.getByText(
-            "Failed to retrieve dashboard data.", { exact: true }
-        )
-    ).toBeInTheDocument();
+        expect(getMock).toHaveBeenCalledWith(
+            "/courses/list/"
+        );
+
+        expect(getMock).toHaveBeenCalledWith(
+            "/courses/enrolments/all/"
+        );
+    });
+
 });
 
 
-test("requests users, courses and enrolments", async () => {
-    const getMock = vi
-        .spyOn(api, "get")
-        .mockImplementation((url) => {
+describe("System overview", () => {
 
-            if (url === "/accounts/all/") {
-                return Promise.resolve({
-                    data: mockAdminUsers,
-                });
-            }
+    test("displays the system overview", async () => {
+        vi.spyOn(api, "get")
+            .mockImplementation((url) => {
 
-            if (url === "/courses/list/") {
-                return Promise.resolve({
-                    data: mockAdminCourses,
-                });
-            }
+                if (url === "/accounts/all/") {
+                    return Promise.resolve({
+                        data: mockAdminUsers,
+                    });
+                }
 
-            if (url === "/courses/enrolments/all/") {
+                if (url === "/courses/list/") {
+                    return Promise.resolve({
+                        data: mockAdminCourses,
+                    });
+                }
+
                 return Promise.resolve({
                     data: mockAdminEnrolments,
                 });
-            }
-
-            return Promise.reject(
-                new Error(`Unexpected URL: ${url}`)
-            );
-        });
-
-    await render(
-        <MemoryRouter>
-            <AdminDashboard />
-        </MemoryRouter>
-    );
-
-    expect(getMock).toHaveBeenCalledWith(
-        "/accounts/all/"
-    );
-
-    expect(getMock).toHaveBeenCalledWith(
-        "/courses/list/"
-    );
-
-    expect(getMock).toHaveBeenCalledWith(
-        "/courses/enrolments/all/"
-    );
-});
-
-
-test("displays the system overview", async () => {
-    vi.spyOn(api, "get")
-        .mockImplementation((url) => {
-
-            if (url === "/accounts/all/") {
-                return Promise.resolve({
-                    data: mockAdminUsers,
-                });
-            }
-
-            if (url === "/courses/list/") {
-                return Promise.resolve({
-                    data: mockAdminCourses,
-                });
-            }
-
-            return Promise.resolve({
-                data: mockAdminEnrolments,
             });
-        });
 
-    const screen = await render(
-        <MemoryRouter>
-            <AdminDashboard />
-        </MemoryRouter>
-    );
+        const screen = await render(
+            <MemoryRouter>
+                <AdminDashboard />
+            </MemoryRouter>
+        );
 
-    await expect.element(
-        screen.getByRole(
-            "heading",
-            { name: "System Overview" }
-        )
-    ).toBeInTheDocument();
-});
+        await expect.element(
+            screen.getByRole(
+                "heading",
+                { name: "System Overview" }
+            )
+        ).toBeInTheDocument();
+    });
 
 
-test("displays the correct user counts", async () => {
-    vi.spyOn(api, "get")
-        .mockImplementation((url) => {
+    test("displays the correct user counts", async () => {
+        vi.spyOn(api, "get")
+            .mockImplementation((url) => {
 
-            if (url === "/accounts/all/") {
-                return Promise.resolve({
-                    data: mockAdminUsers,
-                });
-            }
+                if (url === "/accounts/all/") {
+                    return Promise.resolve({
+                        data: mockAdminUsers,
+                    });
+                }
 
-            if (url === "/courses/list/") {
+                if (url === "/courses/list/") {
+                    return Promise.resolve({
+                        data: [],
+                    });
+                }
+
                 return Promise.resolve({
                     data: [],
                 });
-            }
-
-            return Promise.resolve({
-                data: [],
             });
-        });
 
-    const screen = await render(
-        <MemoryRouter>
-            <AdminDashboard />
-        </MemoryRouter>
-    );
+        const screen = await render(
+            <MemoryRouter>
+                <AdminDashboard />
+            </MemoryRouter>
+        );
 
-    await expect.element(
-        screen.getByText("Students: 1", { exact: true })
-    ).toBeInTheDocument();
+        await expect.element(
+            screen.getByText("Students: 1", { exact: true })
+        ).toBeInTheDocument();
 
-    await expect.element(
-        screen.getByText("Teachers: 1", { exact: true })
-    ).toBeInTheDocument();
+        await expect.element(
+            screen.getByText("Teachers: 1", { exact: true })
+        ).toBeInTheDocument();
 
-    await expect.element(
-        screen.getByText("Admins: 1", { exact: true })
-    ).toBeInTheDocument();
+        await expect.element(
+            screen.getByText("Admins: 1", { exact: true })
+        ).toBeInTheDocument();
 
-    await expect.element(
-        screen.getByText("Total: 3", { exact: true })
-    ).toBeInTheDocument();
-});
+        await expect.element(
+            screen.getByText("Total: 3", { exact: true })
+        ).toBeInTheDocument();
+    });
 
 
-test("displays the correct course counts", async () => {
-    vi.spyOn(api, "get")
-        .mockImplementation((url) => {
+    test("displays the correct course counts", async () => {
+        vi.spyOn(api, "get")
+            .mockImplementation((url) => {
 
-            if (url === "/accounts/all/") {
+                if (url === "/accounts/all/") {
+                    return Promise.resolve({
+                        data: [],
+                    });
+                }
+
+                if (url === "/courses/list/") {
+                    return Promise.resolve({
+                        data: mockAdminCourses,
+                    });
+                }
+
                 return Promise.resolve({
                     data: [],
                 });
-            }
-
-            if (url === "/courses/list/") {
-                return Promise.resolve({
-                    data: mockAdminCourses,
-                });
-            }
-
-            return Promise.resolve({
-                data: [],
             });
-        });
 
-    const screen = await render(
-        <MemoryRouter>
-            <AdminDashboard />
-        </MemoryRouter>
-    );
-    //getByText is vague. need to be cleared up --> using , {exact:true} is a sort of fix
-    await expect.element(
-        screen.getByText("Active Courses: 1", { exact: true })
-    ).toBeInTheDocument();
+        const screen = await render(
+            <MemoryRouter>
+                <AdminDashboard />
+            </MemoryRouter>
+        );
 
-    await expect.element(
-        screen.getByText("Inactive Courses: 1", { exact: true })
-    ).toBeInTheDocument();
+        //getByText is vague. need to be cleared up --> using , {exact:true} is a sort of fix
+        await expect.element(
+            screen.getByText("Active Courses: 1", { exact: true })
+        ).toBeInTheDocument();
 
-    await expect.element(
-        screen.getByText("Total Courses: 2", { exact: true })
-    ).toBeInTheDocument();
+        await expect.element(
+            screen.getByText("Inactive Courses: 1", { exact: true })
+        ).toBeInTheDocument();
+
+        await expect.element(
+            screen.getByText("Total Courses: 2", { exact: true })
+        ).toBeInTheDocument();
+    });
+
+
+    test("displays the correct enrolment counts", async () => {
+        vi.spyOn(api, "get")
+            .mockImplementation((url) => {
+
+                if (url === "/accounts/all/") {
+                    return Promise.resolve({
+                        data: [],
+                    });
+                }
+
+                if (url === "/courses/list/") {
+                    return Promise.resolve({
+                        data: [],
+                    });
+                }
+
+                return Promise.resolve({
+                    data: mockAdminEnrolments,
+                });
+            });
+
+        const screen = await render(
+            <MemoryRouter>
+                <AdminDashboard />
+            </MemoryRouter>
+        );
+
+        await expect.element(
+            screen.getByText("Active Enrolments: 1", { exact: true })
+        ).toBeInTheDocument();
+
+        await expect.element(
+            screen.getByText("Completed Enrolments: 1", { exact: true })
+        ).toBeInTheDocument();
+
+        await expect.element(
+            screen.getByText("Dropped Enrolments: 1", { exact: true })
+        ).toBeInTheDocument();
+
+        await expect.element(
+            screen.getByText("Total Enrolments: 3", { exact: true })
+        ).toBeInTheDocument();
+    });
+
 });
 
 
-test("displays the correct enrolment counts", async () => {
-    vi.spyOn(api, "get")
-        .mockImplementation((url) => {
+describe("Administrative attention", () => {
 
-            if (url === "/accounts/all/") {
+    test("displays no issues when there are no administrative issues", async () => {
+        vi.spyOn(api, "get")
+            .mockImplementation((url) => {
+
+                if (url === "/accounts/all/") {
+                    return Promise.resolve({
+                        data: mockAdminUsers,
+                    });
+                }
+
+                if (url === "/courses/list/") {
+                    return Promise.resolve({
+                        data: mockAdminCourses,
+                    });
+                }
+
                 return Promise.resolve({
-                    data: [],
+                    data: mockAdminEnrolments,
                 });
-            }
-
-            if (url === "/courses/list/") {
-                return Promise.resolve({
-                    data: [],
-                });
-            }
-
-            return Promise.resolve({
-                data: mockAdminEnrolments,
             });
-        });
 
-    const screen = await render(
-        <MemoryRouter>
-            <AdminDashboard />
-        </MemoryRouter>
-    );
+        const screen = await render(
+            <MemoryRouter>
+                <AdminDashboard />
+            </MemoryRouter>
+        );
 
-    await expect.element(
-        screen.getByText("Active Enrolments: 1", { exact: true })
-    ).toBeInTheDocument();
+        await expect.element(
+            screen.getByRole(
+                "heading",
+                { name: "Administrative Attention" }
+            )
+        ).toBeInTheDocument();
 
-    await expect.element(
-        screen.getByText("Completed Enrolments: 1", { exact: true })
-    ).toBeInTheDocument();
-
-    await expect.element(
-        screen.getByText("Dropped Enrolments: 1", { exact: true })
-    ).toBeInTheDocument();
-
-    await expect.element(
-        screen.getByText("Total Enrolments: 3", { exact: true })
-    ).toBeInTheDocument();
-});
+        await expect.element(
+            screen.getByText(
+                "No issues requiring attention.", { exact: true }
+            )
+        ).toBeInTheDocument();
+    });
 
 
-test("displays no issues when there are no administrative issues", async () => {
-    vi.spyOn(api, "get")
-        .mockImplementation((url) => {
+    test("displays courses without an assigned teacher", async () => {
+        const coursesWithMissingTeacher = [
+            ...mockAdminCourses,
+            {
+                id: 3,
+                subject_name: "Physics",
+                code: "PHY101",
+                is_active: true,
+                teacher_name: null,
+                total_submissions: 4,
+            },
+        ];
 
-            if (url === "/accounts/all/") {
+        vi.spyOn(api, "get")
+            .mockImplementation((url) => {
+
+                if (url === "/accounts/all/") {
+                    return Promise.resolve({
+                        data: mockAdminUsers,
+                    });
+                }
+
+                if (url === "/courses/list/") {
+                    return Promise.resolve({
+                        data: coursesWithMissingTeacher,
+                    });
+                }
+
                 return Promise.resolve({
-                    data: mockAdminUsers,
+                    data: mockAdminEnrolments,
                 });
-            }
-
-            if (url === "/courses/list/") {
-                return Promise.resolve({
-                    data: mockAdminCourses,
-                });
-            }
-
-            return Promise.resolve({
-                data: mockAdminEnrolments,
             });
-        });
 
-    const screen = await render(
-        <MemoryRouter>
-            <AdminDashboard />
-        </MemoryRouter>
-    );
+        const screen = await render(
+            <MemoryRouter>
+                <AdminDashboard />
+            </MemoryRouter>
+        );
 
-    await expect.element(
-        screen.getByRole(
-            "heading",
-            { name: "Administrative Attention" }
-        )
-    ).toBeInTheDocument();
+        await expect.element(
+            screen.getByRole(
+                "heading",
+                { name: "Courses without an assigned teacher" }
+            )
+        ).toBeInTheDocument();
 
-    await expect.element(
-        screen.getByText(
-            "No issues requiring attention.", { exact: true }
-        )
-    ).toBeInTheDocument();
-});
+        await expect.element(
+            screen.getByText("Physics (PHY101)", { exact: true })
+        ).toBeInTheDocument();
+
+        await expect.element(
+            screen.getByRole(
+                "button",
+                { name: "Edit Course" }
+            )
+        ).toBeInTheDocument();
+    });
 
 
-test("displays courses without an assigned teacher", async () => {
-    const coursesWithMissingTeacher = [
-        ...mockAdminCourses,
-        {
-            id: 3,
-            subject_name: "Physics",
-            code: "PHY101",
-            is_active: true,
-            teacher_name: null,
-            total_submissions: 4,
-        },
-    ];
+    test("navigates to the course edit page when Edit Course is clicked", async () => {
+        const coursesWithMissingTeacher = [
+            {
+                id: 3,
+                subject_name: "Physics",
+                code: "PHY101",
+                is_active: true,
+                teacher_name: null,
+                total_submissions: 4,
+            },
+        ];
 
-    vi.spyOn(api, "get")
-        .mockImplementation((url) => {
+        vi.spyOn(api, "get")
+            .mockImplementation((url) => {
 
-            if (url === "/accounts/all/") {
+                if (url === "/accounts/all/") {
+                    return Promise.resolve({
+                        data: mockAdminUsers,
+                    });
+                }
+
+                if (url === "/courses/list/") {
+                    return Promise.resolve({
+                        data: coursesWithMissingTeacher,
+                    });
+                }
+
                 return Promise.resolve({
-                    data: mockAdminUsers,
+                    data: mockAdminEnrolments,
                 });
-            }
-
-            if (url === "/courses/list/") {
-                return Promise.resolve({
-                    data: coursesWithMissingTeacher,
-                });
-            }
-
-            return Promise.resolve({
-                data: mockAdminEnrolments,
             });
-        });
 
-    const screen = await render(
-        <MemoryRouter>
-            <AdminDashboard />
-        </MemoryRouter>
-    );
+        const screen = await render(
+            <MemoryRouter initialEntries={["/app"]}>
+                <Routes>
+                    <Route
+                        path="/app"
+                        element={<AdminDashboard />}
+                    />
 
-    await expect.element(
-        screen.getByRole(
-            "heading",
-            { name: "Courses without an assigned teacher" }
-        )
-    ).toBeInTheDocument();
+                    <Route
+                        path="/app/courses/3/edit/"
+                        element={<h1>Edit Course Page</h1>}
+                    />
+                </Routes>
+            </MemoryRouter>
+        );
 
-    await expect.element(
-        screen.getByText("Physics (PHY101)", { exact: true })
-    ).toBeInTheDocument();
-
-    await expect.element(
-        screen.getByRole(
+        await screen.getByRole(
             "button",
             { name: "Edit Course" }
-        )
-    ).toBeInTheDocument();
-});
+        ).click();
+
+        await expect.element(
+            screen.getByRole(
+                "heading",
+                { name: "Edit Course Page" }
+            )
+        ).toBeInTheDocument();
+    });
 
 
-test("navigates to the course edit page when Edit Course is clicked", async () => {
-    const coursesWithMissingTeacher = [
-        {
-            id: 3,
-            subject_name: "Physics",
-            code: "PHY101",
-            is_active: true,
-            teacher_name: null,
-            total_submissions: 4,
-        },
-    ];
+    test("displays users with missing information", async () => {
+        const usersWithMissingInfo = [
+            ...mockAdminUsers,
+            {
+                id: 4,
+                username: "incompleteuser",
+                first_name: "",
+                last_name: "User",
+                email: "",
+                role: "student",
+            },
+        ];
 
-    vi.spyOn(api, "get")
-        .mockImplementation((url) => {
+        vi.spyOn(api, "get")
+            .mockImplementation((url) => {
 
-            if (url === "/accounts/all/") {
+                if (url === "/accounts/all/") {
+                    return Promise.resolve({
+                        data: usersWithMissingInfo,
+                    });
+                }
+
+                if (url === "/courses/list/") {
+                    return Promise.resolve({
+                        data: mockAdminCourses,
+                    });
+                }
+
                 return Promise.resolve({
-                    data: mockAdminUsers,
+                    data: mockAdminEnrolments,
                 });
-            }
-
-            if (url === "/courses/list/") {
-                return Promise.resolve({
-                    data: coursesWithMissingTeacher,
-                });
-            }
-
-            return Promise.resolve({
-                data: mockAdminEnrolments,
             });
-        });
 
-    const screen = await render(
-        <MemoryRouter initialEntries={["/app"]}>
-            <Routes>
-                <Route
-                    path="/app"
-                    element={<AdminDashboard />}
-                />
+        const screen = await render(
+            <MemoryRouter>
+                <AdminDashboard />
+            </MemoryRouter>
+        );
 
-                <Route
-                    path="/app/courses/3/edit/"
-                    element={<h1>Edit Course Page</h1>}
-                />
-            </Routes>
-        </MemoryRouter>
-    );
+        await expect.element(
+            screen.getByRole(
+                "heading",
+                { name: "Users with missing information" }
+            )
+        ).toBeInTheDocument();
 
-    await screen.getByRole(
-        "button",
-        { name: "Edit Course" }
-    ).click();
+        await expect.element(
+            screen.getByText(
+                "incompleteuser — Missing: first name, email", { exact: true }
+            )
+        ).toBeInTheDocument();
 
-    await expect.element(
-        screen.getByRole(
-            "heading",
-            { name: "Edit Course Page" }
-        )
-    ).toBeInTheDocument();
-});
+        await expect.element(
+            screen.getByRole(
+                "button",
+                { name: "Edit User" }
+            )
+        ).toBeInTheDocument();
+    });
 
 
-test("displays users with missing information", async () => {
-    const usersWithMissingInfo = [
-        ...mockAdminUsers,
-        {
-            id: 4,
-            username: "incompleteuser",
-            first_name: "",
-            last_name: "User",
-            email: "",
-            role: "student",
-        },
-    ];
+    test("navigates to the user edit page when Edit User is clicked", async () => {
+        const usersWithMissingInfo = [
+            {
+                id: 4,
+                username: "incompleteuser",
+                first_name: "",
+                last_name: "User",
+                email: "",
+                role: "student",
+            },
+        ];
 
-    vi.spyOn(api, "get")
-        .mockImplementation((url) => {
+        vi.spyOn(api, "get")
+            .mockImplementation((url) => {
 
-            if (url === "/accounts/all/") {
-                return Promise.resolve({
-                    data: usersWithMissingInfo,
-                });
-            }
+                if (url === "/accounts/all/") {
+                    return Promise.resolve({
+                        data: usersWithMissingInfo,
+                    });
+                }
 
-            if (url === "/courses/list/") {
-                return Promise.resolve({
-                    data: mockAdminCourses,
-                });
-            }
+                if (url === "/courses/list/") {
+                    return Promise.resolve({
+                        data: [],
+                    });
+                }
 
-            return Promise.resolve({
-                data: mockAdminEnrolments,
-            });
-        });
-
-    const screen = await render(
-        <MemoryRouter>
-            <AdminDashboard />
-        </MemoryRouter>
-    );
-
-    await expect.element(
-        screen.getByRole(
-            "heading",
-            { name: "Users with missing information" }
-        )
-    ).toBeInTheDocument();
-
-    await expect.element(
-        screen.getByText(
-            "incompleteuser — Missing: first name, email", { exact: true }
-        )
-    ).toBeInTheDocument();
-
-    await expect.element(
-        screen.getByRole(
-            "button",
-            { name: "Edit User" }
-        )
-    ).toBeInTheDocument();
-});
-
-
-test("navigates to the user edit page when Edit User is clicked", async () => {
-    const usersWithMissingInfo = [
-        {
-            id: 4,
-            username: "incompleteuser",
-            first_name: "",
-            last_name: "User",
-            email: "",
-            role: "student",
-        },
-    ];
-
-    vi.spyOn(api, "get")
-        .mockImplementation((url) => {
-
-            if (url === "/accounts/all/") {
-                return Promise.resolve({
-                    data: usersWithMissingInfo,
-                });
-            }
-
-            if (url === "/courses/list/") {
                 return Promise.resolve({
                     data: [],
                 });
-            }
-
-            return Promise.resolve({
-                data: [],
             });
-        });
 
-    const screen = await render(
-        <MemoryRouter initialEntries={["/app"]}>
-            <Routes>
-                <Route
-                    path="/app"
-                    element={<AdminDashboard />}
-                />
+        const screen = await render(
+            <MemoryRouter initialEntries={["/app"]}>
+                <Routes>
+                    <Route
+                        path="/app"
+                        element={<AdminDashboard />}
+                    />
 
-                <Route
-                    path="/app/accounts/4/edit/"
-                    element={<h1>Edit User Page</h1>}
-                />
-            </Routes>
-        </MemoryRouter>
-    );
+                    <Route
+                        path="/app/accounts/4/edit/"
+                        element={<h1>Edit User Page</h1>}
+                    />
+                </Routes>
+            </MemoryRouter>
+        );
 
-    await screen.getByRole(
-        "button",
-        { name: "Edit User" }
-    ).click();
+        await screen.getByRole(
+            "button",
+            { name: "Edit User" }
+        ).click();
 
-    await expect.element(
-        screen.getByRole(
-            "heading",
-            { name: "Edit User Page" }
-        )
-    ).toBeInTheDocument();
+        await expect.element(
+            screen.getByRole(
+                "heading",
+                { name: "Edit User Page" }
+            )
+        ).toBeInTheDocument();
+    });
+
 });
