@@ -7,8 +7,8 @@ function CourseCard({
     onToggleActive,
     onEdit,
     onEnrol,
-    error,
-    errorCourseId,
+    deleteError,
+    deleteErrorCourseId,
     updateActiveError,
     updateActiveErrorCourseId,
     enrolError,
@@ -57,9 +57,9 @@ function CourseCard({
                     Delete Course
                 </button>
 
-                {error && errorCourseId === course.id && (
+                {deleteError && deleteErrorCourseId === course.id && (
                     <span>
-                        {error}
+                        {deleteError}
                     </span>
                 )}
 
@@ -80,7 +80,7 @@ function CourseCard({
                         {updateActiveError}
                     </span>
                 )}
-                
+
             </div>
         )
     }
