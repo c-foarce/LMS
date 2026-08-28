@@ -8,7 +8,7 @@ import EnrolmentCard from "../../components/DisplayCards/EnrolmentCard";
 
 function EnrolmentList() {
 
-    const { user } = useAuth() //needed?
+    const { user } = useAuth()
 
     const [enrolments, setEnrolments] = useState([])
     const [loading, setLoading] = useState(true)
@@ -47,7 +47,6 @@ function EnrolmentList() {
             try {
                 const response = await api.get("/courses/enrolments/all/");
 
-                // console.log("response data TESTING", response.data);
 
                 setEnrolments(response.data);
             } catch (error) {
