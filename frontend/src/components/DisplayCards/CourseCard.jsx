@@ -9,6 +9,8 @@ function CourseCard({
     onEnrol,
     error,
     errorCourseId,
+    updateActiveError,
+    updateActiveErrorCourseId,
     enrolError,
     enrolErrorCourseId
 }) {
@@ -36,20 +38,9 @@ function CourseCard({
     if (role === "student") {
         details.push({
             label: "Required Submissions",
-            value: course.total_submissions, 
+            value: course.total_submissions,
         })
     }
-
-
-    const errorMessage =
-        error && errorCourseId === course.id && (
-            <p>{error}</p>
-        )
-
-    const enrolErrorMessage =
-        enrolError && enrolErrorCourseId === course.id && (
-            <p>{enrolError}</p>
-        )
 
     const actions = []
 
@@ -58,21 +49,39 @@ function CourseCard({
     // Admin
     if (role === "admin") {
         actions.push(
-            <button
-                key="delete"
-                onClick={() => onDelete(course.id)}
-            >
-                Delete Course
-            </button>
+            <div key="delete-action">
+                <button
+                    key="delete"
+                    onClick={() => onDelete(course.id)}
+                >
+                    Delete Course
+                </button>
+
+                {error && errorCourseId === course.id && (
+                    <span>
+                        {error}
+                    </span>
+                )}
+
+            </div>
         )
 
         actions.push(
-            <button
-                key="toggle"
-                onClick={() => onToggleActive(course.id)}
-            >
-                {course.is_active ? "Deactivate" : "Activate"}
-            </button>
+            <div key="update-action">
+                <button
+                    key="toggle"
+                    onClick={() => onToggleActive(course.id)}
+                >
+                    {course.is_active ? "Deactivate" : "Activate"}
+                </button>
+
+                {updateActiveError && updateActiveErrorCourseId === course.id && (
+                    <span>
+                        {updateActiveError}
+                    </span>
+                )}
+                
+            </div>
         )
     }
 
@@ -113,7 +122,6 @@ function CourseCard({
             details={details}
             actions={
                 <>
-                    {errorMessage}
                     {actions}
                 </>
             }
