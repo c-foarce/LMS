@@ -24,8 +24,11 @@ const renderCourseCard = async (props = {}) => {
                 onToggleActive={onToggleActive}
                 onEdit={onEdit}
                 onEnrol={onEnrol}
-                error={null}
-                errorCourseId={null}
+                loadingError={null}
+                deleteError={null}
+                deleteErrorCourseId={null}
+                updateActiveError={null}
+                updateActiveErrorCourseId={null}
                 enrolError={null}
                 enrolErrorCourseId={null}
                 {...props}
@@ -208,8 +211,8 @@ describe("Admin Tests", () => {
     test("displays error for matching course", async () => {
         const screen = await renderCourseCard({
             role: "admin",
-            error:"Could not delete Course.",
-            errorCourseId: mockCourse.id
+            deleteError: "Could not delete Course.",
+            deleteErrorCourseId: mockCourse.id
         })
 
         await expect.element(
