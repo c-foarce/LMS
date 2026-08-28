@@ -408,7 +408,8 @@ test("displays an error when deleting a course fails", async () => {
             data: [mockAdminCourses[0]],
         });
 
-    vi.spyOn(api, "delete")
+    const deleteMock = vi
+        .spyOn(api, "delete")
         .mockRejectedValue({
             response: {
                 data: {
@@ -428,10 +429,21 @@ test("displays an error when deleting a course fails", async () => {
         { name: "Delete Course" }
     ).click();
 
+    expect(deleteMock).toHaveBeenCalledWith(
+        `/courses/${mockAdminCourses[0].id}/delete/`
+    );
+
     await expect.element(
         screen.getByText(
             "Could not delete Course.",
             { exact: true }
+        )
+    ).toBeInTheDocument();
+
+    await expect.element(
+        screen.getByRole(
+            "heading",
+            { name: mockAdminCourses[0].subject_name }
         )
     ).toBeInTheDocument();
 });
@@ -723,6 +735,94 @@ test("admin sees active and inactive courses", async () => {
         screen.getByRole(
             "heading",
             { name: "Computer Science" }
+        )
+    ).toBeInTheDocument();
+});
+
+test("removes the course from the student list after successful enrolment", async () => {
+    vi.mocked(useAuth).mockReturnValue({
+        user: {
+            role: "student",
+        },
+    });
+
+    vi.spyOn(window, "confirm")
+        .mockReturnValue(true);
+
+    const course = mockAdminCourses[0];
+
+    vi.spyOn(api, "get")
+        .mockImplementation((url) => {
+            if (url === "/courses/list/") {
+                return Promise.resolve({
+                    data: [course],
+                });
+            }
+
+            if (url === "/courses/enrolments/me") {
+                return Promise.resolve({
+                    data: [],
+                });
+            }
+
+            return Promise.reject(
+                new Error(`Unexpected URL: ${url}`)
+            );
+        });
+
+    vi.spyOn(api, "post")
+        .mockResolvedValue({
+            data: {
+                id: 99,
+                course: course.id,
+            },
+        });
+
+    const screen = await render(
+        <MemoryRouter>
+            <CourseList />
+        </MemoryRouter>
+    );
+
+    await screen.getByRole(
+        "button",
+        { name: "Enrol" }
+    ).click();
+
+    await expect.element(
+        screen.getByRole(
+            "heading",
+            { name: course.subject_name }
+        )
+    ).not.toBeInTheDocument();
+});
+
+test("displays an error when courses cannot be retrieved", async () => {
+    vi.mocked(useAuth).mockReturnValue({
+        user: {
+            role: "admin",
+        },
+    });
+
+    vi.spyOn(api, "get")
+        .mockRejectedValue({
+            response: {
+                data: {
+                    detail: "Failed to retrieve courses.",
+                },
+            },
+        });
+
+    const screen = await render(
+        <MemoryRouter>
+            <CourseList />
+        </MemoryRouter>
+    );
+
+    await expect.element(
+        screen.getByText(
+            "Failed to retrieve courses.",
+            { exact: true }
         )
     ).toBeInTheDocument();
 });
