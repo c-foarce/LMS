@@ -17,19 +17,34 @@ export const mockInactiveCourse = {
 };
 
 export const mockEnrolment = {
+    id: 1,
     course_name: "Mathematics",
     course_code: "MATH101",
-    teacher: "John Smith",
+    student_name: "teststudent",
+    teacher: "testteacher",
     status: "Active",
     progress: 50,
-    grade: "B",
+    grade: null,
 };
 
 export const mockEnrolmentNoTeacher = {
+    id: 2,
     course_name: "Physics",
     course_code: "PHYS101",
+    student_name: "teststudent2",
     teacher: null,
-    status: "Completed",
-    progress: 100,
+    status: "Active",
+    progress: 70,
     grade: null,
 };
+
+export const mockCompletedEnrolment = {
+    id: 3,
+    course_name: "English",
+    course_code: "ENG101",
+    student_name: "teststudent",
+    teacher: "testteacher2",
+    status: "Completed",
+    progress: 100,
+    grade: null
+}
