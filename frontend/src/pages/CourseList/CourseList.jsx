@@ -20,8 +20,11 @@ function CourseList() {
 
     const [loading, setLoading] = useState(true)
 
-    const [error, setError] = useState(null)
-    const [errorCourseId, setErrorCourseId] = useState(null)
+    const [deleteError, setDeleteError] = useState(null)
+    const [deleteErrorCourseId, setDeleteErrorCourseId] = useState(null)
+
+    const [updateActiveError, setUpdateActiveError] = useState(null)
+    const [updateActiveErrorCourseId, setUpdateActiveErrorCourseId] = useState(null)
 
     const [enrolError, setEnrolError] = useState(null)
     const [enrolErrorCourseId, setEnrolErrorCourseId] = useState(null)
@@ -80,7 +83,8 @@ function CourseList() {
 
         try {
 
-            setError(null)
+            setUpdateActiveError(null)
+            setUpdateActiveErrorCourseId(null)
 
             const response = await api.patch(
                 `/courses/${courseId}/toggle-active/`
@@ -96,18 +100,19 @@ function CourseList() {
 
         } catch (error) {
 
-            console.error("SUBMIT ERROR:", error)
+            console.error("UPDATE ACTIVE ERROR:", error)
 
-            setError(
+            setUpdateActiveError(
                 error.response?.data?.detail ||
-                "Something went wrong when trying to process the request"
+                "Something went wrong when trying to update the course"
             )
 
+            setUpdateActiveErrorCourseId(courseId)
+
             setTimeout(() => {
-                setError(null)
-
-            }, 3000);
-
+                setUpdateActiveError(null)
+                setUpdateActiveErrorCourseId(null)
+            }, 3000)
         }
     }
 
@@ -138,16 +143,16 @@ function CourseList() {
 
             console.error(error)
 
-            setErrorCourseId(courseId)
+            setDeleteErrorCourseId(courseId)
 
-            setError(
+            setDeleteError(
                 error.response?.data?.detail ||
                 "Could not delete Course."
             )
 
             setTimeout(() => {
-                setError(null)
-                setErrorCourseId(null)
+                setDeleteError(null)
+                setDeleteErrorCourseId(null)
             }, 3000)
         }
     }
@@ -254,8 +259,10 @@ function CourseList() {
                         onToggleActive={handleToggleActive}
                         onEdit={handleEdit}
                         onEnrol={handleEnrol}
-                        error={error}
-                        errorCourseId={errorCourseId}
+                        error={deleteError}
+                        errorCourseId={deleteErrorCourseId}
+                        updateActiveError={updateActiveError}
+                        updateActiveErrorCourseId={updateActiveErrorCourseId}
                         enrolError={enrolError}
                         enrolErrorCourseId={enrolErrorCourseId}
                     />
