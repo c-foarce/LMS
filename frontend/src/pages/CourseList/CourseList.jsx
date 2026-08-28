@@ -19,6 +19,7 @@ function CourseList() {
     const [enrolments, setEnrolments] = useState([])
 
     const [loading, setLoading] = useState(true)
+    const [loadingError, setLoadingError] = useState(null)
 
     const [deleteError, setDeleteError] = useState(null)
     const [deleteErrorCourseId, setDeleteErrorCourseId] = useState(null)
@@ -55,7 +56,10 @@ function CourseList() {
 
             } catch (error) {
 
-                console.error(error)
+                setLoadingError(
+                    error.response?.data?.detail ||
+                    "Could not load courses."
+                )
 
             } finally {
 
@@ -100,8 +104,6 @@ function CourseList() {
 
         } catch (error) {
 
-            console.error("UPDATE ACTIVE ERROR:", error)
-
             setUpdateActiveError(
                 error.response?.data?.detail ||
                 "Something went wrong when trying to update the course"
@@ -140,8 +142,6 @@ function CourseList() {
             )
 
         } catch (error) {
-
-            console.error(error)
 
             setDeleteErrorCourseId(courseId)
 
@@ -182,7 +182,6 @@ function CourseList() {
                 }
             )
 
-            console.log("Enrolment created: ", response.data)
 
             setEnrolments(previousEnrolments => [
                 ...previousEnrolments,
@@ -198,7 +197,6 @@ function CourseList() {
 
         } catch (error) {
 
-            console.error("Enrolment creation failed: ", error)
 
             setEnrolErrorCourseId(courseId)
 
@@ -232,6 +230,10 @@ function CourseList() {
     if (loading) {
         return <p>Loading...</p>
     }
+
+    if (loadingError) {
+        return <p>{loadingError}</p>
+    }
     return (
         <>
             <h1>
@@ -259,8 +261,9 @@ function CourseList() {
                         onToggleActive={handleToggleActive}
                         onEdit={handleEdit}
                         onEnrol={handleEnrol}
-                        error={deleteError}
-                        errorCourseId={deleteErrorCourseId}
+                        loadingError={loadingError}
+                        deleteError={deleteError}
+                        deleteErrorCourseId={deleteErrorCourseId}
                         updateActiveError={updateActiveError}
                         updateActiveErrorCourseId={updateActiveErrorCourseId}
                         enrolError={enrolError}
