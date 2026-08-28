@@ -1,6 +1,6 @@
 import RenderCard from "./RenderCard";
 
-function EnrolmentCard({ enrolment, role, onDelete }) {
+function EnrolmentCard({ enrolment, onDelete }) {
 
     const details = [
         { label: "Course", value: enrolment.course_name },
