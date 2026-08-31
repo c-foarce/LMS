@@ -20,10 +20,10 @@ api.interceptors.request.use((config) => {
 
 //refreshes expired tokens automatically
 api.interceptors.response.use(
-    
+
     (response) => response,
 
-    
+
     async (error) => {
 
         const originalRequest = error.config
@@ -49,12 +49,12 @@ api.interceptors.response.use(
                     localStorage.setItem("access", newAccessToken);
 
                     //update fail request with newaccesstoken
-                    originalRequest.headers.Authorization = 
-                    `Bearer ${newAccessToken}`;
-console.log("tokens refreshed")
+                    originalRequest.headers.Authorization =
+                        `Bearer ${newAccessToken}`;
+                    console.log("tokens refreshed")
                     //retry the OG request
                     return api(originalRequest)
-                    
+
                 } catch (refreshError) {
                     console.error("Token refresh failed:", refreshError);
 
