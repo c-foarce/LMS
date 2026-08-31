@@ -266,7 +266,7 @@ export const mockAdminEnrolments = [
         course_name: "Computer Science",
         course_code: "CS101",
         teacher: "teacherone",
-        status: "dropped",
+        status: "active",
         completed_submissions: 1,
         progress: 20,
         grade: "",
