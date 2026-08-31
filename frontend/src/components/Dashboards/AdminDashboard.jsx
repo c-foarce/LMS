@@ -87,9 +87,10 @@ function AdminDashboard() {
         enrolment => enrolment.status === "completed"
     ).length;
 
-    const droppedEnrolments = enrolments.filter(
-        enrolment => enrolment.status === "dropped"
-    ).length;
+    //ununsed atm, commenting out until implemented
+    // const droppedEnrolments = enrolments.filter(
+    //     enrolment => enrolment.status === "dropped"
+    // ).length;
 
     const totalEnrolments = enrolments.length;
 
@@ -164,7 +165,7 @@ function AdminDashboard() {
 
                 <p>Active Enrolments: {activeEnrolments}</p>
                 <p>Completed Enrolments: {completedEnrolments}</p>
-                <p>Dropped Enrolments: {droppedEnrolments}</p>
+                {/* <p>Dropped Enrolments: {droppedEnrolments}</p> */}
                 <p>Total Enrolments: {totalEnrolments}</p>
 
             </div>

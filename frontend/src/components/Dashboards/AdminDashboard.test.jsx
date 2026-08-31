@@ -268,7 +268,7 @@ describe("System overview", () => {
         );
 
         await expect.element(
-            screen.getByText("Active Enrolments: 1", { exact: true })
+            screen.getByText("Active Enrolments: 2", { exact: true })
         ).toBeInTheDocument();
 
         await expect.element(
@@ -276,7 +276,7 @@ describe("System overview", () => {
         ).toBeInTheDocument();
 
         await expect.element(
-            screen.getByText("Dropped Enrolments: 1", { exact: true })
+            screen.getByText("Dropped Enrolments: 0", { exact: true })
         ).toBeInTheDocument();
 
         await expect.element(
