@@ -243,6 +243,7 @@ function CourseList() {
             {enrolSuccess && (
                 <p>{enrolSuccess}</p>
             )}
+            {/*This i want moved next to the relvant button in a <span> */}
 
             {displayedCourses.length === 0 ? (
                 <p>
