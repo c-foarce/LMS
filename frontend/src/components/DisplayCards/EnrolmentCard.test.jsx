@@ -8,6 +8,10 @@ import { mockEnrolment, mockEnrolmentNoTeacher } from '../../test/mocks/displayc
 
 const onDelete = vi.fn()
 
+afterEach(() => {
+    vi.clearAllMocks();
+});
+
 const renderEnrolmentCard = async (props = {}) => {
     return await render(
         <MemoryRouter>
@@ -20,108 +24,142 @@ const renderEnrolmentCard = async (props = {}) => {
     )
 }
 
-test("displays the student and course code", async () => {
-    const screen = await renderEnrolmentCard();
+describe("enrolment heading", () => {
 
-    await expect.element(
-        screen.getByRole("heading", {
-            name: "teststudent - MATH101"
-        })
-    ).toBeInTheDocument();
+    test("displays the student and course code", async () => {
+        const screen = await renderEnrolmentCard();
+
+        await expect.element(
+            screen.getByRole("heading", {
+                name: "teststudent - MATH101"
+            })
+        ).toBeInTheDocument();
+    });
+
 });
 
-test("display the headings for each major datapoint of an enrolment", async () => {
-    const screen = await renderEnrolmentCard();
+describe("enrolment details", () => {
 
-    await expect.element(
-        screen.getByText("Course:")
-    ).toBeInTheDocument();
+    test("displays the headings for each major datapoint of an enrolment", async () => {
+        const screen = await renderEnrolmentCard();
 
-    await expect.element(
-        screen.getByText("Code:")
-    ).toBeInTheDocument();
+        await expect.element(
+            screen.getByText("Course:")
+        ).toBeInTheDocument();
 
-    await expect.element(
-        screen.getByText("Teacher:")
-    ).toBeInTheDocument();
+        await expect.element(
+            screen.getByText("Code:")
+        ).toBeInTheDocument();
 
-    await expect.element(
-        screen.getByText("Status:")
-    ).toBeInTheDocument();
+        await expect.element(
+            screen.getByText("Teacher:")
+        ).toBeInTheDocument();
 
-    await expect.element(
-        screen.getByText("Progress:")
-    ).toBeInTheDocument();
+        await expect.element(
+            screen.getByText("Status:")
+        ).toBeInTheDocument();
 
-    await expect.element(
-        screen.getByText("Grade:")
-    ).toBeInTheDocument();
+        await expect.element(
+            screen.getByText("Progress:")
+        ).toBeInTheDocument();
+
+        await expect.element(
+            screen.getByText("Grade:")
+        ).toBeInTheDocument();
+    });
+
+    test("data from enrolment is displayed", async () => {
+        const screen = await renderEnrolmentCard({
+            enrolment: {
+                ...mockEnrolment,
+                progress: 100,
+                grade: "C"
+            }
+        });
+
+        const courseParent =
+            screen.getByText("Course:").locator("..");
+        await expect.element(courseParent)
+            .toHaveTextContent("Mathematics");
+
+        const codeParent =
+            screen.getByText("Code:").locator("..");
+        await expect.element(codeParent)
+            .toHaveTextContent("MATH101");
+
+        const teacherParent =
+            screen.getByText("Teacher:").locator("..");
+        await expect.element(teacherParent)
+            .toHaveTextContent("testteacher");
+
+        const statusParent =
+            screen.getByText("Status:").locator("..");
+        await expect.element(statusParent)
+            .toHaveTextContent("Active");
+
+        const progressParent =
+            screen.getByText("Progress:").locator("..");
+        await expect.element(progressParent)
+            .toHaveTextContent("100%");
+
+        const gradeParent =
+            screen.getByText("Grade:").locator("..");
+        await expect.element(gradeParent)
+            .toHaveTextContent("C");
+    });
+
 });
 
-test("data from enrolment is displayed", async () => {
-    const screen = await renderEnrolmentCard({
-        enrolment: {
-            ...mockEnrolment,
-            progress: 100,
-            grade: "C"
-        }
-    }); //this test is not for ungraded, separate test for later
+describe("missing data", () => {
 
-    const courseParent = screen.getByText("Course:").locator("..");
-    await expect.element(courseParent).toHaveTextContent("Mathematics");
+    test(`displays "Not graded" when a grade does not exist`, async () => {
+        const screen = await renderEnrolmentCard();
 
-    const codeParent = screen.getByText("Code:").locator("..");
-    await expect.element(codeParent).toHaveTextContent("MATH101");
+        const gradeParent =
+            screen.getByText("Grade:").locator("..");
 
-    const teacherParent = screen.getByText("Teacher:").locator("..");
-    await expect.element(teacherParent).toHaveTextContent("testteacher");
+        await expect.element(gradeParent)
+            .toHaveTextContent("Not graded");
+    });
 
-    const statusParent = screen.getByText("Status:").locator("..");
-    await expect.element(statusParent).toHaveTextContent("Active");
 
-    const progressParent = screen.getByText("Progress:").locator("..");
-    await expect.element(progressParent).toHaveTextContent("100%");
+    test(`displays "N/A" when there is no teacher`, async () => {
+        const screen = await renderEnrolmentCard({
+            enrolment: mockEnrolmentNoTeacher
+        });
 
-    const gradeParent = screen.getByText("Grade:").locator("..");
-    await expect.element(gradeParent).toHaveTextContent("C");
+        const teacherParent =
+            screen.getByText("Teacher:").locator("..");
+
+        await expect.element(teacherParent)
+            .toHaveTextContent("N/A");
+    });
+
 });
 
-test(`display "Not graded" when a grade does not exist`, async () => {
-    const screen = await renderEnrolmentCard();
+describe("delete action", () => {
 
-    const gradeParent = screen.getByText("Grade:").locator("..");
-    await expect.element(gradeParent).toHaveTextContent("Not graded");
-})
+    test("displays the delete button", async () => {
+        const screen = await renderEnrolmentCard();
 
-test(`displays "N/A" when there is no teacher`, async () => {
-    const screen = await renderEnrolmentCard({
-        enrolment: mockEnrolmentNoTeacher
-    })
-
-    const teacherParent = screen.getByText("Teacher:").locator("..");
-    await expect.element(teacherParent).toHaveTextContent("N/A")
-})
-
-test("display the delete button", async (s) => {
-    const screen = await renderEnrolmentCard();
-
-    await expect.element(
-        screen.getByRole("button", {
-            name: "Delete"
-        })
-    ).toBeInTheDocument()
-
-})
-
-test("clicking the delete button calls onDelete with the correct id", async () => {
-    const screen = await renderEnrolmentCard();
-
-    await screen.getByRole(
-        "button",
-        { name: "Delete" }
-    ).click();
-
-    expect(onDelete).toHaveBeenCalledWith(mockEnrolment.id)
-})
+        await expect.element(
+            screen.getByRole("button", {
+                name: "Delete"
+            })
+        ).toBeInTheDocument();
+    });
 
 
+    test("clicking the delete button calls onDelete with the correct id", async () => {
+        const screen = await renderEnrolmentCard();
+
+        await screen.getByRole(
+            "button",
+            { name: "Delete" }
+        ).click();
+
+        expect(onDelete)
+            .toHaveBeenCalledWith(mockEnrolment.id);
+    });
+
+});
