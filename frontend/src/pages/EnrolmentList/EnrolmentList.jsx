@@ -11,8 +11,36 @@ function EnrolmentList() {
     const { user } = useAuth()
 
     const [enrolments, setEnrolments] = useState([])
+
+
     const [loading, setLoading] = useState(true)
-    const [error, setError] = useState(null)
+    const [loadingError, setLoadingError] = useState(null)
+
+
+    const [deleteError, setDeleteError] = useState(null)
+    const [deleteErrorEnrolmentId, setDeleteErrorEnrolmentId] = useState(null)
+
+
+
+    useEffect(() => {
+        const fetchEnrolments = async () => {
+
+            try {
+                const response = await api.get("/courses/enrolments/all/");
+
+
+                setEnrolments(response.data);
+            } catch (error) {
+
+                // console.error(error);
+                setLoadingError("Could not load enrolments");
+            } finally {
+                setLoading(false)
+            }
+        };
+
+        fetchEnrolments()
+    }, []);
 
     const handleDelete = async (enrolmentId) => {
 
@@ -36,42 +64,32 @@ function EnrolmentList() {
                 )
             )
         } catch (error) {
-            console.error(error)
-            setError("Could not delete enrolment.")
+            // console.error(error)
+            setDeleteErrorEnrolmentId(enrolmentId)
+
+            setDeleteError(
+                error.response?.data?.detail ||
+                "Could not delete enrolment."
+            )
+
+            setTimeout(() => {
+                setDeleteError(null)
+                setDeleteErrorEnrolmentId(null)
+            }, 2000);
         }
     }
-
-    useEffect(() => {
-        const fetchEnrolments = async () => {
-
-            try {
-                const response = await api.get("/courses/enrolments/all/");
-
-
-                setEnrolments(response.data);
-            } catch (error) {
-
-                console.error(error);
-                setError("Could not load enrolments");
-            } finally {
-                setLoading(false)
-            }
-        };
-
-        fetchEnrolments()
-    }, []);
 
     if (loading) {
         return <p>Loading...</p>
     }
 
+    if (loadingError) {
+        return <p>{loadingError}</p>
+    }
+
     return (
         <>
             <h1>All Enrolments</h1>
-
-            {error && (
-                <p>{error}</p>
-            )}
 
             {enrolments.length === 0 ? (
                 <p>No enrolments found.</p>
@@ -82,6 +100,8 @@ function EnrolmentList() {
                         role={user.role}
                         enrolment={enrolment}
                         onDelete={handleDelete}
+                        deleteError={deleteError}
+                        deleteErrorEnrolmentId={deleteErrorEnrolmentId}
                     />
                 ))
             )}

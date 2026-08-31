@@ -1,6 +1,10 @@
 import RenderCard from "./RenderCard";
 
-function EnrolmentCard({ enrolment, onDelete }) {
+function EnrolmentCard({
+    enrolment,
+    onDelete,
+    deleteError,
+    deleteErrorEnrolmentId }) {
 
     const details = [
         { label: "Course", value: enrolment.course_name },
@@ -15,12 +19,20 @@ function EnrolmentCard({ enrolment, onDelete }) {
     const actions = []
 
     actions.push(
-        <button
-            key="delete-enrolment"
-            onClick={() => onDelete(enrolment.id)}
-        >
-            Delete
-        </button>
+        <div key="delete-enrolment-action">
+            <button
+                key="delete-enrolment"
+                onClick={() => onDelete(enrolment.id)}
+            >
+                Delete
+            </button>
+
+            {deleteError && deleteErrorEnrolmentId === enrolment.id && (
+                <span>
+                    {deleteError}
+                </span>
+            )}
+        </div>
     )
 
     return (
