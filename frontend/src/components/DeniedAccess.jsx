@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom";
 
 function DeniedAccess() {
 
@@ -11,11 +11,11 @@ function DeniedAccess() {
                 You do not have permission to access this page.
             </p>
 
-            <button onClick={() => navigate(-1)}>
-                Go Back
+            <button onClick={() => navigate("/dashboard")}>
+                Return to Dashboard
             </button>
         </div>
     );
 }
 
-export default DeniedAccess
+export default DeniedAccess;
