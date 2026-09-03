@@ -97,14 +97,21 @@ function NewUser() {
 
                     <div key={field.name}>
 
-                        <label>{field.name}</label>
+                        <label htmlFor={field.name}>
+                            {field.name}
+                        </label>
 
                         {field.choices ? (
 
                             <select
+                                id={field.name}
                                 name={field.name}
                                 onChange={handleChange}
+                                required={field.required}
+                                defaultValue=""
                             >
+                                <option value="" disabled>Select Role</option>
+
                                 {field.choices.map(choice => (
                                     <option
                                         key={choice.value}
@@ -118,6 +125,7 @@ function NewUser() {
                         ) : field.type === "TextField" ? (
 
                             <textarea
+                                id={field.name}
                                 name={field.name}
                                 onChange={handleChange}
                             />
@@ -125,6 +133,7 @@ function NewUser() {
                         ) : (
                             // tyoe below here is set to "text" : "text" so that leaves option open for more hidden types later but keeps password visible
                             <input
+                                id={field.name}
                                 type={field.name === "password" ? "text" : "text"}
                                 name={field.name}
                                 required={field.required}
