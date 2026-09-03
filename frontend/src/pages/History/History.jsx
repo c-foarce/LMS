@@ -195,14 +195,20 @@ function History() {
                     }
                 </h1>
                 <div>
+                    <div>
+                        <label htmlFor="search-history">Search:</label>
                     <input
+                    id="search-history"
                         type="text"
                         placeholder="Search history..."
                         value={search}
                         onChange={(event) => setSearch(event.target.value)}
                     />
+                    </div>
 
                     <FilterDropdown
+                        id="student-filter"
+                        label="Student:"
                         value={studentFilter}
                         onChange={setStudentFilter}
                         defaultLabel="All Students"
@@ -215,6 +221,8 @@ function History() {
 
                     {user?.role === "admin" && (
                         <FilterDropdown
+                            id="teacher-filter"
+                            label="Teacher:"
                             value={teacherFilter}
                             onChange={setTeacherFilter}
                             defaultLabel="All Teachers"
@@ -227,6 +235,8 @@ function History() {
                     )}
 
                     <FilterDropdown
+                        id="course-filter"
+                        label="Course:"
                         value={courseFilter}
                         onChange={setCourseFilter}
                         defaultLabel="All Courses"
@@ -238,6 +248,8 @@ function History() {
                     />
 
                     <FilterDropdown
+                        id="grade-filter"
+                        label="Grade:"
                         value={gradeFilter}
                         onChange={setGradeFilter}
                         defaultLabel="All Grades"
@@ -249,7 +261,7 @@ function History() {
                     <button onClick={clearFilters}>
                         Clear Filters
                     </button>
-                    
+
                 </div>
 
 
