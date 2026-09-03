@@ -134,6 +134,7 @@ function NewCourse() {
     if (field.name === "teacher" && role === "admin") {
       return (
         <select
+          id={field.name}
           name={field.name}
           onChange={handleChange}
           value={formData[field.name] || ""}
@@ -159,6 +160,7 @@ function NewCourse() {
     if (field.widget === "textarea") {
       return (
         <textarea
+          id={field.name}
           name={field.name}
           value={formData[field.name] || ""}
           onChange={handleChange}
@@ -169,6 +171,7 @@ function NewCourse() {
 
     return (
       <input
+        id={field.name}
         type={field.widget}
         name={field.name}
         required={field.required}
@@ -202,8 +205,9 @@ function NewCourse() {
           return (
             <div key={field.name}>
 
-              <label>{field.name}</label>
-
+              <label htmlFor={field.name}>
+                {field.name}
+              </label>
 
               {/*If the current user is an admin:
              show a dropdown instead of a normal text input.
@@ -221,9 +225,9 @@ function NewCourse() {
       </form>
       {/*Temporary debugging output. Shows what is in the package that will be sent to Django*/}
 
-      <pre>
+      {/* <pre>
         {JSON.stringify(formData, null, 2)}
-      </pre>
+      </pre> */}
 
     </>
   )
