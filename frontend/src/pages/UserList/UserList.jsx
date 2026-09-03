@@ -1,14 +1,10 @@
 import { useEffect, useState } from "react";
 
-import { useAuth } from '../../context/AuthContext'
-
 import api from '../../services/api'
 
 import UserCard from "../../components/DisplayCards/UserCard";
 
 function UserList() {
-
-    const { user } = useAuth() //needed? not sure, good failsafe maybe?
 
     const [users, setUsers] = useState([])
     const [loading, setLoading] = useState(true)
