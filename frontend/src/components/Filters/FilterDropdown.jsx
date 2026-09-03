@@ -6,27 +6,36 @@ function FilterDropdown({
     getValue,
     getLabel,
     className,
+    label,
+    id,
 }) {
     return (
-        <select
-            className={className}
-            value={value}
-            onChange={(event) => onChange(event.target.value)}
-        >
-            <option value="">
-                {defaultLabel}
-            </option>
+        <div>
+            <label htmlFor={id}>
+                {label}
+            </label>
 
-            {options.map(option => (
-                <option
-                    key={getValue(option)}
-                    value={getValue(option)}
-                >
-                    {getLabel(option)}
+            <select
+                id={id}
+                className={className}
+                value={value}
+                onChange={(event) => onChange(event.target.value)}
+            >
+                <option value="">
+                    {defaultLabel}
                 </option>
-            ))}
-        </select>
+
+                {options.map(option => (
+                    <option
+                        key={getValue(option)}
+                        value={getValue(option)}
+                    >
+                        {getLabel(option)}
+                    </option>
+                ))}
+            </select>
+        </div>
     );
 }
 
-export default FilterDropdown
+export default FilterDropdown;
