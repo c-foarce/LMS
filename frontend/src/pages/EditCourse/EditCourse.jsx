@@ -108,6 +108,7 @@ function EditCourse() {
         if (field.name === "teacher" && user.role === "admin") {
             return (
                 <select
+                    id={field.name}
                     name={field.name}
                     value={formData[field.name] || ""}
                     onChange={handleChange}
@@ -133,6 +134,7 @@ function EditCourse() {
         if (field.widget === "textarea") {
             return (
                 <textarea
+                    id={field.name}
                     name={field.name}
                     value={formData[field.name] || ""}
                     onChange={handleChange}
@@ -143,6 +145,7 @@ function EditCourse() {
 
         return (
             <input
+                id={field.name}
                 type={field.widget}
                 name={field.name}
                 value={formData[field.name] || ""}
@@ -173,7 +176,7 @@ function EditCourse() {
                     return (
                         <div key={field.name}>
 
-                            <label>
+                            <label htmlFor={field.name}>
                                 {field.name}
                             </label>
 
@@ -201,9 +204,9 @@ function EditCourse() {
                 </div>
 
             </form>
-            <pre>
+            {/* <pre>
                 {JSON.stringify(formData, null, 2)}
-            </pre>
+            </pre> */}
         </>
     )
 }
