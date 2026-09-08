@@ -306,7 +306,7 @@ class AcknoweldgeCompletionView(generics.UpdateAPIView):
                 {
                     "detail": "You cannot acknowledge completion until all submissions are complete."
                 },
-                statut=status.HTTP_400_BAD_REQUEST
+                status=status.HTTP_400_BAD_REQUEST
             )
 
         if not enrolment.grade:
