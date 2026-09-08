@@ -11,7 +11,6 @@ class RegisterSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         return User.objects.create_user(**validated_data)
-    
 
 class UserSerializer(serializers.ModelSerializer):
 
@@ -45,7 +44,6 @@ class StudentListSerializer(serializers.ModelSerializer):
         model = User
         fields = ["id", "username"]
 
-
 class AllUsersListSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
@@ -74,6 +72,8 @@ class AdminUserEditSerializer(serializers.ModelSerializer):
             "username",
             "first_name",
             "last_name",
+            "email",
+            "role",
             "password",
         ]
 
