@@ -10,6 +10,8 @@ function UserList() {
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(null)
 
+    const [searchTerm, setSearchTerm] = useState("")
+
 
     //This block is repeated on all major "get all of this model type" pages. extraction candidate?
     useEffect(() => {
@@ -30,6 +32,12 @@ function UserList() {
 
         fetchUsers()
     }, [])
+    
+
+    //This only goes by usernames, might want to add firstname/lastname filtering later
+    const filteredUsers = users.filter((user) =>
+        user.username.toLowerCase().includes(searchTerm.toLowerCase())
+    );
 
 
     if (loading) {
@@ -44,10 +52,19 @@ function UserList() {
                 <p>{error}</p>
             )}
 
+            <input
+                type="text"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                placeholder="Search users..."
+            />
+
+
+
             {users.length === 0 ? (
                 <p>Connection successful, no users found.</p>
             ) : (
-                users.map(user => (
+                filteredUsers.map(user => (
                     <UserCard
                         key={user.id}
                         user={user}
