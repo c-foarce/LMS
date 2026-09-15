@@ -144,20 +144,39 @@ class StudentEnrolmentSerializer(serializers.ModelSerializer):
 
         return course
 
+    def validate(self, attrs):
+        student=self.context["request"].user
+        course=attrs["course"]
+
+        if Enrolment.objects.filter(
+            student=student, 
+            course=course,
+        ).exists():
+            raise serializers.ValidationError(
+                "You are already enrolled on this course"
+            )
+        
+        return attrs
+
     def create(self, validated_data):
         return Enrolment.objects.create(
             student=self.context["request"].user,
             **validated_data
         )
 
-
-class SubmitProgressSerializer(serializers.ModelSerializer):
-    class Meta:
-        model=Enrolment
-        fields=["progress"]#
+#ISSUE- appears unused?
+#delcares progress field despite enrolment never using it.
+#related view does not even use the serializer and instead directly increments
+# class SubmitProgressSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model=Enrolment
+#         fields=["progress"]#
 
 class GradeEnrolmentSerializer(serializers.ModelSerializer):
-
+    ##this could become a shared truth candidte - JSON for both ends to import
+    grade = serializers.ChoiceField(
+        choices=["A","B","C","D","F"]
+    )
     class Meta:
         model = Enrolment
         fields = ["grade"]
