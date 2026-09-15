@@ -63,6 +63,7 @@ class TeachingCoursesView(generics.ListAPIView):
         )
 #increments selected course by 1, after cheking if it's able to
 class SubmitProgress(APIView):
+    permission_classes=[IsAuthenticated]
 
     def post(self, request, pk):
 
@@ -205,6 +206,8 @@ class CourseToggleActiveView(APIView):
     def patch(self, request, pk):
 
         course = get_object_or_404(Course, pk=pk)
+
+        self.check_object_permissions(request, course)
 
         course.is_active = not course.is_active
 
