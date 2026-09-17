@@ -53,7 +53,7 @@ class CourseEditView(generics.UpdateAPIView):
 # Gets all Courses a "teacher" User owns
 class TeachingCoursesView(generics.ListAPIView):
     serializer_class = serializers.TeacherCourseSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, permissions.IsTeacher]
 
     def get_queryset(self):
         return (

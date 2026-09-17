@@ -129,7 +129,6 @@ class CreateEnrolmentSerializer(serializers.ModelSerializer):
 
         return attrs
 
-
 class StudentEnrolmentSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -163,14 +162,6 @@ class StudentEnrolmentSerializer(serializers.ModelSerializer):
             student=self.context["request"].user,
             **validated_data
         )
-
-#ISSUE- appears unused?
-#delcares progress field despite enrolment never using it.
-#related view does not even use the serializer and instead directly increments
-# class SubmitProgressSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model=Enrolment
-#         fields=["progress"]#
 
 class GradeEnrolmentSerializer(serializers.ModelSerializer):
     ##this could become a shared truth candidte - JSON for both ends to import
