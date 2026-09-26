@@ -1,6 +1,5 @@
 from rest_framework import generics, status
 from rest_framework.views import APIView
-from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 
@@ -36,9 +35,9 @@ class CourseCreateView(generics.CreateAPIView):
     def perform_create(self, serializer):
         user = self.request.user
 
-        if user.role == "teacher":
+        if user.role == User.Roles.TEACHER:
             serializer.save(teacher=user)
-        elif user.role == "admin":
+        elif user.role == User.Roles.ADMIN:
             serializer.save()
 
 
@@ -150,7 +149,7 @@ class CourseFieldsView(APIView):
 
         teacher_options = []
 
-        if getattr(request.user, "role", None) == "admin":
+        if getattr(request.user, "role", None) == User.Roles.ADMIN:
 
             teachers = User.objects.filter(role="teacher")
 
@@ -225,7 +224,7 @@ class AvaliableCourseListView(generics.ListAPIView):
 
         user = self.request.user
 
-        if user.role == "teacher":
+        if user.role == User.Roles.TEACHER:
             return Course.objects.filter(
                 teacher=user,
                 is_active=True
@@ -449,10 +448,10 @@ class CompleteEnrolmentHistoryView(generics.ListAPIView):
 
         user = self.request.user
 
-        if user.role == "admin":
+        if user.role == User.Roles.ADMIN:
             return CompletedEnrolment.objects.all()
 
-        if user.role == "teacher":
+        if user.role == User.Roles.TEACHER:
             return CompletedEnrolment.objects.filter(
                 teacher_id=user.id
             )
