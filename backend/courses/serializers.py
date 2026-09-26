@@ -1,4 +1,6 @@
 from rest_framework import serializers
+
+from accounts.models import User
 from .models import Enrolment, Course, CompletedEnrolment
 
 class EnrolmentSerializer(serializers.ModelSerializer):
@@ -107,7 +109,7 @@ class CreateEnrolmentSerializer(serializers.ModelSerializer):
                 "This course is no longer accepting enrolments."
             )
 
-        if user.role == "teacher" and course.teacher != user:
+        if user.role == User.Roles.TEACHER and course.teacher != user:
             raise serializers.ValidationError(
                 "You can only create enrolments for your own courses."
             )
@@ -164,7 +166,7 @@ class StudentEnrolmentSerializer(serializers.ModelSerializer):
         )
 
 class GradeEnrolmentSerializer(serializers.ModelSerializer):
-    ##this could become a shared truth candidte - JSON for both ends to import
+    ##this could become a shared truth candidate - JSON for both ends to import
     grade = serializers.ChoiceField(
         choices=["A","B","C","D","F"]
     )
