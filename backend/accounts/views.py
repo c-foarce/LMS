@@ -1,5 +1,3 @@
-from django.shortcuts import render
-
 from rest_framework import generics
 from rest_framework.views import APIView
 from rest_framework.exceptions import PermissionDenied
@@ -11,32 +9,11 @@ from . import serializers
 from . import permissions
 
 
-
-# Create your views here.
-
-class RegisterView(generics.CreateAPIView):
-    queryset = User.objects.all()
-    serializer_class = serializers.RegisterSerializer
-
-
 class UserCreateView(generics.CreateAPIView):
 
     serializer_class = serializers.UserSerializer
     permission_classes = [permissions.IsAdmin]
 
-
-
-
-# #This can and probably should be changed to a generics views with permission class inside the class
-
-# @api_view(["GET"])  
-# @permission_classes([IsAuthenticated])
-# def get_user_role(request):
-
-#     return Response({
-#         "username": request.user.username,
-#         "role": request.user.role
-#     })
 
 
 class UserRoleView(APIView):
@@ -96,23 +73,12 @@ class UserFieldsView(APIView):
         })
 
 
-
-# @api_view(["GET"])
-# @permission_classes([IsAuthenticated])
-# def student_list(request):
-
-#     students = User.objects.filter(role="student")
-
-#     serializer = StudentListSerializer(students, many=True)
-
-#     return Response(serializer.data)
-
-
+#returns a list of students for enrolment creation
 class StudentListView(generics.ListAPIView):
 
     serializer_class = serializers.StudentListSerializer
 
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, permissions.IsTeacherOrAdmin]
 
     def get_queryset(self):
         return User.objects.filter(role="student")
