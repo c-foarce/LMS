@@ -45,7 +45,7 @@ class CourseCreateView(generics.CreateAPIView):
 class CourseEditView(generics.UpdateAPIView):
     queryset = Course.objects.all()
     serializer_class = serializers.CourseSerializer
-    permission_classes = [permissions.IsTeacherOrAdmin, permissions.IsCourseOwnerOrAdmin]
+    permission_classes = [permissions.IsCourseOwnerOrAdmin]
 
     
     
@@ -200,7 +200,7 @@ class CourseDetailView(generics.RetrieveAPIView):
 
 # Activates/Deactivates a course to no longer be shown for enrolments
 class CourseToggleActiveView(APIView):
-    permission_classes = [IsAuthenticated, permissions.IsCourseOwnerOrAdmin]
+    permission_classes = [permissions.IsCourseOwnerOrAdmin]
 
     def patch(self, request, pk):
 
@@ -235,13 +235,13 @@ class AvaliableCourseListView(generics.ListAPIView):
 class EnrolmentDeleteView(generics.DestroyAPIView):
 
     queryset = Enrolment.objects.all()
-    permission_classes = [permissions.IsTeacherOrAdmin,IsAuthenticated]
+    permission_classes = [permissions.IsEnrolmentOwnerOrAdmin] #IsAuthenticated?
 
 
 class ListAllEnrolmentsView(generics.ListAPIView):
         
     queryset = Enrolment.objects.all()
-    permission_classes = [IsAuthenticated,permissions.IsAdmin]
+    permission_classes = [permissions.IsAdmin]
     serializer_class=serializers.EnrolmentSerializer
 
 
