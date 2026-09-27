@@ -129,12 +129,31 @@ class CourseCreateViewTests(CourseViewTestBase):
             },
         )
 
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn("teacher", response.data)
+        self.assertFalse(
+            Course.objects.filter(subject_name="Physics").exists()
+        )
 
-        course = Course.objects.get(pk=response.data["id"])
+    def test_teacher_cannot_provide_teacher_field(self):
+        self.authenticate(self.teacher)
 
-        self.assertEqual(course.teacher, self.teacher)
-        self.assertNotEqual(course.teacher, self.other_teacher)
+        response = self.client.post(
+            reverse("course-create"),
+            {
+                "subject_name": "Physics",
+                "code": "PH101",
+                "description": "Physics course",
+                "total_submissions": 5,
+                "teacher": self.teacher.id,
+            },
+         )
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn("teacher", response.data)
+        self.assertFalse(
+            Course.objects.filter(subject_name="Physics").exists()
+        )
 
     def test_admin_can_create_course(self):
         self.authenticate(self.admin)
