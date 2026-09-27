@@ -537,8 +537,13 @@ class EnrolmentDeleteViewTests(EnrolmentViewTestBase):
             status.HTTP_204_NO_CONTENT,
         )
 
-    #this needs to be fixe,d test is here to check the "wrong" thing DOES happen, then we can fix
-    def test_teacher_can_delete_enrolment_from_another_teachers_course(self):
+        self.assertFalse(
+            Enrolment.objects.filter(
+                id=self.enrolment.id
+            ).exists()
+        )
+
+    def test_teacher_cannot_delete_enrolment_from_another_teachers_course(self):
         self.authenticate(self.teacher)
 
         response = self.client.delete(
@@ -550,7 +555,13 @@ class EnrolmentDeleteViewTests(EnrolmentViewTestBase):
 
         self.assertEqual(
             response.status_code,
-            status.HTTP_204_NO_CONTENT,
+            status.HTTP_403_FORBIDDEN,
+        )
+
+        self.assertTrue(
+            Enrolment.objects.filter(
+                id=self.other_enrolment.id
+            ).exists()
         )
 
     def test_nonexistent_enrolment_returns_not_found(self):
