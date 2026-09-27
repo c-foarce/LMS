@@ -3,6 +3,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 
+from django.db import transaction
 from django.shortcuts import get_object_or_404
 
 from .models import Enrolment, Course, CompletedEnrolment
@@ -388,51 +389,54 @@ class CompleteEnrolmentView(generics.CreateAPIView):
                 status=status.HTTP_400_BAD_REQUEST
             )
 
-        student=enrolment.student
-        teacher=enrolment.course.teacher
-        course=enrolment.course
+        student = enrolment.student
+        teacher = enrolment.course.teacher
+        course = enrolment.course
 
-        completed_enrolment=CompletedEnrolment.objects.create(
+        #maybe add some test?
+        with transaction.atomic():
 
-            original_enrolment_id=enrolment.id,
+            completed_enrolment = CompletedEnrolment.objects.create(
 
-            student_id=student.id,
-            student_username=student.username,
-            student_first_name=student.first_name,
-            student_last_name=student.last_name,
+                original_enrolment_id=enrolment.id,
 
-            teacher_id = teacher.id if teacher else None,
+               student_id=student.id,
+               student_username=student.username,
+                student_first_name=student.first_name,
+                student_last_name=student.last_name,
 
-            teacher_username=(
-                teacher.username
-                if teacher
-                else "Unknown"
-            ),
+                teacher_id=teacher.id if teacher else None,
 
-            teacher_first_name=(
-                teacher.first_name
-                if teacher
-                else "Unknown"
-            ),
+                teacher_username=(
+                    teacher.username
+                    if teacher
+                    else "Unknown"
+                ),
 
-            teacher_last_name=(
-                teacher.last_name
-                if teacher
-                else "Unknown"
-            ),
+                teacher_first_name=(
+                    teacher.first_name
+                    if teacher
+                    else "Unknown"
+                ),
 
-            course_id=course.id,
-            course_name=course.subject_name,
-            course_code=course.code,
+                teacher_last_name=(
+                    teacher.last_name
+                    if teacher
+                    else "Unknown"
+                ),
 
-            grade=enrolment.grade,
-        )
+                course_id=course.id,
+                course_name=course.subject_name,
+                course_code=course.code,
+
+                grade=enrolment.grade,
+            )
+
+            enrolment.delete()
 
         serializer = self.get_serializer(
             completed_enrolment
         )
-
-        enrolment.delete()
 
         return Response(
             serializer.data,
