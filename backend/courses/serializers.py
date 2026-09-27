@@ -73,6 +73,22 @@ class CourseSerializer(serializers.ModelSerializer):
             "is_active",
         ]
 
+    def validate(self, attrs):
+        request = self.context.get("request")
+
+        if (
+            request
+            and request.user.role == User.Roles.TEACHER
+            and "teacher" in attrs
+        ):
+            raise serializers.ValidationError(
+                {
+                    "teacher": "Teachers cannot change course ownership."
+                }
+            )
+
+        return attrs
+
 class CourseListSerializer(serializers.ModelSerializer):
     teacher_name = serializers.CharField(
         source="teacher.username",
