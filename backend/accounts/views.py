@@ -78,7 +78,7 @@ class StudentListView(generics.ListAPIView):
 
     serializer_class = serializers.StudentListSerializer
 
-    permission_classes = [IsAuthenticated, permissions.IsTeacherOrAdmin]
+    permission_classes = [permissions.IsTeacherOrAdmin]
 
     def get_queryset(self):
         return User.objects.filter(role="student")
@@ -89,7 +89,7 @@ class AllUserListView(generics.ListAPIView):
 
     serializer_class = serializers.AllUsersListSerializer
 
-    permission_classes = [IsAuthenticated, permissions.IsAdmin]
+    permission_classes = [ permissions.IsAdmin]
 
     queryset = User.objects.all()
 
@@ -120,4 +120,4 @@ class UserDetailView(generics.RetrieveAPIView):
 
     queryset = User.objects.all()
     serializer_class = serializers.AllUsersListSerializer
-    permission_classes=[IsAuthenticated, permissions.IsAdmin]
+    permission_classes=[permissions.IsAdmin]
