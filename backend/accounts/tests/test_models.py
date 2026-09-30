@@ -5,7 +5,7 @@ from rest_framework.test import APIClient
 from accounts.models import User
 
 
-class UserModelTest(TestCase):
+class UserModelTests(TestCase):
 
     def test_create_student(self):
         user = User.objects.create_user(

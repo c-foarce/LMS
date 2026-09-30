@@ -5,7 +5,7 @@ from rest_framework.test import APIClient
 from accounts.models import User
 
 
-class LoginViewTest(TestCase):
+class LoginViewTests(TestCase):
 
     def setUp(self):
         self.client = APIClient()
@@ -78,7 +78,7 @@ class LoginViewTest(TestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
 
-class RefreshTokenViewTest(TestCase):
+class RefreshTokenViewTests(TestCase):
 
     def setUp(self):
         self.client = APIClient()
@@ -135,7 +135,7 @@ class RefreshTokenViewTest(TestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
 
-class UserRoleViewTest(TestCase):
+class UserRoleViewTests(TestCase):
 
     def setUp(self):
         self.client = APIClient()
@@ -224,7 +224,7 @@ class UserRoleViewTest(TestCase):
         )
 
 
-class UserFieldsViewTest(TestCase):
+class UserFieldsViewTests(TestCase):
 
     def setUp(self):
         self.client = APIClient()
@@ -329,7 +329,7 @@ class UserFieldsViewTest(TestCase):
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
 
-class StudentListViewTest(TestCase):
+class StudentListViewTests(TestCase):
 
     def setUp(self):
         self.client = APIClient()
@@ -412,12 +412,12 @@ class StudentListViewTest(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data, [])
 
-    def test_student_can_access_student_list(self):
+    def test_student_cannot_access_student_list(self):
         self.client.force_authenticate(user=self.student)
 
         response = self.client.get(self.url)
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_teacher_can_access_student_list(self):
         self.client.force_authenticate(user=self.teacher)
@@ -439,7 +439,7 @@ class StudentListViewTest(TestCase):
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
 
-class AllUserListViewTest(TestCase):
+class AllUserListViewTests(TestCase):
 
     def setUp(self):
         self.client = APIClient()
@@ -553,7 +553,7 @@ class AllUserListViewTest(TestCase):
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
 
-class UserCreateViewTest(TestCase):
+class UserCreateViewTests(TestCase):
 
     def setUp(self):
         self.client = APIClient()
@@ -746,7 +746,7 @@ class UserCreateViewTest(TestCase):
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
 
-class UserDetailViewTest(TestCase):
+class UserDetailViewTests(TestCase):
 
     def setUp(self):
         self.client = APIClient()
@@ -847,7 +847,7 @@ class UserDetailViewTest(TestCase):
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
 
-class UserDeleteViewTest(TestCase):
+class UserDeleteViewTests(TestCase):
 
     def setUp(self):
         self.client = APIClient()

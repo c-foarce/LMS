@@ -10,7 +10,6 @@ from courses.serializers import (
     CourseListSerializer,
     CreateEnrolmentSerializer,
     StudentEnrolmentSerializer,
-    # SubmitProgressSerializer,
     GradeEnrolmentSerializer,
     TeacherCourseProgressSerializer,
     CompletedEnrolmentSerializer,

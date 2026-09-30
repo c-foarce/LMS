@@ -4,7 +4,7 @@ from accounts.models import User
 from accounts.serializers import *
 
 
-class UserSerializerTest(TestCase):
+class UserSerializerTests(TestCase):
 
     def test_valid_user_data_is_valid(self):
         serializer = UserSerializer(
@@ -59,7 +59,7 @@ class UserSerializerTest(TestCase):
         )
 
 
-class StudentListSerializerTest(TestCase):
+class StudentListSerializerTests(TestCase):
 
     def setUp(self):
         self.student = User.objects.create_user(
@@ -102,7 +102,7 @@ class StudentListSerializerTest(TestCase):
         )
 
 
-class AllUsersListSerializerTest(TestCase):
+class AllUsersListSerializerTests(TestCase):
 
     def setUp(self):
         self.user = User.objects.create_user(
@@ -144,7 +144,7 @@ class AllUsersListSerializerTest(TestCase):
         )
 
 
-class AdminUserEditSerializerTest(TestCase):
+class AdminUserEditSerializerTests(TestCase):
 
     def setUp(self):
         self.user = User.objects.create_user(
