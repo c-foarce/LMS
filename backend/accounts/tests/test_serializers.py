@@ -3,6 +3,100 @@ from django.test import TestCase
 from accounts.models import User
 from accounts.serializers import *
 
+class RegisterSerializerTests(TestCase):
+
+    def test_valid_student_data_is_valid(self):
+        serializer = RegisterSerializer(
+            data={
+                "username": "student",
+                "password": "password123",
+                "role": "student",
+            }
+        )
+
+        self.assertTrue(serializer.is_valid())
+
+    def test_valid_teacher_data_is_valid(self):
+        serializer = RegisterSerializer(
+            data={
+                "username": "teacher",
+                "password": "password123",
+                "role": "teacher",
+            }
+        )
+
+        self.assertTrue(serializer.is_valid())
+
+    def test_admin_role_is_rejected(self):
+        serializer = RegisterSerializer(
+            data={
+                "username": "admin",
+                "password": "password123",
+                "role": "admin",
+            }
+        )
+
+        self.assertFalse(serializer.is_valid())
+        self.assertIn("role", serializer.errors)
+
+    def test_invalid_role_is_rejected(self):
+        serializer = RegisterSerializer(
+            data={
+                "username": "student",
+                "password": "password123",
+                "role": "invalid",
+            }
+        )
+
+        self.assertFalse(serializer.is_valid())
+        self.assertIn("role", serializer.errors)
+
+    def test_duplicate_username_is_rejected(self):
+        User.objects.create_user(
+            username="student",
+            password="password123",
+            role="student",
+        )
+
+        serializer = RegisterSerializer(
+            data={
+                "username": "student",
+                "password": "differentpassword",
+                "role": "student",
+            }
+        )
+
+        self.assertFalse(serializer.is_valid())
+        self.assertIn("username", serializer.errors)
+
+    def test_create_hashes_password(self):
+        serializer = RegisterSerializer(
+            data={
+                "username": "student",
+                "password": "password123",
+                "role": "student",
+            }
+        )
+
+        self.assertTrue(serializer.is_valid())
+
+        user = serializer.save()
+
+        self.assertNotEqual(
+            user.password,
+            "password123"
+        )
+
+        self.assertTrue(
+            user.check_password("password123")
+        )
+
+    def test_password_is_write_only(self):
+        serializer = RegisterSerializer()
+
+        self.assertTrue(
+            serializer.fields["password"].write_only
+        )
 
 class UserSerializerTests(TestCase):
 
