@@ -6,8 +6,6 @@ import {
   Navigate
 } from "react-router-dom";
 
-//import Root from "../../layouts/Root";
-
 import { AuthProvider } from "../../context/AuthContext";
 
 import ProtectedRoute from "../../components/ProtectedRoute";
