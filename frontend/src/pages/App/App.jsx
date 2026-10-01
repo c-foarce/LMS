@@ -18,6 +18,7 @@ import AppLayout from "../../layouts/AppLayout";
 
 import Welcome from "../Welcome/Welcome"
 import Login from "../Login/Login";
+import Register from "../Register/Register";
 
 import Dashboard from "../Dashboard/Dashboard";
 import Courses from "../Courses/Courses";
@@ -41,6 +42,7 @@ const router = createBrowserRouter(
       <Route path="/" element={<AuthLayout />}>
         <Route index element={<Welcome />} />
         <Route path="login" element={<Login />} />
+        <Route path="register" element={<Register />} />
       </Route>
       {/*Anyone can access this */}
       {/* Login Access */}

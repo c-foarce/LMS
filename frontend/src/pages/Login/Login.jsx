@@ -69,6 +69,11 @@ function Login() {
 
   return (
     <div>
+
+      <button type="button" onClick={() => navigate("/")}>
+        ← Back
+      </button>
+
       <h1>Login</h1>
 
       <form onSubmit={handleLogin}>

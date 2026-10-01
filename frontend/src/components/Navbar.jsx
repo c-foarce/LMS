@@ -12,7 +12,7 @@ function Navbar() {
 
     const navigate = useNavigate();
 
-    const { user, setUser } = useAuth();
+    const { user } = useAuth();
 
     const isLoggedIn = localStorage.getItem("access") !== null;
 
@@ -26,9 +26,8 @@ function Navbar() {
         localStorage.removeItem("access");
         localStorage.removeItem("refresh");
 
-        setUser(null)
-
         navigate("/");
+
     }
 
     return (
