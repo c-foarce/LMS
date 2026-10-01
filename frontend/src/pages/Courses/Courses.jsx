@@ -48,7 +48,7 @@ function Courses() {
 
 
         setItems(response.data)
-        console.log(response.data)
+
 
       } catch (error) {
 
@@ -87,8 +87,6 @@ function Courses() {
       const response = await api.post(
         `/courses/enrolments/${enrolmentId}/submit/`
       )
-
-      console.log("SUBMIT RESPONSE:", response)
 
       setItems(previousItems =>
         previousItems.map(enrolment =>

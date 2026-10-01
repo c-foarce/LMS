@@ -87,11 +87,6 @@ function AdminDashboard() {
         enrolment => enrolment.status === "completed"
     ).length;
 
-    //ununsed atm, commenting out until implemented
-    // const droppedEnrolments = enrolments.filter(
-    //     enrolment => enrolment.status === "dropped"
-    // ).length;
-
     const totalEnrolments = enrolments.length;
 
 

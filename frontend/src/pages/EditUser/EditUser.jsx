@@ -152,8 +152,6 @@ function EditUser() {
 
     const handleDelete = async () => {
 
-        console.log("DEL USER ID:", id);
-
         const confirmed = window.confirm(
             "Are you sure you want to delete this user?"
         );
@@ -310,9 +308,6 @@ function EditUser() {
                 )}
             </div>
 
-            <pre>
-                {JSON.stringify(user, null, 2)}
-            </pre>
         </>
     );
 }

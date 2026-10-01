@@ -31,9 +31,6 @@ function StudentDashboard() {
                 setEnrolments(enrolmentsResponse.data);
                 setCompletedEnrolments(completedResponse.data);
 
-                console.log("Current:", enrolmentsResponse.data);
-                console.log("Completed:", completedResponse.data);
-
             } catch (error) {
 
                 console.error(

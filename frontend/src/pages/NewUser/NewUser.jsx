@@ -12,17 +12,6 @@ function NewUser() {
     const [success, setSuccess] = useState(false)
 
     // Stores whatever the user has entered into the form.
-    //
-    // Example:
-    // {
-    //   first name: "John",
-    //   last name: "Oliver"
-    //   username: "John_Oliver", i think the username should initially be built from first+last name, but with the option of being changed in the front end before posting,
-    //   role: "student",
-    //   password: "testtest1212", this will be viewd as plain text on the front end, but hashed and stored in the database,
-    //   description: "Introduction to physics"
-    // }
-    //
     // This object will eventually be sent as the POST request body.
     const [formData, setFormData] = useState({})
 
@@ -47,7 +36,6 @@ function NewUser() {
 
         api.post("/accounts/create/", formData)
             .then(response => {
-                console.log("User created", response.data);
 
                 setSuccess(true);
 
@@ -68,14 +56,10 @@ function NewUser() {
         api.get("/accounts/user-fields/")
             .then(response => {
 
-                console.log("user fields acquired:");
-                console.log(response.data);
-
                 setFields(response.data.fields);
 
             })
             .catch(error => {
-                console.log("could not access users model")
                 if (error.response) {
                     console.error(error.response.data);
                 } else {
@@ -148,12 +132,6 @@ function NewUser() {
 
                 <button type="submit">Submit</button>
             </form>
-            {/*Temporary debugging output. Shows what is in the package that will be sent to Django*/}
-
-            <pre>
-                {JSON.stringify(formData, null, 2)}
-            </pre>
-
         </>
     )
 

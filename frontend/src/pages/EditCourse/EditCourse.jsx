@@ -204,9 +204,6 @@ function EditCourse() {
                 </div>
 
             </form>
-            {/* <pre>
-                {JSON.stringify(formData, null, 2)}
-            </pre> */}
         </>
     )
 }

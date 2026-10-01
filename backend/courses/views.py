@@ -50,17 +50,6 @@ class CourseEditView(generics.UpdateAPIView):
 
     
     
-# Gets all Courses a "teacher" User owns
-class TeachingCoursesView(generics.ListAPIView):
-    serializer_class = serializers.TeacherCourseSerializer
-    permission_classes = [IsAuthenticated, permissions.IsTeacher]
-
-    def get_queryset(self):
-        return (
-            Course.objects.filter(
-                teacher=self.request.user
-            )
-        )
 #increments selected course by 1, after cheking if it's able to
 class SubmitProgress(APIView):
     permission_classes=[IsAuthenticated]
@@ -289,7 +278,6 @@ class StudentGradeView(generics.ListAPIView):
         ).exclude(
             grade=""
         )
-    pass
 
 
 class AcknoweldgeCompletionView(generics.UpdateAPIView):

@@ -289,36 +289,6 @@ describe("Navbar", () => {
         ).not.toBeInTheDocument();
     });
 
-
-    // test("logs out the user and navigates to the home page", async () => {
-    //     // This test needs actual routes so we can see where navigate("/") goes.
-
-    //     const screen = await render(
-    //         <MemoryRouter initialEntries={["/app/dashboard/"]}>
-    //             <Navbar />
-    //         </MemoryRouter>
-    //     );
-
-    //     // Navbar needs a user for roleName.
-    //     mockUseAuth.mockReturnValue({
-    //         user: mockStudent,
-    //         setUser: mockSetUser,
-    //     });
-
-    //     localStorage.setItem("access", "test-access-token");
-    //     localStorage.setItem("refresh", "test-refresh-token");
-
-    //     await screen.getByRole(
-    //         "button",
-    //         { name: "Logout" }
-    //     ).click();
-
-    //     expect(localStorage.getItem("access")).toBeNull();
-    //     expect(localStorage.getItem("refresh")).toBeNull();
-
-    //     expect(mockSetUser).toHaveBeenCalledWith(null);
-    // });
-
     test("logs out the user", async () => {
         const screen = await renderNavbar(mockStudent);
 

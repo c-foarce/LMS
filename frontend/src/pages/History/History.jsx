@@ -38,7 +38,6 @@ function History() {
 
                 setRecords(response.data);
 
-                console.log("History:", response.data);
 
             } catch (error) {
 

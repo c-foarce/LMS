@@ -27,10 +27,6 @@ function Gradebook() {
                     "/courses/teaching/progress/"
                 );
 
-                console.log(
-                    "TEACHER PROGRESS:",
-                    response.data
-                );
 
                 setCourses(response.data);
 
@@ -64,8 +60,6 @@ function Gradebook() {
                     grade: selectedGrades[enrolmentId]
                 }
             );
-
-            console.log("patch success");
 
             setCourses(previousCourses =>
                 previousCourses.map(course => ({

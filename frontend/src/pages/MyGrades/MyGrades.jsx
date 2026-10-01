@@ -15,7 +15,6 @@ function MyGrades() {
                 const response = await api.get(
                     "/courses/enrolments/my-grades/"
                 );
-                console.log("Data:", response.data);
 
                 setGrades(response.data);
 

@@ -20,24 +20,10 @@ function NewCourse() {
   const [teacherId, setTeacherId] = useState(null)
 
   // Stores all possible teachers, only for use when role == "admin"
-  // Each item contains information like:
-  // {
-  //   id: 3,
-  //   username: "teacher1"
-  // }
   const [teacherOptions, setTeacherOptions] = useState([])
 
 
   // Stores whatever the user has entered into the form.
-  //
-  // Example:
-  // {
-  //   subject_name: "Physics",
-  //   code: "PHY101",
-  //   teacher: "3",
-  //   description: "Introduction to physics"
-  // }
-  //
   // This object will eventually be sent as the POST request body.
   const [formData, setFormData] = useState({})
 
@@ -62,7 +48,6 @@ function NewCourse() {
 
     api.post("/courses/create/", formData)
       .then(response => {
-        console.log("Course Created", response.data);
 
         setSuccess(true);
 
@@ -98,8 +83,6 @@ function NewCourse() {
 
     api.get("/courses/course-fields/")
       .then(response => {
-
-        console.log("HERE", response.data.fields);
 
         // saves all fields form course model in array
         setFields(response.data.fields);
@@ -223,12 +206,6 @@ function NewCourse() {
 
         <button type="submit" >Submit</button>
       </form>
-      {/*Temporary debugging output. Shows what is in the package that will be sent to Django*/}
-
-      {/* <pre>
-        {JSON.stringify(formData, null, 2)}
-      </pre> */}
-
     </>
   )
 

@@ -33,7 +33,6 @@ function NewEnrolment() {
 
         api.post("/courses/enrolments/create/", formData)
             .then(response => {
-                console.log("New enrolment created", response.data);
 
                 setSuccess(true);
 
@@ -71,15 +70,9 @@ function NewEnrolment() {
                 const studentsResponse = await api.get('/accounts/students/');
                 const coursesResponse = await api.get('/courses/available/');
 
-                // console.log("Testing")
-                // console.log(studentsResponse.data)
-                // console.log(coursesResponse.data)
-
                 setStudentOptions(studentsResponse.data)
                 setCourseOptions(coursesResponse.data)
 
-                // console.log("TESTING MORE")
-                // console.log(studentsResponse.data)
             } catch (error) {
                 console.error(error)
             }
@@ -144,9 +137,6 @@ function NewEnrolment() {
 
                 <button type="submit">Submit Enrolment</button>
             </form>
-            <pre>
-                {JSON.stringify(formData, null, 2)}
-            </pre>
         </>
     )
 

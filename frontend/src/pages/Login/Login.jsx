@@ -56,7 +56,6 @@ function Login() {
       }, 1000);
 
     } catch (err) {
-      console.log("LOGIN FAILED:", err.response?.data);
       setLoginState(
         {
           type: "error",

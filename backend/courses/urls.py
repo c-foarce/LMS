@@ -43,13 +43,6 @@ urlpatterns = [
         name="available-courses"
     ),
 
-    # path(
-    #     "teaching/",
-    #     views.TeachingCoursesView.as_view(),
-    #     name="teaching-courses",
-    # ),
-    #Not needed since CourseList had a reworK? check during sweep
-
     path(
         "teaching/progress/",
         views.TeacherProgressView.as_view(),
