@@ -91,8 +91,7 @@ class TeacherProgressView(generics.ListAPIView):
         )
 
     
-##########################
-###### WIDGET TYPES ######
+# Maps Django field types to frontend form widgets.
 WIDGET_TYPES = {
     "CharField": "text",
     "TextField": "textarea",
@@ -101,12 +100,9 @@ WIDGET_TYPES = {
     "FloatField": "number",
     "ForeignKey": "select",
 }
-#########################
-#########################
 
 
-#########################
-###### FIELD ORDER ######
+# Controls the order fields are returned to the frontend form.
 FIELD_ORDER = [
 "subject_name",
 "code", 
@@ -115,7 +111,7 @@ FIELD_ORDER = [
 "total_submissions",
 ]
 
-# Gets name, type, and required Course fields
+# Provides the frontend with the fields needed to build the course form.
 ## USES WIDGET_TYPES
 class CourseFieldsView(APIView):
     permission_classes = [IsAuthenticated]
@@ -315,6 +311,8 @@ class AcknoweldgeCompletionView(generics.UpdateAPIView):
 
         return Response(serializer.data)
 
+# Archives a completed enrolment after all completion requirements are met.
+# Copies the final record to CompletedEnrolment and removes the active enrolment atomically.
 class CompleteEnrolmentView(generics.CreateAPIView):
 
     serializer_class=serializers.CompletedEnrolmentSerializer

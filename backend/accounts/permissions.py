@@ -4,9 +4,6 @@ from accounts.models import User
 
 class IsAdmin(BasePermission):
     
-    #Allow access only to those with admin role
-
-
     def has_permission(self, request, view):
         return (
             request.user.is_authenticated and request.user.role == User.Roles.ADMIN
