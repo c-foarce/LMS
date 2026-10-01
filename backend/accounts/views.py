@@ -9,6 +9,10 @@ from . import serializers
 from . import permissions
 
 
+class RegisterView(generics.CreateAPIView):
+    queryset = User.objects.all()
+    serializer_class = serializers.RegisterSerializer
+
 class UserCreateView(generics.CreateAPIView):
 
     serializer_class = serializers.UserSerializer
