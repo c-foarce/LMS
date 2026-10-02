@@ -33,11 +33,6 @@ function StudentDashboard() {
 
             } catch (error) {
 
-                console.error(
-                    "Failed to retrieve student dashboard data:",
-                    error
-                );
-
                 setError(
                     "Failed to retrieve student dashboard data."
                 );

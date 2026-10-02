@@ -55,8 +55,6 @@ function EditUser() {
 
             } catch (error) {
 
-                console.error("Failed to retrieve user:", error);
-
                 setError(
                     error.response?.data?.detail ||
                     "Failed to retrieve user."
@@ -139,8 +137,6 @@ function EditUser() {
 
         } catch (error) {
 
-            console.error("Failed to update user:", error);
-
             setError(
                 error.response?.data?.detail ||
                 "Failed to update user."
@@ -173,8 +169,6 @@ function EditUser() {
             }, 2000);
 
         } catch (error) {
-
-            console.error(error);
 
             setDeleting(false);
             setError("Could not delete user.");

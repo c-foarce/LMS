@@ -32,7 +32,6 @@ function EnrolmentList() {
                 setEnrolments(response.data);
             } catch (error) {
 
-                // console.error(error);
                 setLoadingError("Could not load enrolments");
             } finally {
                 setLoading(false)
@@ -64,7 +63,7 @@ function EnrolmentList() {
                 )
             )
         } catch (error) {
-            // console.error(error)
+
             setDeleteErrorEnrolmentId(enrolmentId)
 
             setDeleteError(

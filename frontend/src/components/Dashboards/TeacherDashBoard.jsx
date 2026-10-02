@@ -35,11 +35,6 @@ function TeacherDashboard() {
 
             } catch (error) {
 
-                console.error(
-                    "Failed to retrieve teacher dashboard data:",
-                    error
-                );
-
                 setError(
                     "Failed to retrieve teacher dashboard data."
                 );

@@ -32,8 +32,6 @@ function Gradebook() {
 
             } catch (error) {
 
-                console.error(error);
-
                 setError(
                     "Failed to retrieve student progress."
                 );
@@ -94,11 +92,8 @@ function Gradebook() {
 
         } catch (error) {
 
-            console.error(
-                "Grade submission failed:",
-                error
-            );
-
+            setError("Failed to save grade.");
+            
         }
     };
 

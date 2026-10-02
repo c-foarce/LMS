@@ -33,7 +33,6 @@ function AdminDashboard() {
 
             } catch (error) {
 
-                console.error("Failed to retrieve dashboard data:", error);
                 setError("Failed to retrieve dashboard data.");
 
             } finally {

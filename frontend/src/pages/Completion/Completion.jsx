@@ -35,8 +35,6 @@ function Completion() {
 
             } catch (error) {
 
-                console.error(error);
-
                 setError(
                     "Failed to retrieve completed courses."
                 );
@@ -99,11 +97,6 @@ function Completion() {
             }, 2000);
 
         } catch (error) {
-
-            console.error(
-                "Completion processing failed",
-                error
-            );
 
             setErrorEnrolmentId(enrolmentId);
 

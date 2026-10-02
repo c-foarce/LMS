@@ -41,7 +41,7 @@ function Courses() {
             break;
 
           default:
-            console.error("Unknown user role.")
+            setError("Unknown user role.")
             return;
 
         }
@@ -51,8 +51,6 @@ function Courses() {
 
 
       } catch (error) {
-
-        console.error("Failed to retrieve courses:", error);
 
         setError(
           error.response?.data?.detail ||
@@ -104,8 +102,6 @@ function Courses() {
 
     } catch (error) {
 
-      console.error("SUBMIT ERROR:", error)
-
       setError(
         error.response?.data?.detail ||
         "Something went wrong when submitting"
@@ -142,8 +138,6 @@ function Courses() {
       )
 
     } catch (error) {
-
-      console.error("SUBMIT ERROR:", error)
 
       setError(
         error.response?.data?.detail ||

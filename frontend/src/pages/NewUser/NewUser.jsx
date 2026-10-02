@@ -3,13 +3,15 @@ import api from '../../services/api'
 
 function NewUser() {
 
-    // will store all the needed frields form the User Model
+    // will store all the needed fields form the User Model
     const [fields, setFields] = useState([])
 
-    // gets the rle of the user, possibly for denying access to Students/Teachers since this should be an admin only feature
+    // gets the role of the user, possibly for denying access to Students/Teachers since this should be an admin only feature
     const [role, setRole] = useState("")
 
     const [success, setSuccess] = useState(false)
+
+    const [error, setError] = useState(null)
 
     // Stores whatever the user has entered into the form.
     // This object will eventually be sent as the POST request body.
@@ -45,9 +47,10 @@ function NewUser() {
                 }, 3000)
             })
             .catch(error => {
-                console.error(
-                    "User creation failed:",
-                    error.response?.data || error.message
+                setError(
+                    error.response?.data?.detail ||
+                    error.response?.data?.non_field_errors?.[0] ||
+                    "Failed to create user."
                 );
             });
     };
@@ -59,12 +62,8 @@ function NewUser() {
                 setFields(response.data.fields);
 
             })
-            .catch(error => {
-                if (error.response) {
-                    console.error(error.response.data);
-                } else {
-                    console.error(error.message);
-                }
+            .catch(() => {
+                setError("Failed to load user fields.");
             });
 
     }, [])
@@ -72,8 +71,9 @@ function NewUser() {
     return (
         <>
             <h1>New User Page</h1>
-            {success && (
-                <p>User sucessfully created!</p>
+
+            {error && (
+                <p>{error}</p>
             )}
 
             <form onSubmit={handleSubmit}>
@@ -130,7 +130,18 @@ function NewUser() {
 
                 ))}
 
-                <button type="submit">Submit</button>
+                <div>
+                    <button
+                        type="submit"
+                        disabled={success}
+                    >
+                        Submit
+                    </button>
+
+                    {success && (
+                        <span>User successfully created!</span>
+                    )}
+                </div>
             </form>
         </>
     )

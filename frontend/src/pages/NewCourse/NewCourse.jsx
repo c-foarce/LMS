@@ -16,8 +16,7 @@ function NewCourse() {
   // for tracking when a successful POST has been made, flags to reset the page back to default
   const [success, setSuccess] = useState(false);
 
-  // captures TeacherID, for use in case of teacher created courses
-  const [teacherId, setTeacherId] = useState(null)
+  const [error, setError] = useState(null)
 
   // Stores all possible teachers, only for use when role == "admin"
   const [teacherOptions, setTeacherOptions] = useState([])
@@ -45,21 +44,16 @@ function NewCourse() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    setError(null);
 
     api.post("/courses/create/", formData)
-      .then(response => {
+      .then(() => {
 
         setSuccess(true);
 
         // this will reset the form
         setTimeout(() => {
-          if (role === "teacher") {
-            setFormData({
-              teacher: teacherId,
-            });
-          } else {
-            setFormData({})
-          }
+          setFormData({});
 
           //hide success message
           setSuccess(false)
@@ -67,8 +61,8 @@ function NewCourse() {
 
         }, 3000)
       })
-      .catch(error => {
-        console.error("Course creation failed:", error.response.data);
+      .catch(() => {
+        setError("Failed to create course.");
       })
   }
 
@@ -89,24 +83,10 @@ function NewCourse() {
 
         // store the current logged in users role
         setRole(response.data.role);
-
-        // store current users id
-        setTeacherId(response.data.teacher_id)
-
-        if (response.data.role === "teacher") {
-          setFormData({
-            teacher: response.data.teacher_id,
-          });
-        }
-
-        // gets all users with role == "teacher" to be used with admin view
-        setTeacherOptions(response.data.teacher_options)
       })
-      .catch(error => {
+      .catch(() => {
 
-        // for debugging, logs error to console
-        console.error(error)
-        //IF NO INTERNET DISPLAY BAD PAGE
+        setError("Failed to load course fields.");
 
       });
 
@@ -171,8 +151,12 @@ function NewCourse() {
 
       <h1>New Course Page</h1>
 
+      {error && (
+        <p>{error}</p>
+      )}
+
       {success && (
-        <p>Course sucessfully created!</p>
+        <p>Course successfully created!</p>
       )}
 
       <form onSubmit={handleSubmit}>

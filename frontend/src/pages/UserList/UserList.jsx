@@ -23,7 +23,6 @@ function UserList() {
                 setUsers(response.data)
             } catch (error) {
 
-                console.error(error);
                 setError("Failed to retreive User data.")
             } finally {
                 setLoading(false)

@@ -48,8 +48,6 @@ function NewEnrolment() {
             })
             .catch(error => {
 
-                console.error("Enrolment creation failure:");
-
                 setError(
                     error.response?.data?.non_field_errors?.[0] ||
                     error.response?.data?.detail ||
@@ -74,8 +72,8 @@ function NewEnrolment() {
                 setStudentOptions(studentsResponse.data)
                 setCourseOptions(coursesResponse.data)
 
-            } catch (error) {
-                console.error(error)
+            } catch {
+                setError("Failed to load students and courses.");
             }
 
 

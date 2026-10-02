@@ -19,7 +19,7 @@ function MyGrades() {
                 setGrades(response.data);
 
             } catch (error) {
-                console.error(error);
+
                 setError("Failed to Load grades.");
             } finally {
                 setLoading(false)

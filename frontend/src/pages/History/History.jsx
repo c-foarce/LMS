@@ -41,8 +41,6 @@ function History() {
 
             } catch (error) {
 
-                console.error("Failed to retrieve history:", error);
-
                 setError(
                     error.response?.data?.detail ||
                     "Failed to retrieve course history."
