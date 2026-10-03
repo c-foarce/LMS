@@ -5,14 +5,15 @@ import { useAuth } from '../../context/AuthContext'
 
 import api from '../../services/api'
 
+import FilterDropdown from "../../components/Filters/FilterDropdown";
 
 import CourseCard from "../../components/DisplayCards/CourseCard";
+
 
 function CourseList() {
 
     const navigate = useNavigate()
 
-    //remove later, get working first
     const { user } = useAuth()
 
     const [courses, setCourses] = useState([])
@@ -31,6 +32,10 @@ function CourseList() {
     const [enrolErrorCourseId, setEnrolErrorCourseId] = useState(null)
 
     const [enrolSuccess, setEnrolSuccess] = useState(null)
+
+    const [search, setSearch] = useState("");
+    const [teacherFilter, setTeacherFilter] = useState("");
+    const [statusFilter, setStatusFilter] = useState("");
 
 
     // INITIAL MOUNTING
@@ -71,6 +76,16 @@ function CourseList() {
     }, [user.role])
 
 
+    const teachers = [...new Set(
+        courses
+            .map(course => course.teacher_name)
+            .filter(Boolean)
+    )];
+
+    const statuses = [
+        { value: "active", label: "Active" },
+        { value: "inactive", label: "Inactive" }
+    ];
 
 
     //BUTTON FUNCTIONS
@@ -80,8 +95,6 @@ function CourseList() {
     const handleEdit = (courseId) => {
         navigate(`/app/courses/${courseId}/edit/`)
     }
-
-
 
     const handleToggleActive = async (courseId) => {
 
@@ -117,7 +130,6 @@ function CourseList() {
             }, 3000)
         }
     }
-
 
     const handleDelete = async (courseId) => {
 
@@ -227,6 +239,30 @@ function CourseList() {
         )
     }
 
+    const filteredCourses = displayedCourses.filter(course => {
+        const searchTerm = search.toLowerCase()
+
+        const matchesSearch =
+            course.subject_name?.toLowerCase().includes(searchTerm) ||
+            course.code?.toLowerCase().includes(searchTerm) ||
+            course.teacher_name?.toLowerCase().includes(searchTerm)
+
+        const matchesTeacher =
+            !teacherFilter ||
+            course.teacher_name === teacherFilter
+
+        const matchesStatus =
+            !statusFilter ||
+            (statusFilter === "active" && course.is_active) ||
+            (statusFilter === "inactive" && !course.is_active)
+
+        return (
+            matchesSearch &&
+            matchesTeacher &&
+            matchesStatus
+        )
+    })
+
     if (loading) {
         return <p>Loading...</p>
     }
@@ -240,20 +276,60 @@ function CourseList() {
                 Course List
             </h1>
 
+            <div>
+                <label htmlFor="course-search">
+                    Search:
+                </label>
+
+                <input
+                    id="course-search"
+                    type="text"
+                    placeholder="Search courses..."
+                    value={search}
+                    onChange={(event) => setSearch(event.target.value)}
+                />
+
+                <FilterDropdown
+                    id="teacher-filter"
+                    label="Teacher:"
+                    value={teacherFilter}
+                    onChange={setTeacherFilter}
+                    defaultLabel="All Teachers"
+                    options={teachers}
+                    getValue={teacher => teacher}
+                    getLabel={teacher => teacher}
+                />
+
+                {user.role !== "student" && (
+                    <FilterDropdown
+                        id="status-filter"
+                        label="Status:"
+                        value={statusFilter}
+                        onChange={setStatusFilter}
+                        defaultLabel="All Statuses"
+                        options={statuses}
+                        getValue={status => status.value}
+                        getLabel={status => status.label}
+                    />
+                )}
+            </div>
+
             {enrolSuccess && (
                 <p>{enrolSuccess}</p>
             )}
             {/*This i want moved next to the relvant button in a <span> */}
 
-            {displayedCourses.length === 0 ? (
+            {filteredCourses.length === 0 ? (
                 <p>
-                    {user.role === "student"
-                        ? "There are currently no courses available to enrol on."
-                        : "No courses found."
+                    {displayedCourses.length === 0
+                        ? user.role === "student"
+                            ? "There are currently no courses available to enrol on."
+                            : "No courses found."
+                        : "No courses match your search or filters."
                     }
                 </p>
             ) : (
-                displayedCourses.map(course => (
+                filteredCourses.map(course => (
                     <CourseCard
                         key={course.id}
                         course={course}
