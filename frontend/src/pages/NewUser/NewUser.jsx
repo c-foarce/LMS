@@ -1,7 +1,10 @@
 import { useState, useEffect } from "react"
+import { useNavigate } from "react-router-dom"
 import api from '../../services/api'
 
 function NewUser() {
+
+    const navigate = useNavigate();
 
     // will store all the needed fields form the User Model
     const [fields, setFields] = useState([])
@@ -33,28 +36,6 @@ function NewUser() {
         }));
     };
 
-    const handleSubmit = (event) => {
-        event.preventDefault();
-
-        api.post("/accounts/create/", formData)
-            .then(response => {
-
-                setSuccess(true);
-
-                setTimeout(() => {
-                    setFormData({});
-                    setSuccess(false)
-                }, 3000)
-            })
-            .catch(error => {
-                setError(
-                    error.response?.data?.detail ||
-                    error.response?.data?.non_field_errors?.[0] ||
-                    "Failed to create user."
-                );
-            });
-    };
-
     useEffect(() => {
         api.get("/accounts/user-fields/")
             .then(response => {
@@ -68,8 +49,105 @@ function NewUser() {
 
     }, [])
 
+    const handleSubmit = (event) => {
+        event.preventDefault();
+
+        api.post("/accounts/create/", formData)
+            .then(() => {
+
+                setSuccess(true);
+
+                setTimeout(() => {
+                    setFormData({});
+                    setSuccess(false)
+                }, 3000)
+            })
+            .catch(() => {
+                setError(
+                    error.response?.data?.detail ||
+                    error.response?.data?.non_field_errors?.[0] ||
+                    "Failed to create user."
+                );
+            });
+    };
+
+
+    const fieldLabels = {
+        username: "Username",
+        first_name: "First Name",
+        last_name: "Last Name",
+        email: "Email",
+        password: "Password",
+        role: "Role",
+    };
+
+    const renderField = (field) => {
+
+        if (field.choices) {
+            return (
+                <select
+                    id={field.name}
+                    name={field.name}
+                    onChange={handleChange}
+                    value={formData[field.name] || ""}
+                    required={field.required}
+                >
+                    <option value="">
+                        Select role:
+                    </option>
+
+                    {field.choices.map((choice) => (
+                        <option
+                            key={choice.value}
+                            value={choice.value}
+                        >
+                            {choice.label}
+                        </option>
+                    ))}
+                </select>
+            );
+        }
+
+
+        if (field.type === "TextField") {
+            return (
+                <textarea
+                    id={field.name}
+                    name={field.name}
+                    value={formData[field.name] || ""}
+                    onChange={handleChange}
+                    required={field.required}
+                />
+            );
+        }
+
+
+        return (
+            <input
+                id={field.name}
+                type={field.name === "password" ? "text" : "text"}
+                name={field.name}
+                required={field.required}
+                value={formData[field.name] || ""}
+                onChange={handleChange}
+            />
+        );
+
+    };
+
+
+
     return (
         <>
+
+            <div>
+                <button
+                    type="button"
+                    onClick={() => navigate(-1)}
+                >
+                    ← Back
+                </button>
+            </div>
             <h1>New User Page</h1>
 
             {error && (
@@ -77,66 +155,35 @@ function NewUser() {
             )}
 
             <form onSubmit={handleSubmit}>
-                {fields.map((field) => (
+                {fields.map((field) => {
 
-                    <div key={field.name}>
+                    return (
+                        <div key={field.name}>
 
-                        <label htmlFor={field.name}>
-                            {field.name}
-                        </label>
+                            <label htmlFor={field.name}>
+                                {fieldLabels[field.name] || field.name}:
+                            </label>
 
-                        {field.choices ? (
+                            {renderField(field)}
 
-                            <select
-                                id={field.name}
-                                name={field.name}
-                                onChange={handleChange}
-                                required={field.required}
-                                defaultValue=""
-                            >
-                                <option value="" disabled>Select Role</option>
+                        </div>
+                    );
 
-                                {field.choices.map(choice => (
-                                    <option
-                                        key={choice.value}
-                                        value={choice.value}
-                                    >
-                                        {choice.label}
-                                    </option>
-                                ))}
-                            </select>
-
-                        ) : field.type === "TextField" ? (
-
-                            <textarea
-                                id={field.name}
-                                name={field.name}
-                                onChange={handleChange}
-                            />
-
-                        ) : (
-                            // tyoe below here is set to "text" : "text" so that leaves option open for more hidden types later but keeps password visible
-                            <input
-                                id={field.name}
-                                type={field.name === "password" ? "text" : "text"}
-                                name={field.name}
-                                required={field.required}
-                                onChange={handleChange}
-                            />
-
-                        )}
-
-                    </div>
-
-                ))}
+                })}
 
                 <div>
-                    <button
-                        type="submit"
-                        disabled={success}
-                    >
-                        Submit
-                    </button>
+                    <div>
+                        <button type="submit">
+                            Create User
+                        </button>
+
+                        <button
+                            type="button"
+                            onClick={() => navigate(-1)}
+                        >
+                            Cancel
+                        </button>
+                    </div>
 
                     {success && (
                         <span>User successfully created!</span>

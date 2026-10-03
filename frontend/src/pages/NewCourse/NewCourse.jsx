@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react"
+import { useNavigate } from "react-router-dom"
+
 import api from '../../services/api'
 
 
 function NewCourse() {
 
-  //SETTING STATE
+  const navigate = useNavigate()
 
   // Stores the list of fields received from Django. taken from course model
   const [fields, setFields] = useState([])
@@ -92,6 +94,14 @@ function NewCourse() {
 
   }, []);
 
+  const fieldLabels = {
+    subject_name: "Subject Name",
+    code: "Course Code",
+    description: "Description",
+    teacher: "Teacher",
+    total_submissions: "Required Submissions",
+  };
+
   const renderField = (field) => {
 
     if (field.name === "teacher" && role === "admin") {
@@ -149,6 +159,15 @@ function NewCourse() {
   return (
     <>
 
+      <div>
+        <button
+          type="button"
+          onClick={() => navigate(-1)}
+        >
+          ← Back
+        </button>
+      </div>
+
       <h1>New Course Page</h1>
 
       {error && (
@@ -173,7 +192,7 @@ function NewCourse() {
             <div key={field.name}>
 
               <label htmlFor={field.name}>
-                {field.name}
+                {fieldLabels[field.name] || field.name}:
               </label>
 
               {/*If the current user is an admin:
@@ -188,7 +207,19 @@ function NewCourse() {
         })}
 
 
-        <button type="submit" >Submit</button>
+        <div>
+          <button type="submit">
+            Create Course
+          </button>
+
+          <button
+            type="button"
+            onClick={() => navigate(-1)}
+          >
+            Cancel
+          </button>
+        </div>
+        
       </form>
     </>
   )

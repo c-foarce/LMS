@@ -1,7 +1,11 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+
 import api from '../../services/api'
 
 function NewEnrolment() {
+
+    const navigate = useNavigate()
 
     const [courseOptions, setCourseOptions] = useState([]);
     const [studentOptions, setStudentOptions] = useState([]);
@@ -85,7 +89,14 @@ function NewEnrolment() {
 
     return (
         <>
-
+            <div>
+                <button
+                    type="button"
+                    onClick={() => navigate(-1)}
+                >
+                    ← Back
+                </button>
+            </div>
             <h1>New Enrolment</h1>
             {success && (
                 <p>Enrolment sucessfully created!</p>
@@ -134,7 +145,18 @@ function NewEnrolment() {
                     })}
                 </select>
 
-                <button type="submit">Submit Enrolment</button>
+                <div>
+                    <button type="submit">
+                        Create Enrolment
+                    </button>
+
+                    <button
+                        type="button"
+                        onClick={() => navigate(-1)}
+                    >
+                        Cancel
+                    </button>
+                </div>
             </form>
         </>
     )
