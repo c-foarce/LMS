@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 
-import api from '../../services/api'
+import api from '../../services/api';
+
+import FilterDropdown from "../../components/Filters/FilterDropdown";
 
 import UserCard from "../../components/DisplayCards/UserCard";
 
@@ -11,6 +13,7 @@ function UserList() {
     const [error, setError] = useState(null)
 
     const [searchTerm, setSearchTerm] = useState("")
+    const [roleFilter, setRoleFilter] = useState("")
 
 
     //This block is repeated on all major "get all of this model type" pages. extraction candidate?
@@ -31,12 +34,24 @@ function UserList() {
 
         fetchUsers()
     }, [])
-    
+
 
     //This only goes by usernames, might want to add firstname/lastname filtering later
-    const filteredUsers = users.filter((user) =>
-        user.username.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    const filteredUsers = users.filter(user => {
+        const search = searchTerm.toLowerCase();
+
+        const matchesSearch =
+            user.username?.toLowerCase().includes(search) ||
+            user.first_name?.toLowerCase().includes(search) ||
+            user.last_name?.toLowerCase().includes(search) ||
+            user.email?.toLowerCase().includes(search);
+
+        const matchesRole =
+            !roleFilter ||
+            user.role === roleFilter;
+
+        return matchesSearch && matchesRole;
+    });
 
 
     if (loading) {
@@ -58,16 +73,31 @@ function UserList() {
                 placeholder="Search users..."
             />
 
+            <FilterDropdown
+                id="role-filter"
+                label="Role:"
+                value={roleFilter}
+                onChange={setRoleFilter}
+                defaultLabel="All Roles"
+                options={[
+                    { value: "student", label: "Student" },
+                    { value: "teacher", label: "Teacher" },
+                    { value: "admin", label: "Admin" }
+                ]}
+                getValue={role => role.value}
+                getLabel={role => role.label}
+            />
 
 
             {users.length === 0 ? (
                 <p>Connection successful, no users found.</p>
+            ) : filteredUsers.length === 0 ? (
+                <p>No users match your search or filter.</p>
             ) : (
                 filteredUsers.map(user => (
                     <UserCard
                         key={user.id}
                         user={user}
-
                     />
                 ))
             )}
