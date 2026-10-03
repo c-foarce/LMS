@@ -9,6 +9,8 @@ class RegisterSerializerTests(TestCase):
         serializer = RegisterSerializer(
             data={
                 "username": "student",
+                "first_name": "Test",
+                "last_name": "Student",
                 "password": "password123",
                 "role": "student",
             }
@@ -20,6 +22,8 @@ class RegisterSerializerTests(TestCase):
         serializer = RegisterSerializer(
             data={
                 "username": "teacher",
+                "first_name": "Test",
+                "last_name": "Teacher",
                 "password": "password123",
                 "role": "teacher",
             }
@@ -54,6 +58,8 @@ class RegisterSerializerTests(TestCase):
     def test_duplicate_username_is_rejected(self):
         User.objects.create_user(
             username="student",
+            first_name="Test",
+            last_name="Student",
             password="password123",
             role="student",
         )
@@ -61,6 +67,8 @@ class RegisterSerializerTests(TestCase):
         serializer = RegisterSerializer(
             data={
                 "username": "student",
+                "first_name": "Different",
+                "last_name": "Student",
                 "password": "differentpassword",
                 "role": "student",
             }
@@ -73,6 +81,8 @@ class RegisterSerializerTests(TestCase):
         serializer = RegisterSerializer(
             data={
                 "username": "student",
+                "first_name": "Test",
+                "last_name": "Student",
                 "password": "password123",
                 "role": "student",
             }
@@ -104,6 +114,8 @@ class UserSerializerTests(TestCase):
         serializer = UserSerializer(
             data={
                 "username": "student",
+                "first_name": "Test",
+                "last_name": "Student",
                 "password": "password123",
                 "role": "student",
             }
@@ -127,6 +139,8 @@ class UserSerializerTests(TestCase):
         serializer = UserSerializer(
             data={
                 "username": "student",
+                "first_name": "Test",
+                "last_name": "Student",
                 "password": "password123",
                 "role": "student",
             }

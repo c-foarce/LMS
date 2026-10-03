@@ -16,6 +16,8 @@ class RegistrationViewTests(TestCase):
             self.url,
             {
                 "username": "student",
+                "first_name": "Test",
+                "last_name": "Student",
                 "password": "password123",
                 "role": "student",
             },
@@ -34,6 +36,8 @@ class RegistrationViewTests(TestCase):
             self.url,
             {
                 "username": "teacher",
+                "first_name": "Test",
+                "last_name": "Teacher",
                 "password": "password123",
                 "role": "teacher",
             },
@@ -144,11 +148,14 @@ class RegistrationViewTests(TestCase):
                 "username": "student",
                 "password": "password123",
                 "role": "student",
+                "first_name": "Test",
+                "last_name": "Student",
             },
             format="json",
         )
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
         self.assertNotIn("password", response.data)
 
 class LoginViewTests(TestCase):
@@ -730,6 +737,8 @@ class UserCreateViewTests(TestCase):
             self.url,
             {
                 "username": "newstudent",
+                "first_name": "New",
+                "last_name": "Student",
                 "password": "newpassword123",
                 "role": "student",
             },
@@ -751,6 +760,8 @@ class UserCreateViewTests(TestCase):
             self.url,
             {
                 "username": "newteacher",
+                "first_name": "New",
+                "last_name": "Teacher",
                 "password": "newpassword123",
                 "role": "teacher",
             },
@@ -769,6 +780,8 @@ class UserCreateViewTests(TestCase):
             self.url,
             {
                 "username": "newadmin",
+                "first_name": "New",
+                "last_name": "Admin",
                 "password": "newpassword123",
                 "role": "admin",
             },
@@ -787,6 +800,8 @@ class UserCreateViewTests(TestCase):
             self.url,
             {
                 "username": "newstudent",
+                "first_name": "New",
+                "last_name": "Student",
                 "password": "newpassword123",
                 "role": "student",
             },
@@ -806,6 +821,8 @@ class UserCreateViewTests(TestCase):
             self.url,
             {
                 "username": "newstudent",
+                "first_name": "New",
+                "last_name": "Student",
                 "password": "newpassword123",
                 "role": "student",
             },

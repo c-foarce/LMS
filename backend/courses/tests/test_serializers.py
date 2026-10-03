@@ -266,6 +266,7 @@ class CourseListSerializerTests(SerializerTestMixin, TestCase):
             "id",
             "subject_name",
             "code",
+            "description",
             "is_active",
             "teacher_name",
             "total_submissions",

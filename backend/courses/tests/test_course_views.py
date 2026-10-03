@@ -309,6 +309,7 @@ class CourseListViewTests(CourseViewTestBase):
             "is_active",
             "teacher_name",
             "total_submissions",
+            "description"
         }
 
         self.assertEqual(set(course.keys()), expected_fields)
