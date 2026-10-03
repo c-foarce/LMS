@@ -11,7 +11,7 @@ function DeniedAccess() {
                 You do not have permission to access this page.
             </p>
 
-            <button onClick={() => navigate("/dashboard")}>
+            <button onClick={() => navigate("/app/dashboard")}>
                 Return to Dashboard
             </button>
         </div>
