@@ -103,7 +103,8 @@ class CourseListSerializer(serializers.ModelSerializer):
             "code",
             "is_active",
             "teacher_name",
-            "total_submissions"
+            "total_submissions",
+            "description",
         ]
 
 class CreateEnrolmentSerializer(serializers.ModelSerializer):
