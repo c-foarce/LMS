@@ -76,6 +76,7 @@ function Register() {
                         type="text"
                         value={firstName}
                         onChange={(event) => setFirstName(event.target.value)}
+                        required
                     />
                 </div>
 
@@ -89,6 +90,7 @@ function Register() {
                         type="text"
                         value={lastName}
                         onChange={(event) => setLastName(event.target.value)}
+                        required
                     />
                 </div>
 
