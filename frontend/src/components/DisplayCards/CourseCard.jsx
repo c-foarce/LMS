@@ -21,6 +21,7 @@ function CourseCard({
         { label: "Subject", value: course.subject_name },
         { label: "Code", value: course.code },
         { label: "Teacher", value: course.teacher_name },
+        { label: "Description", value: course.description }
     ]
 
     if (role === "admin") {
