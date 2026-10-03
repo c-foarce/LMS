@@ -7,6 +7,16 @@ from django.db import models
 
 class User(AbstractUser):
 
+    first_name = models.CharField(
+    max_length=150,
+    blank=False,
+    )
+
+    last_name = models.CharField(
+        max_length=150,
+        blank=False,
+    )
+
     class Roles(models.TextChoices):
         STUDENT = "student", "Student"
         TEACHER = "teacher", "Teacher"
