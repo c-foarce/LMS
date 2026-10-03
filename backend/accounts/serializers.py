@@ -14,8 +14,14 @@ class RegisterSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ["username", "password", "role"]
-
+        fields = [
+        "username",
+        "first_name",
+        "last_name",
+        "password",
+        "role",
+        ]
+        
     def validate_role(self, value):
         if value not in (User.Roles.STUDENT, User.Roles.TEACHER):
             raise serializers.ValidationError(
