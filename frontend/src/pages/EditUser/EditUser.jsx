@@ -82,6 +82,55 @@ function EditUser() {
         }))
     }
 
+    const fields = [
+        {
+            name: "username",
+            type: "text",
+        },
+        {
+            name: "first_name",
+            type: "text",
+        },
+        {
+            name: "last_name",
+            type: "text",
+        },
+        {
+            name: "password",
+            type: "text",
+            placeholder: "Leave blank to keep current password",
+        },
+        {
+            name: "confirm_password",
+            type: "text",
+            placeholder: "Repeat new password",
+        },
+    ];
+
+    const fieldLabels = {
+        username: "Username",
+        first_name: "First Name",
+        last_name: "Last Name",
+        password: "New Password",
+        confirm_password: "Confirm New Password",
+    };
+
+    const renderField = (field) => {
+
+        return (
+            <input
+                id={field.name}
+                type={field.type}
+                name={field.name}
+                value={formData[field.name]}
+                onChange={handleChange}
+                placeholder={field.placeholder}
+            />
+        );
+    };
+
+
+
     const handleSubmit = async (event) => {
 
         event.preventDefault();
@@ -177,6 +226,8 @@ function EditUser() {
     };
 
 
+
+
     if (loading) {
         return <p>Loading...</p>;
     }
@@ -188,93 +239,52 @@ function EditUser() {
 
     return (
         <>
+
+            <div>
+                <button
+                    type="button"
+                    onClick={() => navigate(-1)}
+                >
+                    ← Back
+                </button>
+            </div>
             <div>
 
                 <h1>Edit User</h1>
 
                 <form onSubmit={handleSubmit}>
 
-                    <div>
-                        <label htmlFor="username">
-                            Username:
-                        </label>
+                    {fields.map((field) => {
 
-                        <input
-                            id="username"
-                            type="text"
-                            name="username"
-                            value={formData.username}
-                            onChange={handleChange}
-                        />
-                    </div>
+                        return (
+                            <div key={field.name}>
 
-                    <div>
-                        <label htmlFor="first_name">
-                            First Name:
-                        </label>
+                                <label htmlFor={field.name}>
+                                    {fieldLabels[field.name] || field.name}:
+                                </label>
 
-                        <input
-                            id="first_name"
-                            type="text"
-                            name="first_name"
-                            value={formData.first_name}
-                            onChange={handleChange}
-                        />
-                    </div>
+                                {renderField(field)}
 
-                    <div>
-                        <label htmlFor="last_name">
-                            Last Name:
-                        </label>
+                            </div>
+                        );
 
-                        <input
-                            id="last_name"
-                            type="text"
-                            name="last_name"
-                            value={formData.last_name}
-                            onChange={handleChange}
-                        />
-                    </div>
-
-                    <div>
-                        <label htmlFor="password">
-                            New Password:
-                        </label>
-
-                        <input
-                            id="password"
-                            type="text"
-                            name="password"
-                            value={formData.password}
-                            onChange={handleChange}
-                            placeholder="Leave blank to keep current password"
-                        />
-                    </div>
-
-                    <div>
-                        <label htmlFor="confirm_password">
-                            Confirm New Password:
-                        </label>
-
-                        <input
-                            id="confirm_password"
-                            type="text"
-                            name="confirm_password"
-                            value={formData.confirm_password}
-                            onChange={handleChange}
-                            placeholder="Repeat new password"
-                        />
-                    </div>
+                    })}
 
                     <p>Role: {user.role}</p>
 
                     <div>
-                        <button
-                            type="submit"
-                            disabled={updating}
-                        >
-                            {updating ? "Saving..." : "Save Changes"}
-                        </button>
+                        <div>
+                            <button type="submit">
+                                Save Changes
+                            </button>
+
+                            <button
+                                type="button"
+                                onClick={() => navigate(-1)}
+                            >
+                                Discard Changes
+                            </button>
+                        </div>
 
                         {success && (
                             <span>

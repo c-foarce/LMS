@@ -97,12 +97,13 @@ function EditCourse() {
             });
     };
 
-    if (loading) {
-        return <p>Loading...</p>
-    }
-    if (error) {
-        return <p>{error}</p>
-    }
+    const fieldLabels = {
+        subject_name: "Subject Name",
+        code: "Course Code",
+        description: "Description",
+        teacher: "Teacher",
+        total_submissions: "Required Submissions",
+    };
 
     const renderField = (field) => {
         if (field.name === "teacher" && user.role === "admin") {
@@ -155,8 +156,23 @@ function EditCourse() {
     }
 
 
+    if (loading) {
+        return <p>Loading...</p>
+    }
+    if (error) {
+        return <p>{error}</p>
+    }
+
     return (
         <>
+            <div>
+                <button
+                    type="button"
+                    onClick={() => navigate(-1)}
+                >
+                    ← Back
+                </button>
+            </div>
             <h1>Edit Course</h1>
 
             <p>Editing Course: {id}</p>
@@ -177,7 +193,7 @@ function EditCourse() {
                         <div key={field.name}>
 
                             <label htmlFor={field.name}>
-                                {field.name}
+                                {fieldLabels[field.name] || field.name}:
                             </label>
 
                             {renderField(field)}
@@ -189,12 +205,18 @@ function EditCourse() {
 
 
                 <div>
-                    <button
-                        type="submit"
-                        disabled={success}
-                    >
-                        {success ? "Saved!" : "Save changes"}
-                    </button>
+                    <div>
+                        <button type="submit" disabled={success}>
+                            {success ? "Saved!" : "Save changes"}
+                        </button>
+
+                        <button
+                            type="button"
+                            onClick={() => navigate(-1)}
+                        >
+                            Discard Changes
+                        </button>
+                    </div>
 
                     {success && (
                         <span>
