@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import api from "../../services/api";
 
@@ -93,7 +94,7 @@ function Gradebook() {
         } catch (error) {
 
             setError("Failed to save grade.");
-            
+
         }
     };
 
@@ -205,6 +206,16 @@ function Gradebook() {
 
     return (
         <>
+
+            <div>
+                <button
+                    type="button"
+                    onClick={() => navigate(-1)}
+                >
+                    ← Back
+                </button>
+            </div>
+            
             <h1>Courses to Grade</h1>
 
 
