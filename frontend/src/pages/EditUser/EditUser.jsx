@@ -253,24 +253,25 @@ function EditUser() {
                 <h1>Edit User</h1>
 
                 <form onSubmit={handleSubmit}>
+                    <div>
+                        {fields.map((field) => {
 
-                    {fields.map((field) => {
+                            return (
+                                <div key={field.name}>
 
-                        return (
-                            <div key={field.name}>
+                                    <label htmlFor={field.name}>
+                                        {fieldLabels[field.name] || field.name}:
+                                    </label>
 
-                                <label htmlFor={field.name}>
-                                    {fieldLabels[field.name] || field.name}:
-                                </label>
+                                    {renderField(field)}
 
-                                {renderField(field)}
+                                </div>
+                            );
 
-                            </div>
-                        );
+                        })}
 
-                    })}
-
-                    <p>Role: {user.role}</p>
+                        <label>Role: {user.role}</label>
+                    </div>
 
                     <div>
                         <div>
