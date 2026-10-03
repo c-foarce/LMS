@@ -1,9 +1,12 @@
 
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import api from "../../services/api";
 
 function Completion() {
+
+    const navigate = useNavigate()
 
     const [items, setItems] = useState([]);
 
@@ -114,6 +117,31 @@ function Completion() {
         }
     };
 
+    const fieldLabels = {
+        course_name: "Course",
+        course_code: "Code",
+        teacher: "Teacher",
+        grade: "Grade",
+    };
+
+    const fields = [
+        "course_name",
+        "course_code",
+        "teacher",
+        "grade",
+    ];
+
+    const renderField = (field, item) => {
+        return (
+            <span>
+                {field === "grade"
+                    ? item[field] || "Awaiting grade"
+                    : item[field]
+                }
+            </span>
+        );
+    };
+
 
     if (loading) {
         return <p>Loading...</p>;
@@ -122,6 +150,15 @@ function Completion() {
 
     return (
         <>
+
+            <div>
+                <button
+                    type="button"
+                    onClick={() => navigate(-1)}
+                >
+                    ← Back
+                </button>
+            </div>
             <h1>Course Completion</h1>
 
             {items.length === 0 ? (
@@ -136,25 +173,31 @@ function Completion() {
 
                     <div key={item.id}>
 
-                        <h2>
-                            {item.course_name}
-                        </h2>
+                        <div>
+                            {fields.map((field) => {
 
-                        <p>
-                            Code: {item.course_code}
-                        </p>
+                                if (field === "course_name") {
+                                    return (
+                                        <h2 key={field}>
+                                            {renderField(field, item)}
+                                        </h2>
+                                    );
+                                }
 
-                        <p>
-                            Teacher: {item.teacher}
-                        </p>
+                                return (
+                                    <div key={field}>
 
-                        <p>
-                            Progress: {item.progress}%
-                        </p>
+                                        <label>
+                                            {fieldLabels[field] || field}:
+                                        </label>
 
-                        <p>
-                            Grade: {item.grade || "Awaiting grade"}
-                        </p>
+                                        {renderField(field, item)}
+
+                                    </div>
+                                );
+
+                            })}
+                        </div>
 
                         <p>
                             Awaiting your acknowledgement.
