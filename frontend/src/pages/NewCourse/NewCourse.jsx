@@ -85,6 +85,7 @@ function NewCourse() {
 
         // store the current logged in users role
         setRole(response.data.role);
+        setTeacherOptions(response.data.teacher_options || []);
       })
       .catch(() => {
 
