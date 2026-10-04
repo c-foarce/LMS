@@ -62,7 +62,7 @@ function NewUser() {
                     setSuccess(false)
                 }, 3000)
             })
-            .catch(() => {
+            .catch((error) => {
                 setError(
                     error.response?.data?.detail ||
                     error.response?.data?.non_field_errors?.[0] ||
