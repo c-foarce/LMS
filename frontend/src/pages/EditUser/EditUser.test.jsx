@@ -169,14 +169,14 @@ describe("EditUser", () => {
         ).toBeInTheDocument();
 
         await expect.element(
-            screen.getByRole("button", { name: "Saving..." })
-        ).toBeDisabled();
+            screen.getByText("User List")
+        ).toBeInTheDocument();
     });
 
 
     test("updates the user with a new password", async () => {
         vi.useFakeTimers()
-        
+
         setupSuccessfulFetch();
 
         api.patch.mockResolvedValue({

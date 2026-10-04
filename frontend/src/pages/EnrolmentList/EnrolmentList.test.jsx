@@ -101,20 +101,20 @@ describe("Loading and data retrieval", () => {
         await expect.element(teacherParent)
             .toHaveTextContent("teacherone")
 
-        const statusParent =
-            screen.getByText("Status:", { exact: true }).locator("..");
-        await expect.element(statusParent)
-            .toHaveTextContent("active")
+        const statusElement =
+            screen.getByText("Status: active", { exact: true })
+        await expect.element(statusElement)
+            .toBeInTheDocument()
 
         const progressParent =
             screen.getByText("Progress:", { exact: true }).locator("..");
         await expect.element(progressParent)
             .toHaveTextContent("50%")
 
-        const gradeParent =
-            screen.getByText("Grade:", { exact: true }).locator("..");
-        await expect.element(gradeParent)
-            .toHaveTextContent("Not graded")
+        const gradeElement =
+            screen.getByText("Grade: Not graded", { exact: true });
+        await expect.element(gradeElement)
+            .toBeInTheDocument()
     })
 
     test("when returned data is empty, display message communicating this", async () => {

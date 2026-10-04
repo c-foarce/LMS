@@ -35,7 +35,7 @@ const renderDeniedAccess = async () => {
             <MemoryRouter initialEntries={["/denied"]}>
                 <Routes>
                     <Route path="/denied" element={<DeniedAccess />} />
-                    <Route path="/dashboard" element={<h1>Dashboard</h1>} />
+                    <Route path="/app/dashboard" element={<h1>Dashboard</h1>} />
                 </Routes>
             </MemoryRouter>
         );

@@ -110,7 +110,7 @@ describe("NewCourse", () => {
         ).toBeInTheDocument();
 
         await expect.element(
-            screen.getByLabelText("subject_name")
+            screen.getByLabelText("Subject Name")
         ).toBeInTheDocument();
 
         await expect.element(
@@ -157,7 +157,7 @@ describe("NewCourse", () => {
 
         const screen = await renderNewCourse();
 
-        const subjectInput = screen.getByLabelText("subject_name");
+        const subjectInput = screen.getByLabelText("Subject Name");
         const codeInput = screen.getByLabelText("code");
         const descriptionInput = screen.getByLabelText("description");
         const teacherSelect = screen.getByRole("combobox");
@@ -188,7 +188,7 @@ describe("NewCourse", () => {
 
         const screen = await renderNewCourse();
 
-        await screen.getByLabelText("subject_name").fill("Physics");
+        await screen.getByLabelText("Subject Name").fill("Physics");
         await screen.getByLabelText("code").fill("PHY101");
         await screen.getByLabelText("description").fill(
             "Introduction to physics"
@@ -196,7 +196,7 @@ describe("NewCourse", () => {
         await screen.getByRole("combobox").selectOptions("2");
 
         await screen.getByRole("button", {
-            name: "Submit",
+            name: "Create Course",
         }).click();
 
         expect(api.post).toHaveBeenCalledWith(
@@ -210,12 +210,12 @@ describe("NewCourse", () => {
         );
 
         await expect.element(
-            screen.getByText("Course sucessfully created!")
+            screen.getByText("Course successfully created!")
         ).toBeInTheDocument();
     });
 
 
-    test("resets teacher form while retaining teacher ID after successful creation", async () => {
+    test("resets teacher form after successful creation", async () => {
         vi.useFakeTimers();
 
         api.get.mockResolvedValue(mockTeacherResponse);
@@ -229,7 +229,7 @@ describe("NewCourse", () => {
 
         const screen = await renderNewCourse();
 
-        const subjectInput = screen.getByLabelText("subject_name");
+        const subjectInput = screen.getByLabelText("Subject Name");
         const codeInput = screen.getByLabelText("code");
         const descriptionInput = screen.getByLabelText("description");
 
@@ -238,11 +238,11 @@ describe("NewCourse", () => {
         await descriptionInput.fill("Introduction to physics");
 
         await screen.getByRole("button", {
-            name: "Submit",
+            name: "Create Course",
         }).click();
 
         await expect.element(
-            screen.getByText("Course sucessfully created!")
+            screen.getByText("Course successfully created!")
         ).toBeInTheDocument();
 
         vi.advanceTimersByTime(3000);
@@ -253,9 +253,11 @@ describe("NewCourse", () => {
 
         expect(api.post).toHaveBeenCalledWith(
             "/courses/create/",
-            expect.objectContaining({
-                teacher: 2,
-            })
+            {
+                subject_name: "Physics",
+                code: "PHY101",
+                description: "Introduction to physics",
+            }
         );
     });
 
@@ -274,7 +276,7 @@ describe("NewCourse", () => {
 
         const screen = await renderNewCourse();
 
-        const subjectInput = screen.getByLabelText("subject_name");
+        const subjectInput = screen.getByLabelText("Subject Name");
         const codeInput = screen.getByLabelText("code");
         const descriptionInput = screen.getByLabelText("description");
         const teacherSelect = screen.getByRole("combobox");
@@ -285,11 +287,11 @@ describe("NewCourse", () => {
         await teacherSelect.selectOptions("2");
 
         await screen.getByRole("button", {
-            name: "Submit",
+            name: "Create Course",
         }).click();
 
         await expect.element(
-            screen.getByText("Course sucessfully created!")
+            screen.getByText("Course successfully created!")
         ).toBeInTheDocument();
 
         vi.advanceTimersByTime(3000);

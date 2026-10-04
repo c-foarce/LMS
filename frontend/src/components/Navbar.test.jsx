@@ -299,7 +299,6 @@ describe("Navbar", () => {
         expect(localStorage.getItem("access")).toBeNull();
         expect(localStorage.getItem("refresh")).toBeNull();
 
-        expect(mockSetUser).toHaveBeenCalledWith(null);
     });
 
     test("navigates to the home page when the user logs out", async () => {

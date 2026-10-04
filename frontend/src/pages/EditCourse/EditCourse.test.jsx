@@ -156,7 +156,7 @@ describe("EditCourse", () => {
 
         const subjectInput = screen.getByRole(
             "textbox",
-            { name: "subject_name" }
+            { name: "Subject Name" }
         );
 
         const codeInput = screen.getByRole(
@@ -192,7 +192,7 @@ describe("EditCourse", () => {
         const screen = await renderEditCourse("teacher");
 
         await expect.element(
-            screen.getByRole("textbox", { name: "subject_name" })
+            screen.getByRole("textbox", { name: "Subject Name" })
         ).toBeInTheDocument();
 
         expect(
@@ -259,7 +259,7 @@ describe("EditCourse", () => {
 
         const subjectInput = screen.getByRole(
             "textbox",
-            { name: "subject_name" }
+            { name: "Subject Name" }
         );
 
         await subjectInput.fill("Advanced Mathematics");

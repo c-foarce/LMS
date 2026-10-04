@@ -1,5 +1,6 @@
 import { afterEach, describe, expect, test, vi } from "vitest";
 import { render } from "vitest-browser-react";
+import { MemoryRouter } from "react-router-dom";
 
 import Completion from "./Completion";
 
@@ -24,7 +25,11 @@ describe("Completion", () => {
     test("shows loading while courses are being fetched", async () => {
         api.get.mockReturnValue(new Promise(() => { }));
 
-        const screen = await render(<Completion />);
+        const screen = await render(
+            <MemoryRouter>
+                <Completion />
+            </MemoryRouter>
+        );
 
         await expect.element(
             screen.getByText("Loading...")
@@ -62,19 +67,31 @@ describe("Completion", () => {
             ],
         });
 
-        const screen = await render(<Completion />);
+        const screen = await render(
+            <MemoryRouter>
+                <Completion />
+            </MemoryRouter>
+        );
 
         await expect.element(
             screen.getByRole("heading", { name: "Mathematics" })
         ).toBeInTheDocument();
 
         await expect.element(
-            screen.getByText("Code: MATH101")
-        ).toBeInTheDocument();
+            screen.getByText("Code:")
+        ).toBeVisible();
 
         await expect.element(
-            screen.getByText("Grade: A")
-        ).toBeInTheDocument();
+            screen.getByText("MATH101")
+        ).toBeVisible();
+
+        await expect.element(
+            screen.getByText("Grade")
+        ).toBeVisible();
+
+        await expect.element(
+            screen.getByText("A", { exact: true })
+        ).toBeVisible();
 
         await expect.element(
             screen.getByRole("heading", { name: "Computer Science" })
@@ -91,7 +108,11 @@ describe("Completion", () => {
             data: [],
         });
 
-        const screen = await render(<Completion />);
+        const screen = await render(
+            <MemoryRouter>
+                <Completion />
+            </MemoryRouter>
+        );
 
         await expect.element(
             screen.getByText(
@@ -120,7 +141,11 @@ describe("Completion", () => {
 
         vi.spyOn(window, "confirm").mockReturnValue(true);
 
-        const screen = await render(<Completion />);
+        const screen = await render(
+            <MemoryRouter>
+                <Completion />
+            </MemoryRouter>
+        );
 
         await screen.getByRole(
             "button",
@@ -163,7 +188,11 @@ describe("Completion", () => {
 
         vi.spyOn(window, "confirm").mockReturnValue(false);
 
-        const screen = await render(<Completion />);
+        const screen = await render(
+            <MemoryRouter>
+                <Completion />
+            </MemoryRouter>
+        );
 
         await screen.getByRole(
             "button",
@@ -199,7 +228,11 @@ describe("Completion", () => {
 
         vi.spyOn(window, "confirm").mockReturnValue(true);
 
-        const screen = await render(<Completion />);
+        const screen = await render(
+            <MemoryRouter>
+                <Completion />
+            </MemoryRouter>
+        );
 
         await screen.getByRole(
             "button",

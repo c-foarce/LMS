@@ -1,5 +1,6 @@
 import { afterEach, describe, expect, test, vi } from "vitest";
 import { render } from "vitest-browser-react";
+import { MemoryRouter } from "react-router-dom";
 
 import NewUser from "./NewUser";
 import api from "../../services/api";
@@ -53,7 +54,11 @@ describe("NewUser", () => {
             },
         });
 
-        await render(<NewUser />);
+        await render(
+            <MemoryRouter>
+                <NewUser />
+            </MemoryRouter>
+        );
 
         expect(api.get).toHaveBeenCalledWith(
             "/accounts/user-fields/"
@@ -68,7 +73,11 @@ describe("NewUser", () => {
             },
         });
 
-        const screen = await render(<NewUser />);
+        const screen = await render(
+            <MemoryRouter>
+                <NewUser />
+            </MemoryRouter>
+        );
 
         await expect.element(
             screen.getByText("New User Page")
@@ -99,7 +108,11 @@ describe("NewUser", () => {
             },
         });
 
-        const screen = await render(<NewUser />);
+        const screen = await render(
+            <MemoryRouter>
+                <NewUser />
+            </MemoryRouter>
+        );
 
         const role = screen.getByLabelText("role");
 
@@ -125,14 +138,18 @@ describe("NewUser", () => {
             },
         });
 
-        const screen = await render(<NewUser />);
+        const screen = await render(
+            <MemoryRouter>
+                <NewUser />
+            </MemoryRouter>
+        );
 
         const description = screen.getByLabelText("description");
 
         await expect.element(description).toBeVisible();
     });
 
-
+    //based on debugging input?
     test("updates form data when fields are changed", async () => {
         api.get.mockResolvedValue({
             data: {
@@ -140,7 +157,11 @@ describe("NewUser", () => {
             },
         });
 
-        const screen = await render(<NewUser />);
+        const screen = await render(
+            <MemoryRouter>
+                <NewUser />
+            </MemoryRouter>
+        );
 
         const fields = {
             username: screen.getByLabelText("username"),
@@ -155,20 +176,20 @@ describe("NewUser", () => {
         await fields.password.fill("password123");
 
         await expect.element(
-            screen.getByText(/"username": "testuser"/)
-        ).toBeVisible();
+            screen.getByLabelText("Username")
+        ).toHaveValue("testuser");
 
         await expect.element(
-            screen.getByText(/"role": "student"/)
-        ).toBeVisible();
+            screen.getByLabelText("Role")
+        ).toHaveValue("student");
 
         await expect.element(
-            screen.getByText(/"description": "Test description"/)
-        ).toBeVisible();
+            screen.getByLabelText("description")
+        ).toHaveValue("Test description");
 
         await expect.element(
-            screen.getByText(/"password": "password123"/)
-        ).toBeVisible();
+            screen.getByLabelText("Password")
+        ).toHaveValue("password123");
     });
 
 
@@ -187,7 +208,11 @@ describe("NewUser", () => {
             },
         });
 
-        const screen = await render(<NewUser />);
+        const screen = await render(
+            <MemoryRouter>
+                <NewUser />
+            </MemoryRouter>
+        );
 
         const fields = {
             username: screen.getByLabelText("username"),
@@ -200,7 +225,7 @@ describe("NewUser", () => {
         await fields.password.fill("password123");
 
         await screen.getByRole("button", {
-            name: "Submit",
+            name: "Create User",
         }).click();
 
         expect(api.post).toHaveBeenCalledWith(
@@ -228,7 +253,11 @@ describe("NewUser", () => {
             },
         });
 
-        const screen = await render(<NewUser />);
+        const screen = await render(
+            <MemoryRouter>
+                <NewUser />
+            </MemoryRouter>
+        );
 
         const fields = {
             username: screen.getByLabelText("username"),
@@ -239,10 +268,10 @@ describe("NewUser", () => {
         await fields.password.fill("password123");
         await screen.getByLabelText("role").selectOptions("student");
 
-        await screen.getByRole("button", { name: "Submit" }).click();
+        await screen.getByRole("button", { name: "Create User" }).click();
 
         await expect.element(
-            screen.getByText("User sucessfully created!")
+            screen.getByText("User successfully created!")
         ).toBeVisible();
     });
 
@@ -263,7 +292,11 @@ describe("NewUser", () => {
             },
         });
 
-        const screen = await render(<NewUser />);
+        const screen = await render(
+            <MemoryRouter>
+                <NewUser />
+            </MemoryRouter>
+        );
 
         const fields = {
             username: screen.getByLabelText("username"),
@@ -274,21 +307,29 @@ describe("NewUser", () => {
         await fields.password.fill("password123");
         await screen.getByLabelText("role").selectOptions("student");
 
-        await screen.getByRole("button", { name: "Submit" }).click();
+        await screen.getByRole("button", { name: "Create User" }).click();
 
         await expect.element(
-            screen.getByText("User sucessfully created!")
+            screen.getByText("User successfully created!")
         ).toBeVisible();
 
         vi.advanceTimersByTime(3000);
 
         await expect.element(
-            screen.getByText("User sucessfully created!")
+            screen.getByText("User successfully created!")
         ).not.toBeInTheDocument();
 
         await expect.element(
-            screen.getByText("{}")
-        ).toBeVisible();
+            screen.getByLabelText("username")
+        ).toHaveValue("");
+
+        await expect.element(
+            screen.getByLabelText("password")
+        ).toHaveValue("");
+
+        await expect.element(
+            screen.getByLabelText("role")
+        ).toHaveValue("");
     });
 
     test("requires a role to be selected before submitting", async () => {
@@ -296,7 +337,11 @@ describe("NewUser", () => {
             data: { fields: mockFields },
         });
 
-        const screen = await render(<NewUser />);
+        const screen = await render(
+            <MemoryRouter>
+                <NewUser />
+            </MemoryRouter>
+        );
 
         const role = screen.getByLabelText("role");
 
@@ -306,7 +351,7 @@ describe("NewUser", () => {
             screen.getByRole("option", { name: "Select Role" })
         ).toBeInTheDocument();
 
-        await screen.getByRole("button", { name: "Submit" }).click();
+        await screen.getByRole("button", { name: "Create User" }).click();
 
         expect(api.post).not.toHaveBeenCalled();
     });

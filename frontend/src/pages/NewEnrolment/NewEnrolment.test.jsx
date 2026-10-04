@@ -158,7 +158,7 @@ describe("NewEnrolment", () => {
         await screen.getByLabelText("Course").selectOptions("10");
 
         await screen.getByRole("button", {
-            name: "Submit Enrolment",
+            name: "Create Enrolment",
         }).click();
 
         expect(api.post).toHaveBeenCalledWith(
@@ -203,7 +203,7 @@ describe("NewEnrolment", () => {
         await courseSelect.selectOptions("10");
 
         await screen.getByRole("button", {
-            name: "Submit Enrolment",
+            name: "Create Enrolment",
         }).click();
 
         await expect.element(
@@ -240,7 +240,7 @@ describe("NewEnrolment", () => {
         await screen.getByLabelText("Course").selectOptions("10");
 
         await screen.getByRole("button", {
-            name: "Submit Enrolment",
+            name: "Create Enrolment",
         }).click();
 
         await expect.element(
