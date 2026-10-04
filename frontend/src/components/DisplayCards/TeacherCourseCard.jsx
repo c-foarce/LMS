@@ -27,10 +27,6 @@ function TeacherCourseCard({
                 Completed Students: {course.completed_students}
             </p>
 
-            <p>
-                Dropped Students: {course.dropped_students}
-            </p>
-
             <div>
                 <button
                     onClick={() => onToggleActive(course.id)}
