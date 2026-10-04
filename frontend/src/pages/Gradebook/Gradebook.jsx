@@ -7,6 +7,8 @@ import StudentGradeCard from "../../components/DisplayCards/StudentGradeCard";
 
 function Gradebook() {
 
+    const navigate = useNavigate()
+
     const [courses, setCourses] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -215,7 +217,7 @@ function Gradebook() {
                     ← Back
                 </button>
             </div>
-            
+
             <h1>Courses to Grade</h1>
 
 
@@ -281,30 +283,23 @@ function Gradebook() {
 
             {filteredCourses.map(course => (
 
-                <section key={course.id}>
+                <details key={course.id} open>
 
-                    <h2>
+                    <summary>
                         {course.subject_name} ({course.code})
-                    </h2>
-
+                    </summary>
 
                     {course.completed_students.length === 0 ? (
-
                         <p>
                             No students match the selected filters.
                         </p>
-
                     ) : (
-
                         course.completed_students.map(student => (
-
                             <StudentGradeCard
                                 key={student.id}
                                 student={student}
                                 editing={editingGrades[student.id]}
-                                selectedGrade={
-                                    selectedGrades[student.id]
-                                }
+                                selectedGrade={selectedGrades[student.id]}
                                 onEdit={() =>
                                     handleEditGrade(student.id)
                                 }
@@ -318,17 +313,13 @@ function Gradebook() {
                                     handleSaveGrade(student.id)
                                 }
                                 onCancel={() =>
-                                    handleCancelGradeEdit(
-                                        student.id
-                                    )
+                                    handleCancelGradeEdit(student.id)
                                 }
                             />
-
                         ))
-
                     )}
 
-                </section>
+                </details>
 
             ))}
 
