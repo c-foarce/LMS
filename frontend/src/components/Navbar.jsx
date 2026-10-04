@@ -20,7 +20,9 @@ function Navbar() {
     const isTeacher = user?.role === "teacher"
     const isStudent = user?.role === "student"
 
-    const roleName = user.role.charAt(0).toUpperCase() + user.role.slice(1)
+    const roleName = user?.role
+        ? user.role.charAt(0).toUpperCase() + user.role.slice(1)
+        : ""
 
     function handleLogout() {
         localStorage.removeItem("access");
@@ -31,13 +33,13 @@ function Navbar() {
     }
 
     return (
-        <nav style={{ display: "flex", gap: "12px", padding: "10px", border: "dotted" }}>
+        <nav style={{ display: "flex", gap: "12px", padding: "10px", border: "solid" }}>
 
             {/* Later: add className={({ isActive }) => ... } using clsx */}
 
             {/* Dashboard - anyone can access */}
             <NavLink to={isLoggedIn ? "/app/dashboard/" : "/"}>
-                {roleName} Home
+                {isLoggedIn ? `${roleName} Home` : "Home"}
             </NavLink>
 
             {/* Courses - Student and Teacher access */}
@@ -54,13 +56,6 @@ function Navbar() {
                 </NavLink>
             )}
 
-            {/* New Course- admin or teachers can access */}
-            {(isTeacher || isAdmin) && (
-                <NavLink to="/app/courses/new/">
-                    New Course
-                </NavLink>
-            )}
-
             {isTeacher && (
                 <NavLink to="/app/courses/progress/">
                     Grading
@@ -71,6 +66,27 @@ function Navbar() {
             {isAdmin && (
                 <NavLink to="/app/accounts/new/">
                     New User
+                </NavLink>
+            )}
+
+            {/* Users List - admin view only */}
+            {isAdmin && (
+                <NavLink to="/app/accounts/all/">
+                    User List
+                </NavLink>
+            )}
+
+            {/* New Course- admin or teachers can access */}
+            {(isTeacher || isAdmin) && (
+                <NavLink to="/app/courses/new/">
+                    New Course
+                </NavLink>
+            )}
+
+            {/* Course List - different form S+T view, this is a list of all courses, for admin editing purposes */}
+            {(isAdmin || isStudent) && (
+                <NavLink to="/app/courses/all/">
+                    Course List
                 </NavLink>
             )}
 
@@ -85,20 +101,6 @@ function Navbar() {
             {isAdmin && (
                 <NavLink to="/app/courses/enrolments/all/">
                     Enrolments List
-                </NavLink>
-            )}
-
-            {/* Users List - admin view only */}
-            {isAdmin && (
-                <NavLink to="/app/accounts/all/">
-                    User List
-                </NavLink>
-            )}
-
-            {/* Course List - different form S+T view, this is a list of all courses, for admin editing purposes */}
-            {(isAdmin || isStudent) && (
-                <NavLink to="/app/courses/all/">
-                    Course List
                 </NavLink>
             )}
 
