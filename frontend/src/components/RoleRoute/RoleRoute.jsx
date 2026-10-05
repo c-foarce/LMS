@@ -1,8 +1,8 @@
 import { Navigate } from "react-router-dom";
 
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../../context/AuthContext";
 
-import DeniedAccess from "./DeniedAccess";
+import DeniedAccess from "../DeniedAccess/DeniedAccess";
 
 function RoleRoute({ roles, children }) {
     const { user, loading } = useAuth();

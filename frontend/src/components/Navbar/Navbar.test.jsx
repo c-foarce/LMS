@@ -8,7 +8,7 @@ import {
     mockStudent,
     mockTeacher,
     mockAdmin,
-} from "../test/mocks/auth";
+} from "../../test/mocks/auth";
 
 const mockUseAuth = vi.fn();
 const mockSetUser = vi.fn();
