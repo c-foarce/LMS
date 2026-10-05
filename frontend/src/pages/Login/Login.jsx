@@ -52,7 +52,7 @@ function Login() {
             message: ""
           }
         )
-        navigate("/app");
+        navigate("/app/dashboard/");
       }, 1000);
 
     } catch (err) {
