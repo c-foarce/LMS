@@ -1,0 +1,28 @@
+:root {
+    /* Colours */
+    --background: #eaf8fa;
+    --surface: #ffffff;
+
+    --primary: #1769aa;
+    --primary-dark: #0f4f82;
+
+    --text: #1f2933;
+    --text-muted: #64748b;
+
+    --border: #1769aa;
+
+    --success: #2e7d32;
+    --warning: #b7791f;
+    --error: #c62828;
+
+    /* Spacing */
+    --spacing-xs: 4px;
+    --spacing-sm: 8px;
+    --spacing-md: 16px;
+    --spacing-lg: 24px;
+    --spacing-xl: 32px;
+
+    /* Borders */
+    --radius-sm: 6px;
+    --radius-md: 10px;
+}
