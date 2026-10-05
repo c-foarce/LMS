@@ -8,8 +8,13 @@ import {
 
 import { AuthProvider } from "../../context/AuthContext";
 
-import ProtectedRoute from "../../components/ProtectedRoute";
-import RoleRoute from "../../components/RoleRoute";
+import "../../styles/variables.css";
+import "../../styles/globals.css";
+
+import styles from "./App.module.css";
+
+import ProtectedRoute from "../../components/ProtectedRoute/ProtectedRoute";
+import RoleRoute from "../../components/RoleRoute/RoleRoute";
 
 import AuthLayout from "../../layouts/AuthLayout";
 import AppLayout from "../../layouts/AppLayout";

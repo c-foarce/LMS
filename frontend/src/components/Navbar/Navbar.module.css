@@ -1,0 +1,59 @@
+.navbar {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    column-gap: 10px;
+    row-gap: 4px;
+    padding: 10px 16px;
+    border-bottom: 2px solid var(--border);
+    background-color: var(--surface);
+}
+
+.navLink {
+    padding: 8px 12px;
+    border-radius: var(--radius-sm);
+    color: var(--primary);
+    text-decoration: none;
+    white-space: nowrap;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.navLink:visited {
+    color: var(--primary);
+}
+
+.navLink:hover {
+    background-color: var(--background);
+    color: var(--primary-dark);
+}
+
+.active {
+    background-color: var(--primary);
+    color: white;
+}
+
+.active:visited {
+    color: white;
+}
+
+.active:hover {
+    background-color: var(--primary-dark);
+    color: white;
+}
+
+.logout {
+    margin-left: auto;
+    padding: 8px 12px;
+    border: 1px solid var(--primary);
+    border-radius: var(--radius-sm);
+    background-color: transparent;
+    color: var(--primary);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.logout:hover {
+    background-color: var(--primary);
+    color: white;
+}
