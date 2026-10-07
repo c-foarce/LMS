@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 
 import api from "../../services/api";
 
+import styles from "./TeacherDashboard.module.css"
+
 function TeacherDashboard() {
 
     const navigate = useNavigate()
@@ -88,25 +90,31 @@ function TeacherDashboard() {
     }
 
     return (
-        <div>
+        <div className={styles.page}>
 
-            <div>
+            <h2>My Teaching</h2>
+
+            <section className={styles.section}>
+
                 <h3>Overview</h3>
 
-                <p>Courses Taught: {totalCourses}</p>
-                <p>Total Students: {totalStudents}</p>
-                <p>Awaiting Grading: {awaitingGrading.length}</p>
-                
-            </div>
+                <div>
+                    <p>Courses Taught: {totalCourses}</p>
+                    <p>Total Students: {totalStudents}</p>
+                    <p>Awaiting Grading: {awaitingGrading.length}</p>
+                </div>
 
-            <div>
+            </section>
+
+
+            <section className={styles.section}>
 
                 <h3>My Courses</h3>
 
                 {courseStats.length === 0 ? (
                     <p>You are not currently teaching any courses.</p>
                 ) : (
-                    <ul>
+                    <div className={styles.records}>
 
                         {courseStats.map(course => {
 
@@ -114,7 +122,10 @@ function TeacherDashboard() {
                                 getAwaitingGrading(course.id);
 
                             return (
-                                <li key={course.id}>
+                                <div
+                                    key={course.id}
+                                    className={styles.record}
+                                >
 
                                     <div>
                                         <h4>
@@ -124,7 +135,9 @@ function TeacherDashboard() {
 
                                         <button
                                             onClick={() =>
-                                                navigate(`/app/courses/${course.id}/edit/`)
+                                                navigate(
+                                                    `/app/courses/${course.id}/edit/`
+                                                )
                                             }
                                         >
                                             Edit Course
@@ -161,13 +174,16 @@ function TeacherDashboard() {
 
                                     <div>
                                         <p>
-                                            Awaiting Grading: {awaitingGrading.length}
+                                            Awaiting Grading:{" "}
+                                            {awaitingGrading.length}
                                         </p>
 
                                         {awaitingGrading.length > 0 && (
                                             <button
                                                 onClick={() =>
-                                                    navigate("/app/courses/progress/")
+                                                    navigate(
+                                                        "/app/courses/progress/"
+                                                    )
                                                 }
                                             >
                                                 Go to Gradebook
@@ -175,15 +191,15 @@ function TeacherDashboard() {
                                         )}
                                     </div>
 
-                                </li>
+                                </div>
                             );
 
                         })}
 
-                    </ul>
+                    </div>
                 )}
 
-            </div>
+            </section>
 
         </div>
     );

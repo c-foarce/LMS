@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 
 import api from "../../services/api";
 
+import styles from "./AdminDashboard.module.css";
+
 function AdminDashboard() {
 
     const navigate = useNavigate()
@@ -128,11 +130,11 @@ function AdminDashboard() {
     }
 
     return (
-        <div>
+        <div className={styles.page}>
 
             <h2>System Overview</h2>
 
-            <div>
+            <section className={styles.section}>
 
                 <h3>Users</h3>
 
@@ -141,9 +143,10 @@ function AdminDashboard() {
                 <p>Admins: {adminCount}</p>
                 <p>Total: {totalUsers}</p>
 
-            </div>
+            </section>
 
-            <div>
+
+            <section className={styles.section}>
 
                 <h3>Courses</h3>
 
@@ -151,9 +154,10 @@ function AdminDashboard() {
                 <p>Inactive Courses: {inactiveCourses}</p>
                 <p>Total Courses: {totalCourses}</p>
 
-            </div>
+            </section>
 
-            <div>
+
+            <section className={styles.section}>
 
                 <h3>Enrolments</h3>
 
@@ -162,9 +166,11 @@ function AdminDashboard() {
                 {/* <p>Dropped Enrolments: {droppedEnrolments}</p> */}
                 <p>Total Enrolments: {totalEnrolments}</p>
 
-            </div>
+            </section>
 
-            <div>
+
+            <section className={styles.section}>
+
                 <h3>Administrative Attention</h3>
 
                 {coursesWithoutTeacher.length === 0 &&
@@ -172,16 +178,25 @@ function AdminDashboard() {
                     <p>No issues requiring attention.</p>
                 ) : (
                     <>
+
                         {coursesWithoutTeacher.length > 0 && (
                             <div>
+
                                 <h4>Courses without an assigned teacher</h4>
 
-                                <ul>
+                                <div className={styles.records}>
+
                                     {coursesWithoutTeacher.map(course => (
-                                        <li key={course.id}>
+                                        <div
+                                            key={course.id}
+                                            className={styles.record}
+                                        >
+
                                             <span>
                                                 {course.subject_name}
-                                                {course.code && ` (${course.code})`}
+                                                {course.code &&
+                                                    ` (${course.code})`
+                                                }
                                             </span>
 
                                             <button
@@ -193,19 +208,29 @@ function AdminDashboard() {
                                             >
                                                 Edit Course
                                             </button>
-                                        </li>
+
+                                        </div>
                                     ))}
-                                </ul>
+
+                                </div>
+
                             </div>
                         )}
 
+
                         {usersWithMissingInfo.length > 0 && (
                             <div>
+
                                 <h4>Users with missing information</h4>
 
-                                <ul>
+                                <div className={styles.records}>
+
                                     {usersWithMissingInfo.map(user => (
-                                        <li key={user.id}>
+                                        <div
+                                            key={user.id}
+                                            className={styles.record}
+                                        >
+
                                             <span>
                                                 {user.username} — Missing:{" "}
                                                 {getMissingUserFields(user).join(", ")}
@@ -220,14 +245,19 @@ function AdminDashboard() {
                                             >
                                                 Edit User
                                             </button>
-                                        </li>
+
+                                        </div>
                                     ))}
-                                </ul>
+
+                                </div>
+
                             </div>
                         )}
+
                     </>
                 )}
-            </div>
+
+            </section>
 
         </div>
     );

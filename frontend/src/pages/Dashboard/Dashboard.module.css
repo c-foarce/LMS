@@ -1,0 +1,10 @@
+.page {
+    width: min(1200px, 100%);
+    margin: 0 auto;
+    padding: var(--spacing-xl);
+}
+
+.page > h1 {
+    margin: 0 0 var(--spacing-xl);
+    color: var(--primary-dark);
+}

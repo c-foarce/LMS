@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 
 import api from "../../services/api";
 
+import styles from "./StudentDashboard.module.css"
+
 function StudentDashboard() {
 
     const navigate = useNavigate()
@@ -82,16 +84,15 @@ function StudentDashboard() {
 
 
     return (
-        <div>
+        <div className={styles.page}>
 
             <h2>My Learning</h2>
 
-            <div>
+            <section className={styles.section}>
 
                 <h3>Overview</h3>
 
                 <div>
-
                     <p>
                         Active Courses: {activeCourses.length}
                     </p>
@@ -99,7 +100,6 @@ function StudentDashboard() {
                     <p>
                         Completed Courses: {completedCourses.length}
                     </p>
-
                 </div>
 
                 <div>
@@ -109,125 +109,171 @@ function StudentDashboard() {
                         <p>No Courses to mark as complete.</p>
                     ) : (
                         <button
-                            onClick={() => navigate("/app/courses/enrolments/complete/")}
+                            onClick={() =>
+                                navigate(
+                                    "/app/courses/enrolments/complete/"
+                                )
+                            }
                         >
                             Courses Awaiting Completion
                         </button>
                     )}
                 </div>
 
-            </div>
+            </section>
 
-            <div>
+
+            <section className={styles.section}>
+
                 <h3>Active Courses</h3>
 
                 {activeCourses.length === 0 ? (
-                    <p>You are not currently enrolled in any active courses.</p>
+                    <p>
+                        You are not currently enrolled in any active courses.
+                    </p>
                 ) : (
-                    activeCourses.map(enrolment => (
-                        <div key={enrolment.id}>
+                    <div className={styles.records}>
 
-                            <h4>
-                                {enrolment.course_name}
-                                {enrolment.course_code &&
-                                    ` (${enrolment.course_code})`
-                                }
-                            </h4>
+                        {activeCourses.map(enrolment => (
+                            <div
+                                key={enrolment.id}
+                                className={styles.record}
+                            >
 
-                            <p>
-                                Teacher: {enrolment.teacher}
-                            </p>
+                                <h4>
+                                    {enrolment.course_name}
+                                    {enrolment.course_code &&
+                                        ` (${enrolment.course_code})`
+                                    }
+                                </h4>
 
-                            <p>
-                                Progress: {enrolment.progress}%
-                            </p>
+                                <p>
+                                    Teacher: {enrolment.teacher}
+                                </p>
 
-                        </div>
-                    ))
+                                <p>
+                                    Progress: {enrolment.progress}%
+                                </p>
+
+                            </div>
+                        ))}
+
+                    </div>
                 )}
-            </div>
 
-            <div>
+            </section>
+
+
+            <section className={styles.section}>
+
                 <h3>Completed Courses</h3>
 
                 {completedCourses.length === 0 ? (
-                    <p>You have not completed any courses yet.</p>
+                    <p>
+                        You have not completed any courses yet.
+                    </p>
                 ) : (
-                    completedCourses.map(enrolment => (
-                        <div key={enrolment.id}>
+                    <div className={styles.records}>
 
-                            <h4>
-                                {enrolment.course_name}
-                                {enrolment.course_code &&
-                                    ` (${enrolment.course_code})`
-                                }
-                            </h4>
+                        {completedCourses.map(enrolment => (
+                            <div
+                                key={enrolment.id}
+                                className={styles.record}
+                            >
 
-                            <p>
-                                Grade: {enrolment.grade}
-                            </p>
+                                <h4>
+                                    {enrolment.course_name}
+                                    {enrolment.course_code &&
+                                        ` (${enrolment.course_code})`
+                                    }
+                                </h4>
 
-                            <p>
-                                Completed:{" "}
-                                {new Date(
-                                    enrolment.completed_at
-                                ).toLocaleDateString()}
-                            </p>
+                                <p>
+                                    Grade: {enrolment.grade}
+                                </p>
 
-                        </div>
-                    ))
+                                <p>
+                                    Completed:{" "}
+                                    {new Date(
+                                        enrolment.completed_at
+                                    ).toLocaleDateString()}
+                                </p>
+
+                            </div>
+                        ))}
+
+                    </div>
                 )}
-            </div>
 
-            <div>
+            </section>
+
+
+            <section className={styles.section}>
+
                 <h3>Current Progress</h3>
 
                 {activeCourses.length === 0 ? (
                     <p>No active courses.</p>
                 ) : (
-                    activeCourses.map(enrolment => (
-                        <div key={enrolment.id}>
+                    <div className={styles.records}>
 
-                            <p>
-                                {enrolment.course_name}:{" "}
-                                {enrolment.progress}%
-                            </p>
+                        {activeCourses.map(enrolment => (
+                            <div
+                                key={enrolment.id}
+                                className={styles.record}
+                            >
 
-                        </div>
-                    ))
+                                <p>
+                                    {enrolment.course_name}:{" "}
+                                    {enrolment.progress}%
+                                </p>
+
+                            </div>
+                        ))}
+
+                    </div>
                 )}
-            </div>
 
-            <div>
+            </section>
+
+
+            <section className={styles.section}>
+
                 <h3>Recent Grades</h3>
 
                 {recentGrades.length === 0 ? (
                     <p>No grades yet.</p>
                 ) : (
-                    recentGrades.map(enrolment => (
-                        <div key={enrolment.id}>
+                    <div className={styles.records}>
 
-                            <p>
-                                {enrolment.course_name}
-                            </p>
+                        {recentGrades.map(enrolment => (
+                            <div
+                                key={enrolment.id}
+                                className={styles.record}
+                            >
 
-                            <p>
-                                Grade: {enrolment.grade}
-                            </p>
+                                <p>
+                                    {enrolment.course_name}
+                                </p>
 
-                            <p>
-                                Completed:{" "}
-                                {new Date(
-                                    enrolment.completed_at
-                                ).toLocaleDateString()}
-                            </p>
+                                <p>
+                                    Grade: {enrolment.grade}
+                                </p>
 
-                        </div>
+                                <p>
+                                    Completed:{" "}
+                                    {new Date(
+                                        enrolment.completed_at
+                                    ).toLocaleDateString()}
+                                </p>
 
-                    ))
+                            </div>
+                        ))}
+
+                    </div>
                 )}
 
-            </div>
+            </section>
 
         </div>
     );
