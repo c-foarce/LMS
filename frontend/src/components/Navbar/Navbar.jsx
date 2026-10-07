@@ -52,6 +52,7 @@ function Navbar() {
             {(isStudent || isTeacher) && (
                 <NavLink
                     to="/app/courses/"
+                    end
                     className={({ isActive }) =>
                         clsx(
                             styles.navLink,
