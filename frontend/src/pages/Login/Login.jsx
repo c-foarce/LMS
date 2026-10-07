@@ -7,6 +7,8 @@ import { useAuth } from "../../context/AuthContext";
 
 import api from "../../services/api";
 
+import styles from "./Login.module.css"
+
 //IMPORT CLSX LATER
 
 function Login() {
@@ -67,38 +69,44 @@ function Login() {
   };
 
   return (
-    <div>
+    <div className={styles.page}>
+      <div className={styles.card}>
+        <button
+          className={styles.back}
+          type="button"
+          onClick={() => navigate("/")}
+        >
+          ← Back
+        </button>
 
-      <button type="button" onClick={() => navigate("/")}>
-        ← Back
-      </button>
+        <h1>Login</h1>
 
-      <h1>Login</h1>
+        <form className={styles.form} onSubmit={handleLogin}>
+          <label htmlFor="username">Username:</label>
+          <input
+            id="username"
+            placeholder="username"
+            onChange={(e) => setUsername(e.target.value)}
+          />
 
-      <form onSubmit={handleLogin}>
-        <label htmlFor="username">Username:</label>
-        <input
-          id="username"
-          placeholder="username"
-          onChange={(e) => setUsername(e.target.value)}
-        />
+          <label htmlFor="password">Password:</label>
+          <input
+            id="password"
+            placeholder="password"
+            /*TO DO, REMOVE COMMENT FOR PRODUCTION*/
+            /* type="password" */
+            onChange={(e) => setPassword(e.target.value)}
+          />
 
-        <label htmlFor="password">Password:</label>
-        <input
-          id="password"
-          placeholder="password"
-          /*TO DO, REMOVE COMMENT FOR PRODUCTION*/
-          /* type="password" */
-          onChange={(e) => setPassword(e.target.value)}
-        />
+          <button type="submit">Login</button>
+        </form>
 
-        <button type="submit">Login</button>
-      </form>
-      {loginState.message && (
-        <p className={`message ${loginState.type}`}>
-          {loginState.message}
-        </p>
-      )}
+        {loginState.message && (
+          <p className={`${styles.message} ${styles[loginState.type]}`}>
+            {loginState.message}
+          </p>
+        )}
+      </div>
     </div>
   );
 }
