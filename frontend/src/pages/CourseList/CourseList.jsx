@@ -5,6 +5,8 @@ import { useAuth } from '../../context/AuthContext'
 
 import api from '../../services/api'
 
+import styles from "./CourseList.module.css"
+
 import FilterDropdown from "../../components/Filters/FilterDropdown";
 
 import CourseCard from "../../components/DisplayCards/CourseCard";
@@ -272,82 +274,86 @@ function CourseList() {
     }
     return (
         <>
-            <h1>
-                Course List
-            </h1>
+            <div className={styles.page}>
+                <h1>
+                    Course List
+                </h1>
 
-            <div>
-                <label htmlFor="course-search">
-                    Search:
-                </label>
+                <div className={styles.filters}>
+                    <label htmlFor="course-search">
+                        Search:
+                    </label>
 
-                <input
-                    id="course-search"
-                    type="text"
-                    placeholder="Search courses..."
-                    value={search}
-                    onChange={(event) => setSearch(event.target.value)}
-                />
-
-                <FilterDropdown
-                    id="teacher-filter"
-                    label="Teacher:"
-                    value={teacherFilter}
-                    onChange={setTeacherFilter}
-                    defaultLabel="All Teachers"
-                    options={teachers}
-                    getValue={teacher => teacher}
-                    getLabel={teacher => teacher}
-                />
-
-                {user.role !== "student" && (
-                    <FilterDropdown
-                        id="status-filter"
-                        label="Status:"
-                        value={statusFilter}
-                        onChange={setStatusFilter}
-                        defaultLabel="All Statuses"
-                        options={statuses}
-                        getValue={status => status.value}
-                        getLabel={status => status.label}
+                    <input
+                        id="course-search"
+                        type="text"
+                        placeholder="Search courses..."
+                        value={search}
+                        onChange={(event) => setSearch(event.target.value)}
                     />
+
+                    <FilterDropdown
+                        id="teacher-filter"
+                        label="Teacher:"
+                        value={teacherFilter}
+                        onChange={setTeacherFilter}
+                        defaultLabel="All Teachers"
+                        options={teachers}
+                        getValue={teacher => teacher}
+                        getLabel={teacher => teacher}
+                    />
+
+                    {user.role !== "student" && (
+                        <FilterDropdown
+                            id="status-filter"
+                            label="Status:"
+                            value={statusFilter}
+                            onChange={setStatusFilter}
+                            defaultLabel="All Statuses"
+                            options={statuses}
+                            getValue={status => status.value}
+                            getLabel={status => status.label}
+                        />
+                    )}
+                </div>
+
+                {enrolSuccess && (
+                    <p>{enrolSuccess}</p>
+                )}
+                {/*This i want moved next to the relvant button in a <span> */}
+
+                {filteredCourses.length === 0 ? (
+                    <p>
+                        {displayedCourses.length === 0
+                            ? user.role === "student"
+                                ? "There are currently no courses available to enrol on."
+                                : "No courses found."
+                            : "No courses match your search or filters."
+                        }
+                    </p>
+                ) : (
+                    <div className={styles.grid}>
+                        {filteredCourses.map(course => (
+                            <CourseCard
+                                key={course.id}
+                                course={course}
+                                role={user.role}
+                                onDelete={handleDelete}
+                                onToggleActive={handleToggleActive}
+                                onEdit={handleEdit}
+                                onEnrol={handleEnrol}
+                                loadingError={loadingError}
+                                deleteError={deleteError}
+                                deleteErrorCourseId={deleteErrorCourseId}
+                                updateActiveError={updateActiveError}
+                                updateActiveErrorCourseId={updateActiveErrorCourseId}
+                                enrolError={enrolError}
+                                enrolErrorCourseId={enrolErrorCourseId}
+                            />
+                        ))}
+                    </div>
                 )}
             </div>
-
-            {enrolSuccess && (
-                <p>{enrolSuccess}</p>
-            )}
-            {/*This i want moved next to the relvant button in a <span> */}
-
-            {filteredCourses.length === 0 ? (
-                <p>
-                    {displayedCourses.length === 0
-                        ? user.role === "student"
-                            ? "There are currently no courses available to enrol on."
-                            : "No courses found."
-                        : "No courses match your search or filters."
-                    }
-                </p>
-            ) : (
-                filteredCourses.map(course => (
-                    <CourseCard
-                        key={course.id}
-                        course={course}
-                        role={user.role}
-                        onDelete={handleDelete}
-                        onToggleActive={handleToggleActive}
-                        onEdit={handleEdit}
-                        onEnrol={handleEnrol}
-                        loadingError={loadingError}
-                        deleteError={deleteError}
-                        deleteErrorCourseId={deleteErrorCourseId}
-                        updateActiveError={updateActiveError}
-                        updateActiveErrorCourseId={updateActiveErrorCourseId}
-                        enrolError={enrolError}
-                        enrolErrorCourseId={enrolErrorCourseId}
-                    />
-                ))
-            )}
 
 
         </>

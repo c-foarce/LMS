@@ -5,6 +5,8 @@ import { useAuth } from '../../context/AuthContext'
 
 import api from '../../services/api'
 
+import styles from "./Courses.module.css"
+
 import StudentCourseCard from "../../components/DisplayCards/StudentCourseCard";
 import TeacherCourseCard from "../../components/DisplayCards/TeacherCourseCard";
 
@@ -162,7 +164,7 @@ function Courses() {
 
   return (
     <>
-      <div>
+      <div className={styles.page}>
         <h1>My Courses</h1>
 
         {error && (
@@ -177,33 +179,35 @@ function Courses() {
           <p>No courses found.</p>
         ) : (
 
-          items.map((item) => {
+          <div className={styles.grid}>
+            {items.map((item) => {
 
-            if (user.role === "student") {
-              return (
-                <StudentCourseCard
-                  key={item.id}
-                  course={item}
-                  onSubmitProgress={handleSubmitProgress}
-                />
-              );
-            }
+              if (user.role === "student") {
+                return (
+                  <StudentCourseCard
+                    key={item.id}
+                    course={item}
+                    onSubmitProgress={handleSubmitProgress}
+                  />
+                );
+              }
 
-            if (user.role === "teacher") {
-              return (
-                <TeacherCourseCard
-                  key={item.id}
-                  course={item}
-                  onToggleActive={handleToggleActive}
-                  onEdit={() =>
-                    navigate(`/app/courses/${item.id}/edit`)
-                  }
-                />
-              );
-            }
+              if (user.role === "teacher") {
+                return (
+                  <TeacherCourseCard
+                    key={item.id}
+                    course={item}
+                    onToggleActive={handleToggleActive}
+                    onEdit={() =>
+                      navigate(`/app/courses/${item.id}/edit`)
+                    }
+                  />
+                );
+              }
 
-            return null;
-          })
+              return null;
+            })}
+          </div>
         )}
       </div>
 
