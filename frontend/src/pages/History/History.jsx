@@ -4,7 +4,7 @@ import { useAuth } from "../../context/AuthContext";
 
 import api from "../../services/api";
 
-import HistoryRecordCard from "../../components/DisplayCards/HistoryRecordCard";
+import HistoryRecordCard from "../../components/HistoryCards/HistoryRecordCard";
 
 import FilterDropdown from "../../components/Filters/FilterDropdown";
 

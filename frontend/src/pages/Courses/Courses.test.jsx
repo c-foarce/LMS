@@ -25,7 +25,7 @@ vi.mock("../../services/api", () => ({
     },
 }));
 
-vi.mock("../../components/DisplayCards/StudentCourseCard", () => ({
+vi.mock("../../components/CourseCards/StudentCourseCard", () => ({
     default: ({ course, onSubmitProgress }) => (
         <div>
             <p>{course.course_name}</p>
@@ -36,7 +36,7 @@ vi.mock("../../components/DisplayCards/StudentCourseCard", () => ({
     ),
 }));
 
-vi.mock("../../components/DisplayCards/TeacherCourseCard", () => ({
+vi.mock("../../components/CourseCards/TeacherCourseCard", () => ({
     default: ({ course, onToggleActive, onEdit }) => (
         <div>
             <p>{course.subject_name}</p>

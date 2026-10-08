@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 import api from "../../services/api";
 
-import StudentGradeCard from "../../components/DisplayCards/StudentGradeCard";
+import StudentGradeCard from "../../components/GradeCards/StudentGradeCard";
 
 function Gradebook() {
 

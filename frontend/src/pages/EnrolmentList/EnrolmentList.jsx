@@ -8,7 +8,7 @@ import styles from "./EnrolmentList.module.css";
 
 import FilterDropdown from "../../components/Filters/FilterDropdown";
 
-import EnrolmentCard from "../../components/DisplayCards/EnrolmentCard";
+import EnrolmentCard from "../../components/EnrolmentCards/EnrolmentCard";
 
 function EnrolmentList() {
 

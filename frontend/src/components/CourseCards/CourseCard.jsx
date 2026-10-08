@@ -1,4 +1,4 @@
-import RenderCard from "./RenderCard";
+import RenderCard from "../Cards/RenderCard";
 
 function CourseCard({
     course,

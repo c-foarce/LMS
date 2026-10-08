@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 
-import RenderCard from "./RenderCard";
+import RenderCard from "../Cards/RenderCard";
 
 function UserCard({ user }) {
 

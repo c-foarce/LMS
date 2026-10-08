@@ -6,7 +6,7 @@ import styles from "./UserList.module.css";
 
 import FilterDropdown from "../../components/Filters/FilterDropdown";
 
-import UserCard from "../../components/DisplayCards/UserCard";
+import UserCard from "../../components/UserCards/UserCard";
 
 function UserList() {
 

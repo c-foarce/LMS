@@ -9,7 +9,7 @@ import styles from "./CourseList.module.css"
 
 import FilterDropdown from "../../components/Filters/FilterDropdown";
 
-import CourseCard from "../../components/DisplayCards/CourseCard";
+import CourseCard from "../../components/CourseCards/CourseCard";
 
 
 function CourseList() {

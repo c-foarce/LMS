@@ -7,8 +7,8 @@ import api from '../../services/api'
 
 import styles from "./Courses.module.css"
 
-import StudentCourseCard from "../../components/DisplayCards/StudentCourseCard";
-import TeacherCourseCard from "../../components/DisplayCards/TeacherCourseCard";
+import StudentCourseCard from "../../components/CourseCards/StudentCourseCard";
+import TeacherCourseCard from "../../components/CourseCards/TeacherCourseCard";
 
 function Courses() {
 
