@@ -223,8 +223,20 @@ describe("Teacher courses", () => {
 
         const courses = screen.getByRole("listitem");
 
-        const mathematics = courses.nth(0);
-        const computerScience = courses.nth(1);
+        const mathematics = screen
+            .getByRole("heading", {
+                level: 4,
+                name: "Mathematics (MATH101)",
+            })
+            .locator("..")
+            .locator("..");
+        const computerScience = screen
+            .getByRole("heading", {
+                level: 4,
+                name: "Computer Science (CS101)",
+            })
+            .locator("..")
+            .locator("..");
 
         // Mathematics
         await expect.element(
@@ -337,9 +349,21 @@ describe("Gradebook", () => {
 
         const courses = screen.getByRole("listitem");
 
-        const mathematics = courses.nth(0);
-        const computerScience = courses.nth(1);
-
+        const mathematics = screen
+            .getByRole("heading", {
+                level: 4,
+                name: "Mathematics (MATH101)",
+            })
+            .locator("..")
+            .locator("..");
+        const computerScience = screen
+            .getByRole("heading", {
+                level: 4,
+                name: "Computer Science (CS101)",
+            })
+            .locator("..")
+            .locator("..");
+            
         await expect.element(
             mathematics.getByRole(
                 "button",
