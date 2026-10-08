@@ -7,7 +7,7 @@ function RenderCard({ title, details, actions }) {
 
             <div className={styles.details}>
                 {details.map(({ label, value }) => (
-                    <p key={label}>
+                    <p key={label} className={styles.detail}>
                         <strong>{label}:</strong> {value}
                     </p>
                 ))}

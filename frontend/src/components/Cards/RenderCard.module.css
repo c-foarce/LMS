@@ -3,12 +3,18 @@
     background-color: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius-md);
+    box-shadow: 0 2px 6px rgb(0 0 0 / 40%);
 }
 
 .title {
     margin: 0 0 var(--spacing-md);
     color: var(--primary-dark);
     font-size: 1.25rem;
+}
+
+.detail {
+    display: flex;
+    align-items: center;
 }
 
 .details {
@@ -19,9 +25,11 @@
 
 .details p {
     margin: 0;
+    color: var(--text);
 }
 
 .details strong {
+    margin-right: var(--spacing-xs);
     color: var(--text);
 }
 
