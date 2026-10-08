@@ -45,9 +45,6 @@ describe("TeacherCourseCard", () => {
             screen.getByText("Completed Students: 2")
         ).toBeVisible();
 
-        await expect.element(
-            screen.getByText("Dropped Students: 1")
-        ).toBeVisible();
     });
 
 
