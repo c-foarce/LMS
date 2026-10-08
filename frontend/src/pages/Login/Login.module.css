@@ -21,18 +21,28 @@
 }
 
 .back {
-    border: none;
-    padding: 0;
-    background: none;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+
+    padding: 6px 10px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+
+    background-color: var(--surface);
     color: var(--primary);
     cursor: pointer;
 }
 
 .back:hover {
+    background-color: var(--background);
     color: var(--primary-dark);
+    border-color: var(--primary-dark);
+}
+
+.back:focus-visible {
     outline: 2px solid var(--primary);
-    outline-offset: 3px;
-    border-radius: var(--radius-sm);
+    outline-offset: 2px;
 }
 
 .form {

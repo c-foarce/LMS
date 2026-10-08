@@ -222,7 +222,7 @@ describe("navigation", () => {
           />
 
           <Route
-            path="/app"
+            path="/app/dashboard/"
             element={<h1>Application</h1>}
           />
         </Routes>

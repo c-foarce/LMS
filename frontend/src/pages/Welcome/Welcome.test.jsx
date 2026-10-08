@@ -25,7 +25,11 @@ describe("Welcome", () => {
     ).toBeInTheDocument();
 
     await expect.element(
-      screen.getByRole("button", { name: "Click to Log in" })
+      screen.getByRole("button", { name: "Log in" })
+    ).toBeInTheDocument();
+
+    await expect.element(
+      screen.getByRole("button", {name: "Register"})
     ).toBeInTheDocument();
   });
 
@@ -45,11 +49,11 @@ describe("Welcome", () => {
 
     await screen.getByRole(
       "button",
-      { name: "Click to Log in" }
+      { name: "Log in" }
     ).click();
 
     await expect.element(
-      screen.getByRole("heading", { name: "Login Page" })
+      screen.getByRole("heading", { name: "Login" })
     ).toBeInTheDocument();
   });
 
