@@ -1,23 +1,25 @@
-
+import styles from "./RenderCard.module.css";
 
 function RenderCard({ title, details, actions }) {
     return (
-        <div>
-            <h2>{title}</h2>
+        <article className={styles.card}>
+            <h2 className={styles.title}>{title}</h2>
 
-            {details.map(({ label, value }) => (
-                <p key={label}>
-                    <strong>{label}:</strong> {value}
-                </p>
-            ))}
+            <div className={styles.details}>
+                {details.map(({ label, value }) => (
+                    <p key={label}>
+                        <strong>{label}:</strong> {value}
+                    </p>
+                ))}
+            </div>
 
             {actions && (
-                <div>
+                <div className={styles.actions}>
                     {actions}
                 </div>
             )}
-        </div>
-    )
+        </article>
+    );
 }
 
-export default RenderCard
+export default RenderCard;
