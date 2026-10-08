@@ -13,7 +13,7 @@ import {
 const mockUseAuth = vi.fn();
 const mockSetUser = vi.fn();
 
-vi.mock("../context/AuthContext", () => ({
+vi.mock("../../context/AuthContext", () => ({
     useAuth: () => mockUseAuth(),
 }));
 

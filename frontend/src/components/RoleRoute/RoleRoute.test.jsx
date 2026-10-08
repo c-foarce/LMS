@@ -6,12 +6,8 @@ import RoleRoute from "./RoleRoute";
 
 const mockUseAuth = vi.fn();
 
-vi.mock("../context/AuthContext", () => ({
+vi.mock("../../context/AuthContext", () => ({
     useAuth: () => mockUseAuth(),
-}));
-
-vi.mock("./DeniedAccess", () => ({
-    default: () => <div>Access Denied Mock</div>,
 }));
 
 const renderRoleRoute = async (roles, user, loading = false) => {
@@ -60,7 +56,7 @@ test("renders children when user has an allowed role", async () => {
     ).toBeInTheDocument();
 
     await expect.element(
-        screen.getByText("Access Denied Mock")
+        screen.getByText("Access Denied")
     ).not.toBeInTheDocument();
 });
 
@@ -71,7 +67,7 @@ test("renders denied access when user does not have an allowed role", async () =
     );
 
     await expect.element(
-        screen.getByText("Access Denied Mock")
+        screen.getByText("Access Denied")
     ).toBeInTheDocument();
 
     await expect.element(
