@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 
 import api from '../../services/api';
 
+import styles from "./UserList.module.css";
+
 import FilterDropdown from "../../components/Filters/FilterDropdown";
 
 import UserCard from "../../components/DisplayCards/UserCard";
@@ -59,49 +61,57 @@ function UserList() {
     }
 
     return (
-        <>
+        <div className={styles.page}>
             <h1>User List</h1>
 
             {error && (
                 <p>{error}</p>
             )}
 
-            <input
-                type="text"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                placeholder="Search users..."
-            />
+            <div className={styles.filters}>
+                <label htmlFor="user-search">
+                    Search:
+                </label>
 
-            <FilterDropdown
-                id="role-filter"
-                label="Role:"
-                value={roleFilter}
-                onChange={setRoleFilter}
-                defaultLabel="All Roles"
-                options={[
-                    { value: "student", label: "Student" },
-                    { value: "teacher", label: "Teacher" },
-                    { value: "admin", label: "Admin" }
-                ]}
-                getValue={role => role.value}
-                getLabel={role => role.label}
-            />
+                <input
+                    id="user-search"
+                    type="text"
+                    placeholder="Search users..."
+                    value={searchTerm}
+                    onChange={(event) => setSearchTerm(event.target.value)}
+                />
 
+                <FilterDropdown
+                    id="role-filter"
+                    label="Role:"
+                    value={roleFilter}
+                    onChange={setRoleFilter}
+                    defaultLabel="All Roles"
+                    options={[
+                        { value: "student", label: "Student" },
+                        { value: "teacher", label: "Teacher" },
+                        { value: "admin", label: "Admin" }
+                    ]}
+                    getValue={role => role.value}
+                    getLabel={role => role.label}
+                />
+            </div>
 
             {users.length === 0 ? (
                 <p>Connection successful, no users found.</p>
             ) : filteredUsers.length === 0 ? (
                 <p>No users match your search or filter.</p>
             ) : (
-                filteredUsers.map(user => (
-                    <UserCard
-                        key={user.id}
-                        user={user}
-                    />
-                ))
+                <div className={styles.grid}>
+                    {filteredUsers.map(user => (
+                        <UserCard
+                            key={user.id}
+                            user={user}
+                        />
+                    ))}
+                </div>
             )}
-        </>
+        </div>
     )
 }
 

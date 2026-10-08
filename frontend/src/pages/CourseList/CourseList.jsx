@@ -24,9 +24,6 @@ function CourseList() {
     const [loading, setLoading] = useState(true)
     const [loadingError, setLoadingError] = useState(null)
 
-    const [deleteError, setDeleteError] = useState(null)
-    const [deleteErrorCourseId, setDeleteErrorCourseId] = useState(null)
-
     const [updateActiveError, setUpdateActiveError] = useState(null)
     const [updateActiveErrorCourseId, setUpdateActiveErrorCourseId] = useState(null)
 
@@ -90,13 +87,14 @@ function CourseList() {
     ];
 
 
-    //BUTTON FUNCTIONS
+    // BUTTON FUNCTIONS
     // ------------------------
-    //ADMIN ONLY
+    // ADMIN ONLY
 
     const handleEdit = (courseId) => {
         navigate(`/app/courses/${courseId}/edit/`)
     }
+
 
     const handleToggleActive = async (courseId) => {
 
@@ -133,46 +131,9 @@ function CourseList() {
         }
     }
 
-    const handleDelete = async (courseId) => {
-
-        const confirmed = window.confirm(
-            "Are you sure you want to delete this course?"
-        )
-
-        if (!confirmed) {
-            return
-        }
-
-        try {
-
-            await api.delete(
-                `/courses/${courseId}/delete/`
-            )
-
-            setCourses(previousCourses =>
-                previousCourses.filter(
-                    course => course.id !== courseId
-                )
-            )
-
-        } catch (error) {
-
-            setDeleteErrorCourseId(courseId)
-
-            setDeleteError(
-                error.response?.data?.detail ||
-                "Could not delete Course."
-            )
-
-            setTimeout(() => {
-                setDeleteError(null)
-                setDeleteErrorCourseId(null)
-            }, 3000)
-        }
-    }
 
     //------------------
-    //STUDENT
+    // STUDENT
 
     const handleEnrol = async (courseId) => {
 
@@ -272,6 +233,7 @@ function CourseList() {
     if (loadingError) {
         return <p>{loadingError}</p>
     }
+
     return (
         <>
             <div className={styles.page}>
@@ -338,13 +300,10 @@ function CourseList() {
                                 key={course.id}
                                 course={course}
                                 role={user.role}
-                                onDelete={handleDelete}
                                 onToggleActive={handleToggleActive}
                                 onEdit={handleEdit}
                                 onEnrol={handleEnrol}
                                 loadingError={loadingError}
-                                deleteError={deleteError}
-                                deleteErrorCourseId={deleteErrorCourseId}
                                 updateActiveError={updateActiveError}
                                 updateActiveErrorCourseId={updateActiveErrorCourseId}
                                 enrolError={enrolError}
@@ -354,8 +313,6 @@ function CourseList() {
                     </div>
                 )}
             </div>
-
-
         </>
     )
 }
