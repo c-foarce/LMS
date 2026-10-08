@@ -805,79 +805,43 @@ class MyCompletedEnrolmentsViewTests(CompletionTestSetup):
 
 
 class StudentGradeViewTests(CompletionTestSetup):
-###dd
-    def test_student_can_view_their_grades(self):
-        # enrolment = Enrolment.objects.create(
-        #     student=self.student,
-        #     course=self.course,
-        #     completed_submissions=3,
-        #     status=Enrolment.Status.COMPLETED,
-        #     grade="A",
-        #     student_completed=True,
-        # )
 
-        # self.authenticate(self.student)
+    def setUp(self):
+        super().setUp()
 
-        self.client.force_authenticate(user=self.student)
-
-        response = self.client.get(
-            reverse("my-grades")
+        self.completed_grade = CompletedEnrolment.objects.create(
+            original_enrolment_id=self.enrolment.id,
+            student_id=self.student.id,
+            student_username=self.student.username,
+            student_first_name=self.student.first_name,
+            student_last_name=self.student.last_name,
+            teacher_id=self.teacher.id,
+            teacher_username=self.teacher.username,
+            teacher_first_name=self.teacher.first_name,
+            teacher_last_name=self.teacher.last_name,
+            course_id=self.course.id,
+            course_name=self.course.subject_name,
+            course_code=self.course.code,
+            grade="A",
         )
 
-        self.assertEqual(
-            response.status_code,
-            status.HTTP_200_OK,
-        )
-
-        self.assertEqual(
-            len(response.data),
-            1,
-        )
-
-        self.assertEqual(
-            response.data[0]["grade"],
-            "A",
-        )
-
-    def test_student_only_sees_completed_enrolments(self):
-        Enrolment.objects.create(
-            student=self.student,
-            course=self.other_course,
-            completed_submissions=1,
-            status=Enrolment.Status.ACTIVE,
+        self.other_completed_grade = CompletedEnrolment.objects.create(
+            original_enrolment_id=self.other_enrolment.id,
+            student_id=self.other_student.id,
+            student_username=self.other_student.username,
+            student_first_name=self.other_student.first_name,
+            student_last_name=self.other_student.last_name,
+            teacher_id=self.other_teacher.id,
+            teacher_username=self.other_teacher.username,
+            teacher_first_name=self.other_teacher.first_name,
+            teacher_last_name=self.other_teacher.last_name,
+            course_id=self.other_course.id,
+            course_name=self.other_course.subject_name,
+            course_code=self.other_course.code,
             grade="B",
         )
 
-        self.authenticate(self.student)
-
-        response = self.client.get(
-            reverse("my-grades")
-        )
-
-        self.assertEqual(
-            response.status_code,
-            status.HTTP_200_OK,
-        )
-
-        self.assertEqual(
-            len(response.data),
-            1,
-        )
-
-        self.assertEqual(
-            response.data[0]["grade"],
-            "A",
-        )
-
-    def test_ungraded_completed_enrolments_are_excluded(self):
-        Enrolment.objects.create(
-            student=self.student,
-            course=self.other_course,
-            completed_submissions=2,
-            status=Enrolment.Status.COMPLETED,
-            grade="",
-        )
-
+    def test_student_can_view_their_grades(self):
         self.authenticate(self.student)
 
         response = self.client.get(
@@ -900,14 +864,6 @@ class StudentGradeViewTests(CompletionTestSetup):
         )
 
     def test_student_does_not_see_another_students_grades(self):
-        # Enrolment.objects.create(
-        #     student=self.other_student,
-        #     course=self.other_course,
-        #     completed_submissions=2,
-        #     status=Enrolment.Status.COMPLETED,
-        #     grade="B",
-        # )
-
         self.authenticate(self.student)
 
         response = self.client.get(
@@ -925,8 +881,41 @@ class StudentGradeViewTests(CompletionTestSetup):
         )
 
         self.assertEqual(
-            response.data[0]["student_name"],
+            response.data[0]["student_username"],
             self.student.username,
+        )
+
+    def test_multiple_completed_grades_are_returned(self):
+        CompletedEnrolment.objects.create(
+            original_enrolment_id=999,
+            student_id=self.student.id,
+            student_username=self.student.username,
+            student_first_name=self.student.first_name,
+            student_last_name=self.student.last_name,
+            teacher_id=self.other_teacher.id,
+            teacher_username=self.other_teacher.username,
+            teacher_first_name=self.other_teacher.first_name,
+            teacher_last_name=self.other_teacher.last_name,
+            course_id=self.other_course.id,
+            course_name=self.other_course.subject_name,
+            course_code=self.other_course.code,
+            grade="B",
+        )
+
+        self.authenticate(self.student)
+
+        response = self.client.get(
+            reverse("my-grades")
+        )
+
+        self.assertEqual(
+            response.status_code,
+            status.HTTP_200_OK,
+        )
+
+        self.assertEqual(
+            len(response.data),
+            2,
         )
 
     def test_teacher_cannot_view_student_grades(self):
@@ -949,7 +938,7 @@ class StudentGradeViewTests(CompletionTestSetup):
         )
 
         self.assertEqual(
-            response.status_code,   
+            response.status_code,
             status.HTTP_403_FORBIDDEN,
         )
 
