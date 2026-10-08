@@ -1,0 +1,31 @@
+.progress {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    width: 100%;
+}
+
+.progressBar {
+    width: 150px;
+    height: 10px;
+    margin-left: auto;
+    overflow: hidden;
+    background-color: var(--background);
+    border-radius: var(--radius-sm);
+}
+
+.progressFill {
+    height: 100%;
+    background-color: var(--primary);
+    border-radius: var(--radius-sm);
+}
+
+.active {
+    color: var(--success);
+    font-weight: bold;
+}
+
+.inactive {
+    color: var(--text-muted);
+    font-weight: bold;
+}

@@ -1,47 +1,67 @@
+import RenderCard from "../Cards/RenderCard";
+
+import styles from "./CourseCards.module.css";
+
 function TeacherCourseCard({
     course,
     onToggleActive,
     onEdit
 }) {
 
-    return (
-        <div>
-            <h3>
-                {course.subject_name}
-                {course.code && ` (${course.code})`}
-            </h3>
-
-            <p>
-                Status: {course.is_active ? "Active" : "Inactive"}
-            </p>
-
-            <p>
-                Total Students: {course.total_students}
-            </p>
-
-            <p>
-                Active Students: {course.active_students}
-            </p>
-
-            <p>
-                Completed Students: {course.completed_students}
-            </p>
-
-            <div>
-                <button
-                    onClick={() => onToggleActive(course.id)}
-                >
-                    {course.is_active
-                        ? "Deactivate Course"
-                        : "Activate Course"
+    const details = [
+        {
+            label: "Status",
+            value: (
+                <span
+                    className={
+                        course.is_active
+                            ? styles.active
+                            : styles.inactive
                     }
-                </button>
+                >
+                    {course.is_active ? "Active" : "Inactive"}
+                </span>
+            )
+        },
+        {
+            label: "Total Students",
+            value: course.total_students
+        },
+        {
+            label: "Active Students",
+            value: course.active_students
+        },
+        {
+            label: "Completed Students",
+            value: course.completed_students
+        }
+    ];
 
-                <button onClick={onEdit}>
-                    Edit Course
-                </button>
-            </div>
-        </div>
+    const actions = [
+        <button
+            key="toggle"
+            onClick={() => onToggleActive(course.id)}
+        >
+            {course.is_active
+                ? "Deactivate Course"
+                : "Activate Course"
+            }
+        </button>,
+
+        <button
+            key="edit"
+            onClick={onEdit}
+        >
+            Edit Course
+        </button>
+    ];
+
+    return (
+        <RenderCard
+            title={`${course.subject_name}${course.code ? ` (${course.code})` : ""}`}
+            details={details}
+            actions={actions}
+        />
     );
 }
 
