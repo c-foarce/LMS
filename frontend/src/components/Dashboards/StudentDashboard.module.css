@@ -10,3 +10,103 @@
     border-radius: var(--radius-sm);
     background-color: var(--surface);
 }
+
+.record h4 {
+    margin: 0 0 var(--spacing-sm);
+    color: var(--primary-dark);
+}
+
+.record p {
+    margin: 0 0 var(--spacing-md);
+    color: var(--text);
+}
+
+.progress {
+    margin-top: var(--spacing-md);
+}
+
+.progressLabel {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-sm);
+    color: var(--text);
+}
+
+.progressBar {
+    height: 10px;
+    overflow: hidden;
+    background-color: var(--background);
+    border-radius: var(--radius-sm);
+}
+
+.progressFill {
+    height: 100%;
+    background-color: var(--primary);
+    border-radius: var(--radius-sm);
+    transition: width 0.3s ease;
+}
+
+.overview {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--spacing-md);
+}
+
+.summaryCard {
+    padding: var(--spacing-lg);
+    background-color: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    box-shadow: 0 2px 6px rgb(0 0 0 / 8%);
+}
+
+.summaryCard h4 {
+    margin: 0 0 var(--spacing-sm);
+    color: var(--text-muted);
+    font-size: 1rem;
+    font-weight: normal;
+}
+
+.summaryCount {
+    margin: 0;
+    color: var(--primary-dark);
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+.completions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-lg);
+    margin-top: var(--spacing-lg);
+    padding: var(--spacing-lg);
+    background-color: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+}
+
+.completionsInfo {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+}
+
+.completionsInfo h3 {
+    margin: 0;
+    color: var(--primary-dark);
+}
+
+.completionsInfo p {
+    margin: 0;
+    color: var(--text-muted);
+}
+
+@media (max-width: 600px) {
+    .completions {
+        align-items: stretch;
+        flex-direction: column;
+    }
+}

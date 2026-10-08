@@ -88,26 +88,45 @@ function StudentDashboard() {
 
             <h2>My Learning</h2>
 
-            <section className={styles.section}>
 
+            <section className={styles.section}>
                 <h3>Overview</h3>
 
-                <div>
-                    <p>
-                        Active Courses: {activeCourses.length}
-                    </p>
+                <div className={styles.overview}>
+                    <div className={styles.summaryCard}>
+                        <h4>Active Courses</h4>
+                        <p className={styles.summaryCount}>
+                            {activeCourses.length}
+                        </p>
+                    </div>
 
-                    <p>
-                        Completed Courses: {completedCourses.length}
-                    </p>
+                    <div className={styles.summaryCard}>
+                        <h4>Completed Courses</h4>
+                        <p className={styles.summaryCount}>
+                            {completedCourses.length}
+                        </p>
+                    </div>
                 </div>
 
-                <div>
-                    <h3>Completions</h3>
+                <div className={styles.completions}>
+                    <div className={styles.completionsInfo}>
+                        <h3>Completions Requiring Attention</h3>
 
-                    {awaitingCompletion.length === 0 ? (
-                        <p>No Courses to mark as complete.</p>
-                    ) : (
+                        {awaitingCompletion.length === 0 ? (
+                            <p>
+                                You're all caught up. No courses need
+                                completion acknowledgement.
+                            </p>
+                        ) : (
+                            <p>
+                                You have {awaitingCompletion.length}{" "}
+                                course{awaitingCompletion.length === 1 ? "" : "s"}{" "}
+                                waiting for your acknowledgement.
+                            </p>
+                        )}
+                    </div>
+
+                    {awaitingCompletion.length > 0 && (
                         <button
                             onClick={() =>
                                 navigate(
@@ -115,12 +134,13 @@ function StudentDashboard() {
                                 )
                             }
                         >
-                            Courses Awaiting Completion
+                            Review Completions
                         </button>
                     )}
                 </div>
 
             </section>
+
 
 
             <section className={styles.section}>
@@ -134,29 +154,46 @@ function StudentDashboard() {
                 ) : (
                     <div className={styles.records}>
 
-                        {activeCourses.map(enrolment => (
-                            <div
-                                key={enrolment.id}
-                                className={styles.record}
-                            >
+                        {activeCourses.map(enrolment => (<div
+                            key={enrolment.id}
+                            className={styles.record}
+                        > <h4>
+                                {enrolment.course_name}
+                                {enrolment.course_code &&
+                                    ` (${enrolment.course_code})`
+                                } </h4>
 
-                                <h4>
-                                    {enrolment.course_name}
-                                    {enrolment.course_code &&
-                                        ` (${enrolment.course_code})`
-                                    }
-                                </h4>
+                            <p>
+                                Teacher: {enrolment.teacher}
+                            </p>
 
-                                <p>
-                                    Teacher: {enrolment.teacher}
-                                </p>
+                            <div className={styles.progress}>
+                                <div className={styles.progressLabel}>
+                                    <strong>Progress:</strong>
+                                    <span>{enrolment.progress}%</span>
+                                </div>
 
-                                <p>
-                                    Progress: {enrolment.progress}%
-                                </p>
-
+                                <div
+                                    className={styles.progressBar}
+                                    role="progressbar"
+                                    aria-label={`${enrolment.course_name} progress`}
+                                    aria-valuenow={enrolment.progress}
+                                    aria-valuemin={0}
+                                    aria-valuemax={100}
+                                >
+                                    <div
+                                        className={styles.progressFill}
+                                        style={{
+                                            width: `${enrolment.progress}%`
+                                        }}
+                                    />
+                                </div>
                             </div>
+                        </div>
+
+
                         ))}
+
 
                     </div>
                 )}
@@ -207,36 +244,6 @@ function StudentDashboard() {
 
             </section>
 
-
-            <section className={styles.section}>
-
-                <h3>Current Progress</h3>
-
-                {activeCourses.length === 0 ? (
-                    <p>No active courses.</p>
-                ) : (
-                    <div className={styles.records}>
-
-                        {activeCourses.map(enrolment => (
-                            <div
-                                key={enrolment.id}
-                                className={styles.record}
-                            >
-
-                                <p>
-                                    {enrolment.course_name}:{" "}
-                                    {enrolment.progress}%
-                                </p>
-
-                            </div>
-                        ))}
-
-                    </div>
-                )}
-
-            </section>
-
-
             <section className={styles.section}>
 
                 <h3>Recent Grades</h3>
@@ -253,7 +260,7 @@ function StudentDashboard() {
                             >
 
                                 <p>
-                                    {enrolment.course_name}
+                                    <strong>{enrolment.course_name}</strong>
                                 </p>
 
                                 <p>

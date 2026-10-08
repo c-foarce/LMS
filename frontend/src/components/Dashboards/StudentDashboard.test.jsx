@@ -108,7 +108,6 @@ describe("Dashboard data fetching", () => {
 
 
 describe("Active courses", () => {
-    //testing both counts in one test. fix later
     test("displays the correct active and completed course counts", async () => {
         vi.spyOn(api, "get")
             .mockImplementation((url) => {
@@ -133,11 +132,25 @@ describe("Active courses", () => {
         );
 
         await expect.element(
-            screen.getByText("Active Courses: 2")
+            screen.getByRole("heading", {
+                name: "Active Courses",
+                level: 4,
+            })
         ).toBeInTheDocument();
 
         await expect.element(
-            screen.getByText("Completed Courses: 1")
+            screen.getByRole("heading", {
+                name: "Completed Courses",
+                level: 4,
+            })
+        ).toBeInTheDocument();
+
+        await expect.element(
+            screen.getByText("2", { exact: true })
+        ).toBeInTheDocument();
+
+        await expect.element(
+            screen.getByText("1", { exact: true })
         ).toBeInTheDocument();
     });
 
@@ -174,12 +187,13 @@ describe("Active courses", () => {
         ).toBeInTheDocument();
 
         await expect.element(
-            screen.getByText("Progress: 50%")
+            screen.getByText("Progress:")
         ).toBeInTheDocument();
+
     });
 
 
-    test("displays the active course in current progress", async () => {
+    test("displays the active course progress bar", async () => {
         vi.spyOn(api, "get")
             .mockImplementation((url) => {
                 if (url === "/courses/enrolments/me/") {
@@ -199,16 +213,16 @@ describe("Active courses", () => {
             </MemoryRouter>
         );
 
-        await expect.element(
-            screen.getByRole(
-                "heading",
-                { name: "Current Progress" }
-            )
-        ).toBeInTheDocument();
+        const progressBar = screen.getByRole(
+            "progressbar",
+            { name: "Mathematics progress" }
+        );
 
-        await expect.element(
-            screen.getByText("Mathematics: 50%")
-        ).toBeInTheDocument();
+        await expect.element(progressBar).toBeInTheDocument();
+        await expect.element(progressBar).toHaveAttribute(
+            "aria-valuenow",
+            "50"
+        );
     });
 
 
@@ -236,10 +250,6 @@ describe("Active courses", () => {
             screen.getByText(
                 "You are not currently enrolled in any active courses."
             )
-        ).toBeInTheDocument();
-
-        await expect.element(
-            screen.getByText("No active courses.")
         ).toBeInTheDocument();
     });
 
@@ -271,7 +281,7 @@ describe("Completed courses", () => {
         await expect.element(
             screen.getByRole(
                 "heading",
-                { name: "Completed Courses" }
+                { name: "Completed Courses", level: 3 }
             )
         ).toBeInTheDocument();
 
@@ -372,6 +382,24 @@ describe("Completed courses", () => {
 
         await expect.element(history).toBeInTheDocument();
         await expect.element(english).toBeInTheDocument();
+
+        const recentGradesHeading = screen.getByRole(
+            "heading",
+            { name: "Recent Grades" }
+        );
+
+        const recentGradesSection =
+            recentGradesHeading.element().parentElement;
+
+        const historyPosition =
+            recentGradesSection.textContent.indexOf("History (HIST101)");
+
+        const englishPosition =
+            recentGradesSection.textContent.indexOf("English (ENG101)");
+
+        expect(historyPosition).toBeGreaterThanOrEqual(0);
+        expect(englishPosition).toBeGreaterThanOrEqual(0);
+        expect(historyPosition).toBeLessThan(englishPosition);
     });
 
 
@@ -465,7 +493,7 @@ describe("Course completion", () => {
         await expect.element(
             screen.getByRole(
                 "button",
-                { name: "Courses Awaiting Completion" }
+                { name: "Review Completions" }
             )
         ).toBeInTheDocument();
     });
@@ -493,14 +521,14 @@ describe("Course completion", () => {
 
         await expect.element(
             screen.getByText(
-                "No Courses to mark as complete."
+                "You're all caught up. No courses need completion acknowledgement."
             )
         ).toBeInTheDocument();
 
         await expect.element(
             screen.getByRole(
                 "button",
-                { name: "Courses Awaiting Completion" }
+                { name: "Review Completions" }
             )
         ).not.toBeInTheDocument();
     });
@@ -538,7 +566,7 @@ describe("Course completion", () => {
 
         await screen.getByRole(
             "button",
-            { name: "Courses Awaiting Completion" }
+            { name: "Review Completions" }
         ).click();
 
         await expect.element(
