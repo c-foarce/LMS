@@ -16,13 +16,17 @@ const mockGrades = [
         id: 1,
         course_name: "Mathematics",
         course_code: "MATH101",
+        teacher_username: "teacher1",
         grade: "A",
+        completed_at: "2026-10-01T12:00:00Z",
     },
     {
         id: 2,
         course_name: "Computer Science",
         course_code: "CS101",
+        teacher_username: "teacher2",
         grade: "B",
+        completed_at: "2026-09-15T12:00:00Z",
     },
 ];
 
@@ -39,9 +43,8 @@ afterEach(() => {
 });
 
 describe("MyGrades", () => {
-
     test("shows loading state while grades are being retrieved", async () => {
-        api.get.mockReturnValue(new Promise(() => {}));
+        api.get.mockReturnValue(new Promise(() => { }));
 
         const screen = await renderMyGrades();
 
@@ -68,7 +71,15 @@ describe("MyGrades", () => {
         ).toBeInTheDocument();
 
         await expect.element(
+            screen.getByText("Teacher: teacher1")
+        ).toBeInTheDocument();
+
+        await expect.element(
             screen.getByText("Grade: A")
+        ).toBeInTheDocument();
+
+        await expect.element(
+            screen.getByText("Completed: 01/10/2026")
         ).toBeInTheDocument();
 
         await expect.element(
@@ -78,7 +89,15 @@ describe("MyGrades", () => {
         ).toBeInTheDocument();
 
         await expect.element(
+            screen.getByText("Teacher: teacher2")
+        ).toBeInTheDocument();
+
+        await expect.element(
             screen.getByText("Grade: B")
+        ).toBeInTheDocument();
+
+        await expect.element(
+            screen.getByText("Completed: 15/09/2026")
         ).toBeInTheDocument();
     });
 
@@ -103,5 +122,4 @@ describe("MyGrades", () => {
             screen.getByText("Failed to Load grades.")
         ).toBeInTheDocument();
     });
-
 });
