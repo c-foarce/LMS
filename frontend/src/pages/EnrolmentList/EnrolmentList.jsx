@@ -4,6 +4,8 @@ import { useAuth } from '../../context/AuthContext';
 
 import api from '../../services/api';
 
+import styles from "./EnrolmentList.module.css";
+
 import FilterDropdown from "../../components/Filters/FilterDropdown";
 
 import EnrolmentCard from "../../components/DisplayCards/EnrolmentCard";
@@ -119,10 +121,10 @@ function EnrolmentList() {
     }
 
     return (
-        <>
+        <div className={styles.page}>
             <h1>All Enrolments</h1>
 
-            <div>
+            <div className={styles.filters}>
                 <label htmlFor="enrolment-search">
                     Search:
                 </label>
@@ -172,18 +174,20 @@ function EnrolmentList() {
                     }
                 </p>
             ) : (
-                filteredEnrolments.map(enrolment => (
-                    <EnrolmentCard
-                        key={enrolment.id}
-                        role={user.role}
-                        enrolment={enrolment}
-                        onDelete={handleDelete}
-                        deleteError={deleteError}
-                        deleteErrorEnrolmentId={deleteErrorEnrolmentId}
-                    />
-                ))
+                <div className={styles.grid}>
+                    {filteredEnrolments.map(enrolment => (
+                        <EnrolmentCard
+                            key={enrolment.id}
+                            role={user.role}
+                            enrolment={enrolment}
+                            onDelete={handleDelete}
+                            deleteError={deleteError}
+                            deleteErrorEnrolmentId={deleteErrorEnrolmentId}
+                        />
+                    ))}
+                </div>
             )}
-        </>
+        </div>
     )
 }
 
