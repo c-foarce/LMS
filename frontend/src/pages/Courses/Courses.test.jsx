@@ -340,4 +340,189 @@ describe("Courses", () => {
         ).toBeInTheDocument();
     });
 
+
+    test("filters student courses by search term", async () => {
+        useAuth.mockReturnValue({
+            user: mockStudent,
+        });
+
+        api.get.mockResolvedValue({
+            data: [
+                {
+                    id: 1,
+                    course_name: "Mathematics",
+                    course_code: "MATH101",
+                    teacher: "Alice",
+                    status: "active",
+                },
+                {
+                    id: 2,
+                    course_name: "Biology",
+                    course_code: "BIO101",
+                    teacher: "Bob",
+                    status: "active",
+                },
+            ],
+        });
+
+        const screen = await render(
+            <MemoryRouter>
+                <Courses />
+            </MemoryRouter>
+        );
+
+        await screen.getByRole("searchbox", {
+            name: "Search:",
+        }).fill("Mathematics");
+
+        await expect.element(
+            screen.getByText("Mathematics")
+        ).toBeInTheDocument();
+
+        await expect.element(
+            screen.getByText("Biology")
+        ).not.toBeInTheDocument();
+    });
+
+
+    test("filters teacher courses by search term", async () => {
+        useAuth.mockReturnValue({
+            user: mockTeacher,
+        });
+
+        api.get.mockResolvedValue({
+            data: [
+                {
+                    id: 1,
+                    subject_name: "Mathematics",
+                    code: "MATH101",
+                    is_active: true,
+                },
+                {
+                    id: 2,
+                    subject_name: "Biology",
+                    code: "BIO101",
+                    is_active: false,
+                },
+            ],
+        });
+
+        const screen = await render(
+            <MemoryRouter>
+                <Courses />
+            </MemoryRouter>
+        );
+
+        await screen.getByRole("searchbox", {
+            name: "Search:",
+        }).fill("Biology");
+
+        await expect.element(
+            screen.getByText("Biology")
+        ).toBeInTheDocument();
+
+        await expect.element(
+            screen.getByText("Mathematics")
+        ).not.toBeInTheDocument();
+    });
+
+
+    test("filters courses by status", async () => {
+        useAuth.mockReturnValue({
+            user: mockStudent,
+        });
+
+        api.get.mockResolvedValue({
+            data: [
+                {
+                    id: 1,
+                    course_name: "Mathematics",
+                    course_code: "MATH101",
+                    teacher: "Alice",
+                    status: "active",
+                },
+                {
+                    id: 2,
+                    course_name: "Biology",
+                    course_code: "BIO101",
+                    teacher: "Bob",
+                    status: "completed",
+                },
+            ],
+        });
+
+        const screen = await render(
+            <MemoryRouter>
+                <Courses />
+            </MemoryRouter>
+        );
+
+        await screen.getByLabelText("Status:").selectOptions("completed");
+
+        await expect.element(
+            screen.getByText("Biology")
+        ).toBeInTheDocument();
+
+        await expect.element(
+            screen.getByText("Mathematics")
+        ).not.toBeInTheDocument();
+    });
+
+
+    test("combines search and status filters", async () => {
+        useAuth.mockReturnValue({
+            user: mockStudent,
+        });
+
+        api.get.mockResolvedValue({
+            data: [
+                {
+                    id: 1,
+                    course_name: "Mathematics",
+                    course_code: "MATH101",
+                    teacher: "Alice",
+                    status: "active",
+                },
+                {
+                    id: 2,
+                    course_name: "Mathematics Advanced",
+                    course_code: "MATH201",
+                    teacher: "Alice",
+                    status: "completed",
+                },
+                {
+                    id: 3,
+                    course_name: "Biology",
+                    course_code: "BIO101",
+                    teacher: "Bob",
+                    status: "completed",
+                },
+            ],
+        });
+
+        const screen = await render(
+            <MemoryRouter>
+                <Courses />
+            </MemoryRouter>
+        );
+
+        await screen.getByRole("searchbox", {
+            name: "Search:",
+        }).fill("Mathematics");
+
+        await screen.getByLabelText("Status:").selectOptions("completed");
+
+        await expect.element(
+            screen.getByText("Mathematics Advanced")
+        ).toBeInTheDocument();
+
+        await expect.element(
+            screen.getByText("Mathematics", { exact: true })
+        ).not.toBeInTheDocument();
+
+        await expect.element(
+            screen.getByText("Biology")
+        ).not.toBeInTheDocument();
+    });
+
 });

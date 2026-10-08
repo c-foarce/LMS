@@ -9,6 +9,7 @@ import styles from "./Courses.module.css"
 
 import StudentCourseCard from "../../components/CourseCards/StudentCourseCard";
 import TeacherCourseCard from "../../components/CourseCards/TeacherCourseCard";
+import FilterDropdown from "../../components/Filters/FilterDropdown";
 
 function Courses() {
 
@@ -22,6 +23,9 @@ function Courses() {
 
   const [error, setError] = useState(null)
   const [success, setSuccess] = useState(null)
+
+  const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState("");
 
   //on initial mounting, get the enrolment data to render
   useEffect(() => {
@@ -153,6 +157,37 @@ function Courses() {
     }
   }
 
+  const filteredItems = items.filter((item) => {
+    const search = searchTerm.toLowerCase();
+
+    if (user.role === "student") {
+      const matchesSearch =
+        item.course_name.toLowerCase().includes(search) ||
+        item.course_code.toLowerCase().includes(search) ||
+        item.teacher.toLowerCase().includes(search);
+
+      const matchesStatus =
+        !statusFilter ||
+        item.status === statusFilter;
+
+      return matchesSearch && matchesStatus;
+    }
+
+    if (user.role === "teacher") {
+      const matchesSearch =
+        item.subject_name.toLowerCase().includes(search) ||
+        (item.code || "").toLowerCase().includes(search);
+
+      const matchesStatus =
+        !statusFilter ||
+        (item.is_active ? "Active" : "Inactive") === statusFilter;
+
+      return matchesSearch && matchesStatus;
+    }
+
+    return false;
+  });
+
   //--------------------------------------------------------
   //---------------------RENDER RETURNS---------------------
   //--------------------------------------------------------
@@ -168,20 +203,57 @@ function Courses() {
         <h1>My Courses</h1>
 
         {error && (
-          <p>{error}</p>
+          <p className={styles.error}>{error}</p>
         )}
 
         {success && (
-          <p>{success}</p>
+          <p className={styles.success}>{success}</p>
         )}
 
-        {items.length === 0 ? (
-          <p>No courses found.</p>
+        <section className={styles.filters}>
+          <label htmlFor="course-search">
+            Search:
+          </label>
+
+          <input
+            id="course-search"
+            type="search"
+            value={searchTerm}
+            onChange={(event) =>
+              setSearchTerm(event.target.value)
+            }
+            placeholder="Search courses..."
+          />
+
+          <FilterDropdown
+            id="status-filter"
+            label="Status:"
+            value={statusFilter}
+            onChange={setStatusFilter}
+            defaultLabel="All Statuses"
+            options={
+              user.role === "student"
+                ? ["active", "completed"]
+                : ["Active", "Inactive"]
+            }
+            getValue={(status) => status}
+            getLabel={(status) =>
+              status.charAt(0) + status.slice(1).toLowerCase()
+            }
+          />
+        </section>
+
+        {filteredItems.length === 0 ? (
+          <p>
+            {items.length === 0
+              ? "No courses found."
+              : "No courses match your filters."
+            }
+          </p>
         ) : (
 
           <div className={styles.grid}>
-            {items.map((item) => {
-
+            {filteredItems.map((item) => {
               if (user.role === "student") {
                 return (
                   <StudentCourseCard
