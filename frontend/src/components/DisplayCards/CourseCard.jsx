@@ -3,12 +3,9 @@ import RenderCard from "./RenderCard";
 function CourseCard({
     course,
     role,
-    onDelete,
     onToggleActive,
     onEdit,
     onEnrol,
-    deleteError,
-    deleteErrorCourseId,
     updateActiveError,
     updateActiveErrorCourseId,
     enrolError,
@@ -49,24 +46,6 @@ function CourseCard({
     // ACTIONS ------------------------------------
     // Admin
     if (role === "admin") {
-        actions.push(
-            <div key="delete-action">
-                <button
-                    key="delete"
-                    onClick={() => onDelete(course.id)}
-                >
-                    Delete Course
-                </button>
-
-                {deleteError && deleteErrorCourseId === course.id && (
-                    <span>
-                        {deleteError}
-                    </span>
-                )}
-
-            </div>
-        )
-
         actions.push(
             <div key="update-action">
                 <button
@@ -121,11 +100,7 @@ function CourseCard({
         <RenderCard
             title={course.subject_name}
             details={details}
-            actions={
-                <>
-                    {actions}
-                </>
-            }
+            actions={actions}
         />
     )
 }

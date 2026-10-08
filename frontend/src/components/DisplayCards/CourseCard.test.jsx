@@ -9,7 +9,6 @@ import {
     mockInactiveCourse
 } from '../../test/mocks/displaycards'
 
-const onDelete = vi.fn();
 const onToggleActive = vi.fn();
 const onEdit = vi.fn();
 const onEnrol = vi.fn();
@@ -20,13 +19,10 @@ const renderCourseCard = async (props = {}) => {
             <CourseCard
                 course={mockCourse}
                 role=""
-                onDelete={onDelete}
                 onToggleActive={onToggleActive}
                 onEdit={onEdit}
                 onEnrol={onEnrol}
                 loadingError={null}
-                deleteError={null}
-                deleteErrorCourseId={null}
                 updateActiveError={null}
                 updateActiveErrorCourseId={null}
                 enrolError={null}
@@ -141,12 +137,6 @@ describe("Admin Tests", () => {
 
         await expect.element(
             screen.getByRole("button", {
-                name: "Delete Course"
-            })
-        ).toBeInTheDocument();
-
-        await expect.element(
-            screen.getByRole("button", {
                 name: "Deactivate"
             })
         ).toBeInTheDocument();
@@ -156,19 +146,6 @@ describe("Admin Tests", () => {
                 name: "Edit"
             })
         ).toBeInTheDocument();
-    });
-
-    test("delete button calls onDelete with course ID", async () => {
-
-        const screen = await renderCourseCard({
-            role: "admin"
-        })
-
-        await screen.getByRole("button", {
-            name: "Delete Course"
-        }).click();
-
-        expect(onDelete).toHaveBeenCalledWith(mockCourse.id);
     });
 
     test("deactivate button calls onToggleActive with course ID", async () => {
@@ -205,18 +182,6 @@ describe("Admin Tests", () => {
             screen.getByRole("button", {
                 name: "Activate"
             })
-        ).toBeInTheDocument();
-    });
-
-    test("displays error for matching course", async () => {
-        const screen = await renderCourseCard({
-            role: "admin",
-            deleteError: "Could not delete Course.",
-            deleteErrorCourseId: mockCourse.id
-        })
-
-        await expect.element(
-            screen.getByText("Could not delete Course.", { exact: true })
         ).toBeInTheDocument();
     });
 
