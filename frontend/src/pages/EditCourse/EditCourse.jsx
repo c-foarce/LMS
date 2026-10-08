@@ -1,101 +1,159 @@
 import { useState, useEffect } from "react";
 
-import { useParams, useNavigate } from "react-router-dom"
+import { useParams, useNavigate } from "react-router-dom";
 
-import { useAuth } from '../../context/AuthContext'
+import { useAuth } from "../../context/AuthContext";
 
-import api from '../../services/api'
+import api from "../../services/api";
+
+import styles from "./EditCourse.module.css";
 
 function EditCourse() {
 
-    const navigate = useNavigate()
+    const navigate = useNavigate();
 
-    //stores the id of the course being asked for by extracting it from the URL
+    // stores the id of the course being asked for by extracting it from the URL
     const { id } = useParams();
     const { user } = useAuth();
 
-    //gets current course data
-    const [formData, setFormData] = useState({})
+    // gets current course data
+    const [formData, setFormData] = useState({});
 
-    //stores available teachers for dropdowns
-    const [teacherOptions, setTeacherOptions] = useState([])
+    // stores available teachers for dropdowns
+    const [teacherOptions, setTeacherOptions] = useState([]);
 
-    const [fields, setFields] = useState([])
+    const [fields, setFields] = useState([]);
 
-    //used for feedback after successful patch
-    const [success, setSuccess] = useState(false)
+    // used for feedback after successful patch
+    const [success, setSuccess] = useState(false);
 
-    //optional loading/error states
-    const [loading, setLoading] = useState(true)
-    const [error, setError] = useState(null)
+    const [loading, setLoading] = useState(true);
+    const [updating, setUpdating] = useState(false);
+    const [error, setError] = useState(null);
+
+    const [deleting, setDeleting] = useState(false);
+    const [deleted, setDeleted] = useState(false);
 
 
-    //get existing courses and teachers
+    // get existing course and dynamic form information
     useEffect(() => {
 
-        //get ID course info
-        api.get(`/courses/${id}/`)
-            .then(response => {
-                setFormData(response.data);
-            })
-            .catch(error => {
-                setError(error.message);
-            })
-            .finally(() => {
+        const fetchData = async () => {
+
+            try {
+
+                const [courseResponse, fieldsResponse] = await Promise.all([
+                    api.get(`/courses/${id}/`),
+                    api.get("/courses/course-fields/")
+                ]);
+
+                setFormData(courseResponse.data);
+                setFields(fieldsResponse.data.fields);
+                setTeacherOptions(fieldsResponse.data.teacher_options || []);
+
+            } catch (error) {
+
+                setError(
+                    error.response?.data?.detail ||
+                    error.message ||
+                    "Failed to load course."
+                );
+
+            } finally {
+
                 setLoading(false);
-            })
 
-        //get dynamic form info
-        //includes teachers if admin
-        api.get('/courses/course-fields')
-            .then(response => {
-                setFields(response.data.fields)
-                setTeacherOptions(response.data.teacher_options);
-            })
-            .catch(error => {
-                setError(error.message)
-            })
-            .finally(() => {
-                setLoading(false)
-            });
+            }
+        };
+
+        fetchData();
+
+    }, [id]);
 
 
-    }, [id])
-
-
-    //handles change for each input
     const handleChange = (event) => {
 
         const { name, value } = event.target;
 
-        setFormData(prev => ({
-            ...prev,
+        setFormData(previous => ({
+            ...previous,
             [name]: value
         }));
     };
 
 
-    //sends submitted data to django
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
 
         event.preventDefault();
 
-        api.patch(`/courses/${id}/edit/`, formData)
-            .then(response => {
+        setError(null);
+        setSuccess(false);
+        setUpdating(true);
 
-                setFormData(response.data)
+        try {
 
-                setSuccess(true);
+            const response = await api.patch(
+                `/courses/${id}/edit/`,
+                formData
+            );
 
-                setTimeout(() => {
-                    navigate(-1)
-                }, 2000);
+            setFormData(response.data);
+            setSuccess(true);
+            setUpdating(false);
 
-            })
-            .catch(error => {
-                setError(error.message)
-            });
+            setTimeout(() => {
+                navigate(-1);
+            }, 2000);
+
+        } catch (error) {
+
+            setError(
+                error.response?.data?.detail ||
+                error.response?.data?.non_field_errors?.[0] ||
+                error.message ||
+                "Failed to update course."
+            );
+
+            setUpdating(false);
+        }
     };
+
+
+    const handleDelete = async () => {
+
+        const confirmed = window.confirm(
+            "Are you sure you want to delete this course?"
+        );
+
+        if (!confirmed) {
+            return;
+        }
+
+        setError(null);
+        setDeleting(true);
+
+        try {
+
+            await api.delete(`/courses/${id}/delete/`);
+
+            setDeleted(true);
+            setDeleting(false);
+
+            setTimeout(() => {
+                navigate(-1);
+            }, 2000);
+
+        } catch (error) {
+
+            setDeleting(false);
+
+            setError(
+                error.response?.data?.detail ||
+                "Could not delete course."
+            );
+        }
+    };
+
 
     const fieldLabels = {
         subject_name: "Subject Name",
@@ -105,7 +163,9 @@ function EditCourse() {
         total_submissions: "Required Submissions",
     };
 
+
     const renderField = (field) => {
+
         if (field.name === "teacher" && user.role === "admin") {
             return (
                 <select
@@ -153,81 +213,128 @@ function EditCourse() {
                 onChange={handleChange}
             />
         );
-    }
+    };
 
 
     if (loading) {
-        return <p>Loading...</p>
+        return <p>Loading...</p>;
     }
+
+
     if (error) {
-        return <p>{error}</p>
+        return <p>{error}</p>;
     }
+
 
     return (
-        <>
-            <div>
-                <button
-                    type="button"
-                    onClick={() => navigate(-1)}
+        <main className={styles.page}>
+
+            <button
+                className={styles.back}
+                type="button"
+                onClick={() => navigate(-1)}
+            >
+                ← Back
+            </button>
+
+            <section className={styles.card}>
+
+                <h1>Edit Course</h1>
+
+                <form
+                    className={styles.form}
+                    onSubmit={handleSubmit}
                 >
-                    ← Back
-                </button>
-            </div>
-            <h1>Edit Course</h1>
 
-            <p>Editing Course: {id}</p>
-            <form onSubmit={handleSubmit}>
+                    {fields.map((field) => {
 
-                {fields.map((field) => {
+                        // teachers cannot edit teacher assignment
+                        if (
+                            field.name === "teacher" &&
+                            user.role === "teacher"
+                        ) {
+                            return null;
+                        }
 
-                    // teachers cannot edit teacher assignment
-                    // unless you decide they should later
-                    if (
-                        field.name === "teacher" &&
-                        user.role === "teacher"
-                    ) {
-                        return null;
-                    }
+                        return (
+                            <div
+                                className={styles.field}
+                                key={field.name}
+                            >
+                                <label htmlFor={field.name}>
+                                    {fieldLabels[field.name] || field.name}:
+                                </label>
 
-                    return (
-                        <div key={field.name}>
+                                {renderField(field)}
+                            </div>
+                        );
 
-                            <label htmlFor={field.name}>
-                                {fieldLabels[field.name] || field.name}:
-                            </label>
+                    })}
 
-                            {renderField(field)}
+                    {error && (
+                        <p className={styles.error}>
+                            {error}
+                        </p>
+                    )}
 
-                        </div>
-                    );
+                    <div className={styles.actions}>
 
-                })}
-
-
-                <div>
-                    <div>
-                        <button type="submit" disabled={success}>
-                            {success ? "Saved!" : "Save changes"}
+                        <button
+                            type="submit"
+                            disabled={updating || success}
+                        >
+                            {updating
+                                ? "Saving..."
+                                : success
+                                    ? "Saved!"
+                                    : "Save Changes"
+                            }
                         </button>
 
                         <button
                             type="button"
                             onClick={() => navigate(-1)}
+                            disabled={updating}
                         >
                             Discard Changes
                         </button>
+
                     </div>
 
                     {success && (
-                        <span>
+                        <p className={styles.success}>
                             Course updated successfully!
-                        </span>
+                        </p>
                     )}
-                </div>
 
-            </form>
-        </>
-    )
+                </form>
+
+            </section>
+
+            <section className={styles.deleteSection}>
+
+                {deleted ? (
+                    <p className={styles.success}>
+                        Course deleted successfully.
+                    </p>
+                ) : (
+                    <button
+                        className={styles.deleteButton}
+                        type="button"
+                        onClick={handleDelete}
+                        disabled={deleting}
+                    >
+                        {deleting
+                            ? "Deleting..."
+                            : "Delete Course"
+                        }
+                    </button>
+                )}
+
+            </section>
+
+        </main>
+    );
 }
 
-export default EditCourse
+export default EditCourse;

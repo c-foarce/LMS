@@ -93,6 +93,12 @@ describe("EditUser", () => {
         const screen = await renderEditUser();
 
         await expect.element(
+            screen.getByRole("heading", {
+                name: "Edit Student"
+            })
+        ).toBeInTheDocument();
+
+        await expect.element(
             screen.getByRole("textbox", { name: "Username:" })
         ).toHaveValue("testuser");
 
@@ -103,10 +109,6 @@ describe("EditUser", () => {
         await expect.element(
             screen.getByRole("textbox", { name: "Last Name:" })
         ).toHaveValue("User");
-
-        await expect.element(
-            screen.getByText("Role: student")
-        ).toBeInTheDocument();
 
         expect(api.get).toHaveBeenCalledWith(
             "/accounts/users/5/"

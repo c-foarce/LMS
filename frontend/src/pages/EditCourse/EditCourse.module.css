@@ -1,0 +1,136 @@
+.page {
+    width: min(800px, 100%);
+    margin: 0 auto;
+    padding: var(--spacing-xl);
+}
+
+.back {
+    border: none;
+    padding: 0;
+    background: none;
+    color: var(--primary);
+    cursor: pointer;
+}
+
+.back:hover {
+    background: none;
+    color: var(--primary-dark);
+}
+
+.back:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+}
+
+.card {
+    margin-top: var(--spacing-md);
+    padding: var(--spacing-xl);
+    background-color: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+}
+
+.card h1 {
+    margin-top: 0;
+    margin-bottom: var(--spacing-xl);
+    color: var(--primary-dark);
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+.field {
+    display: grid;
+    grid-template-columns: 180px 1fr;
+    align-items: center;
+    gap: var(--spacing-md);
+}
+
+.field label {
+    font-weight: 600;
+}
+
+.field input,
+.field select,
+.field textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background-color: var(--surface);
+    color: var(--text);
+}
+
+.field input:focus,
+.field select:focus,
+.field textarea:focus {
+    outline: 2px solid var(--primary);
+    outline-offset: 1px;
+}
+
+.field textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+.actions {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    margin-top: var(--spacing-sm);
+    flex-wrap: wrap;
+}
+
+.success {
+    margin: 0;
+    color: var(--success);
+    font-weight: 600;
+}
+
+.error {
+    margin: 0;
+    color: var(--error);
+    font-weight: 600;
+}
+
+.deleteSection {
+    margin-top: var(--spacing-lg);
+}
+
+.deleteButton {
+    background-color: var(--error);
+    border-color: var(--error);
+}
+
+.deleteButton:hover {
+    background-color: var(--error);
+    border-color: var(--error);
+    opacity: 0.9;
+}
+
+@media (max-width: 700px) {
+    .page {
+        padding: var(--spacing-md);
+    }
+
+    .card {
+        padding: var(--spacing-lg);
+    }
+
+    .field {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-xs);
+    }
+
+    .actions {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .actions button {
+        width: 100%;
+    }
+}

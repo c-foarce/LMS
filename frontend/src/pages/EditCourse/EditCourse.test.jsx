@@ -73,6 +73,7 @@ vi.mock("../../services/api", () => ({
     default: {
         get: vi.fn(),
         patch: vi.fn(),
+        delete: vi.fn(),
     },
 }));
 
@@ -127,7 +128,9 @@ describe("EditCourse", () => {
         const screen = await renderEditCourse();
 
         await expect.element(
-            screen.getByText("Editing Course: 5")
+            screen.getByRole("heading", {
+                name: "Edit Course"
+            })
         ).toBeInTheDocument();
 
         expect(api.get).toHaveBeenCalledWith(
@@ -135,7 +138,7 @@ describe("EditCourse", () => {
         );
 
         expect(api.get).toHaveBeenCalledWith(
-            "/courses/course-fields"
+            "/courses/course-fields/"
         );
     });
 
@@ -332,6 +335,128 @@ describe("EditCourse", () => {
 
         await expect.element(
             screen.getByText("Failed to update course")
+        ).toBeInTheDocument();
+    });
+
+
+    test("displays the delete course button", async () => {
+        api.get
+            .mockResolvedValueOnce({
+                data: mockCourse,
+            })
+            .mockResolvedValueOnce({
+                data: {
+                    fields: mockFields,
+                    teacher_options: mockTeacherOptions,
+                },
+            });
+
+        const screen = await renderEditCourse("admin");
+
+        await expect.element(
+            screen.getByRole("button", {
+                name: "Delete Course"
+            })
+        ).toBeInTheDocument();
+    });
+
+
+    test("deletes a course after confirmation", async () => {
+        api.get
+            .mockResolvedValueOnce({
+                data: mockCourse,
+            })
+            .mockResolvedValueOnce({
+                data: {
+                    fields: mockFields,
+                    teacher_options: mockTeacherOptions,
+                },
+            });
+
+        api.delete.mockResolvedValue({
+            data: {}
+        });
+
+        vi.spyOn(window, "confirm").mockReturnValue(true);
+
+        const screen = await renderEditCourse("admin");
+
+        await screen.getByRole("button", {
+            name: "Delete Course"
+        }).click();
+
+        expect(window.confirm).toHaveBeenCalledWith(
+            "Are you sure you want to delete this course?"
+        );
+
+        expect(api.delete).toHaveBeenCalledWith(
+            "/courses/5/delete/"
+        );
+
+        await expect.element(
+            screen.getByText("Course deleted successfully.")
+        ).toBeInTheDocument();
+    });
+
+
+    test("does not delete a course when deletion is cancelled", async () => {
+        api.get
+            .mockResolvedValueOnce({
+                data: mockCourse,
+            })
+            .mockResolvedValueOnce({
+                data: {
+                    fields: mockFields,
+                    teacher_options: mockTeacherOptions,
+                },
+            });
+
+        vi.spyOn(window, "confirm").mockReturnValue(false);
+
+        const screen = await renderEditCourse("admin");
+
+        await screen.getByRole("button", {
+            name: "Delete Course"
+        }).click();
+
+        expect(window.confirm).toHaveBeenCalledWith(
+            "Are you sure you want to delete this course?"
+        );
+
+        expect(api.delete).not.toHaveBeenCalled();
+    });
+
+
+    test("shows an error when deleting a course fails", async () => {
+        api.get
+            .mockResolvedValueOnce({
+                data: mockCourse,
+            })
+            .mockResolvedValueOnce({
+                data: {
+                    fields: mockFields,
+                    teacher_options: mockTeacherOptions,
+                },
+            });
+
+        api.delete.mockRejectedValue({
+            response: {
+                data: {
+                    detail: "Could not delete course."
+                }
+            }
+        });
+
+        vi.spyOn(window, "confirm").mockReturnValue(true);
+
+        const screen = await renderEditCourse("admin");
+
+        await screen.getByRole("button", {
+            name: "Delete Course"
+        }).click();
+
+        await expect.element(
+            screen.getByText("Could not delete course.")
         ).toBeInTheDocument();
     });
 

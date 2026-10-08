@@ -5,22 +5,24 @@ import api from "../../services/api";
 
 import { useAuth } from "../../context/AuthContext";
 
+import styles from "./EditUser.module.css";
+
 function EditUser() {
 
-    const navigate = useNavigate()
+    const navigate = useNavigate();
 
-    const { user: currentUser } = useAuth()
+    const { user: currentUser } = useAuth();
     const { id } = useParams();
 
-    const isSelf = currentUser?.id === Number(id)
+    const isSelf = currentUser?.id === Number(id);
 
     const [user, setUser] = useState(null);
 
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    const [success, setSuccess] = useState(null)
-    const [updating, setUpdating] = useState(false)
+    const [success, setSuccess] = useState(null);
+    const [updating, setUpdating] = useState(false);
 
     const [deleting, setDeleting] = useState(false);
     const [deleted, setDeleted] = useState(false);
@@ -32,6 +34,7 @@ function EditUser() {
         password: "",
         confirm_password: "",
     });
+
 
     useEffect(() => {
 
@@ -50,8 +53,8 @@ function EditUser() {
                     first_name: response.data.first_name,
                     last_name: response.data.last_name,
                     password: "",
+                    confirm_password: "",
                 });
-
 
             } catch (error) {
 
@@ -65,12 +68,12 @@ function EditUser() {
                 setLoading(false);
 
             }
-
         };
 
         fetchUser();
 
     }, [id]);
+
 
     const handleChange = (event) => {
 
@@ -79,8 +82,9 @@ function EditUser() {
         setFormData(previous => ({
             ...previous,
             [name]: value
-        }))
-    }
+        }));
+    };
+
 
     const fields = [
         {
@@ -97,15 +101,16 @@ function EditUser() {
         },
         {
             name: "password",
-            type: "text",
+            type: "password",
             placeholder: "Leave blank to keep current password",
         },
         {
             name: "confirm_password",
-            type: "text",
+            type: "password",
             placeholder: "Repeat new password",
         },
     ];
+
 
     const fieldLabels = {
         username: "Username",
@@ -114,6 +119,7 @@ function EditUser() {
         password: "New Password",
         confirm_password: "Confirm New Password",
     };
+
 
     const renderField = (field) => {
 
@@ -130,16 +136,14 @@ function EditUser() {
     };
 
 
-
     const handleSubmit = async (event) => {
 
         event.preventDefault();
 
         setError(null);
         setSuccess(null);
-        setUpdating(true)
+        setUpdating(true);
 
-        // Password validation
         if (
             !formData.password &&
             formData.confirm_password
@@ -166,7 +170,6 @@ function EditUser() {
                 last_name: formData.last_name,
             };
 
-            // Only send password if the admin actually entered one
             if (formData.password) {
                 dataToSend.password = formData.password;
             }
@@ -176,13 +179,12 @@ function EditUser() {
                 dataToSend
             );
 
-            setUpdating(true)
-            setSuccess("User updated successfully!")
+            setSuccess("User updated successfully!");
+            setUpdating(false);
 
             setTimeout(() => {
                 navigate("/app/accounts/all/");
             }, 2000);
-
 
         } catch (error) {
 
@@ -195,6 +197,7 @@ function EditUser() {
         }
     };
 
+
     const handleDelete = async () => {
 
         const confirmed = window.confirm(
@@ -205,13 +208,15 @@ function EditUser() {
             return;
         }
 
-        try {
+        setError(null);
+        setDeleting(true);
 
-            setDeleting(true);
+        try {
 
             await api.delete(`/accounts/${id}/delete/`);
 
             setDeleted(true);
+            setDeleting(false);
 
             setTimeout(() => {
                 navigate("/app/accounts/all/");
@@ -220,17 +225,18 @@ function EditUser() {
         } catch (error) {
 
             setDeleting(false);
-            setError("Could not delete user.");
-
+            setError(
+                error.response?.data?.detail ||
+                "Could not delete user."
+            );
         }
     };
-
-
 
 
     if (loading) {
         return <p>Loading...</p>;
     }
+
 
     if (error) {
         return <p>{error}</p>;
@@ -238,82 +244,105 @@ function EditUser() {
 
 
     return (
-        <>
+        <main className={styles.page}>
 
-            <div>
-                <button
-                    type="button"
-                    onClick={() => navigate(-1)}
+            <button
+                className={styles.back}
+                type="button"
+                onClick={() => navigate(-1)}
+            >
+                ← Back
+            </button>
+
+            <section className={styles.card}>
+
+                <h1>
+                    Edit {user.role.charAt(0).toUpperCase() + user.role.slice(1)}
+                </h1>
+
+                <form
+                    className={styles.form}
+                    onSubmit={handleSubmit}
                 >
-                    ← Back
-                </button>
-            </div>
-            <div>
 
-                <h1>Edit User</h1>
+                    {fields.map((field) => (
+                        <div
+                            className={styles.field}
+                            key={field.name}
+                        >
+                            <label htmlFor={field.name}>
+                                {fieldLabels[field.name]}:
+                            </label>
 
-                <form onSubmit={handleSubmit}>
-                    <div>
-                        {fields.map((field) => {
-
-                            return (
-                                <div key={field.name}>
-
-                                    <label htmlFor={field.name}>
-                                        {fieldLabels[field.name] || field.name}:
-                                    </label>
-
-                                    {renderField(field)}
-
-                                </div>
-                            );
-
-                        })}
-
-                        <label>Role: {user.role}</label>
-                    </div>
-
-                    <div>
-                        <div>
-                            <button type="submit">
-                                Save Changes
-                            </button>
-
-                            <button
-                                type="button"
-                                onClick={() => navigate(-1)}
-                            >
-                                Discard Changes
-                            </button>
+                            {renderField(field)}
                         </div>
+                    ))}
 
-                        {success && (
-                            <span>
-                                {success}
-                            </span>
-                        )}
+                    {error && (
+                        <p className={styles.error}>
+                            {error}
+                        </p>
+                    )}
+
+                    <div className={styles.actions}>
+
+                        <button
+                            type="submit"
+                            disabled={updating || success}
+                        >
+                            {updating
+                                ? "Saving..."
+                                : success
+                                    ? "Saved!"
+                                    : "Save Changes"
+                            }
+                        </button>
+
+                        <button
+                            type="button"
+                            onClick={() => navigate(-1)}
+                            disabled={updating}
+                        >
+                            Discard Changes
+                        </button>
+
                     </div>
+
+                    {success && (
+                        <p className={styles.success}>
+                            {success}
+                        </p>
+                    )}
 
                 </form>
 
-            </div>
+            </section>
 
-            <div>
-                {!isSelf && (
-                    deleted ? (
-                        <p>User deleted successfully.</p>
+            {!isSelf && (
+                <section className={styles.deleteSection}>
+
+                    {deleted ? (
+                        <p className={styles.success}>
+                            User deleted successfully.
+                        </p>
                     ) : (
                         <button
+                            className={styles.deleteButton}
+                            type="button"
                             onClick={handleDelete}
                             disabled={deleting}
                         >
-                            {deleting ? "Deleting..." : "Delete User"}
+                            {deleting
+                                ? "Deleting..."
+                                : "Delete User"
+                            }
                         </button>
-                    )
-                )}
-            </div>
+                    )}
 
-        </>
+                </section>
+            )}
+
+        </main>
     );
 }
 
