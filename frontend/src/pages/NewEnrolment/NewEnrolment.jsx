@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
+import styles from "./NewEnrolment.module.css";
+
 import api from '../../services/api'
 
 function NewEnrolment() {
@@ -88,77 +90,99 @@ function NewEnrolment() {
     }, []);
 
     return (
-        <>
-            <div>
-                <button
-                    type="button"
-                    onClick={() => navigate(-1)}
+        <div className={styles.page}>
+            <button
+                className={styles.back}
+                type="button"
+                onClick={() => navigate(-1)}
+            >
+                ← Back
+            </button>
+
+            <div className={styles.card}>
+                <h1>New Enrolment</h1>
+
+                {success && (
+                    <p className={styles.success}>
+                        Enrolment successfully created!
+                    </p>
+                )}
+
+                {error && (
+                    <p className={styles.error}>{error}</p>
+                )}
+
+                <form
+                    className={styles.form}
+                    onSubmit={handleSubmit}
                 >
-                    ← Back
-                </button>
+                    <div className={styles.field}>
+                        <label htmlFor="student">
+                            Student:
+                        </label>
+
+                        <select
+                            id="student"
+                            name="student"
+                            value={formData.student || ""}
+                            onChange={handleChange}
+                        >
+                            <option value="">
+                                Select a student:
+                            </option>
+
+                            {studentOptions.map(student => (
+                                <option
+                                    key={student.id}
+                                    value={student.id}
+                                >
+                                    {student.username}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+
+                    <div className={styles.field}>
+                        <label htmlFor="course">
+                            Course:
+                        </label>
+
+                        <select
+                            id="course"
+                            name="course"
+                            value={formData.course || ""}
+                            onChange={handleChange}
+                        >
+                            <option value="">
+                                Select a course:
+                            </option>
+
+                            {courseOptions.map(course => (
+                                <option
+                                    key={course.id}
+                                    value={course.id}
+                                >
+                                    {course.subject_name}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+
+                    <div className={styles.actions}>
+                        <button type="submit">
+                            Create Enrolment
+                        </button>
+
+                        <button
+                            type="button"
+                            onClick={() => navigate(-1)}
+                        >
+                            Cancel
+                        </button>
+                    </div>
+                </form>
             </div>
-            <h1>New Enrolment</h1>
-            {success && (
-                <p>Enrolment sucessfully created!</p>
-            )}
-
-            {error && (
-                <p>{error}</p>
-            )}
-
-            <form onSubmit={handleSubmit}>
-                <label htmlFor="student">Student</label>
-
-                <select
-                    id="student"
-                    name="student"
-                    value={formData.student || ""}
-                    onChange={handleChange}
-                >
-                    <option value="">Select a student:</option>
-
-                    {studentOptions.map(student => {
-                        return (
-                            <option key={student.id} value={student.id}>
-                                {student.username}
-                            </option>
-                        )
-                    })}
-                </select>
-
-                <label htmlFor="course">Course</label>
-
-                <select
-                    id="course"
-                    name="course"
-                    value={formData.course || ""}
-                    onChange={handleChange}
-                >
-                    <option value="">Select a course:</option>
-
-                    {courseOptions.map(course => {
-                        return (
-                            <option key={course.id} value={course.id}>
-                                {course.subject_name}
-                            </option>
-                        )
-                    })}
-                </select>
-
-                <div>
-                    <button type="submit">
-                        Create Enrolment
-                    </button>
-
-                    <button
-                        type="button"
-                        onClick={() => navigate(-1)}
-                    >
-                        Cancel
-                    </button>
-                </div>
-            </form>
-        </>
+        </div>
     )
 
 

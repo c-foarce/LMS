@@ -1,5 +1,8 @@
 import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
+
+import styles from "./NewUser.module.css";
+
 import api from '../../services/api'
 
 function NewUser() {
@@ -138,60 +141,61 @@ function NewUser() {
 
 
     return (
-        <>
+    <div className={styles.page}>
+        <button
+            className={styles.back}
+            type="button"
+            onClick={() => navigate(-1)}
+        >
+            ← Back
+        </button>
 
-            <div>
-                <button
-                    type="button"
-                    onClick={() => navigate(-1)}
-                >
-                    ← Back
-                </button>
-            </div>
-            <h1>New User Page</h1>
+        <div className={styles.card}>
+            <h1>New User</h1>
 
             {error && (
-                <p>{error}</p>
+                <p className={styles.error}>{error}</p>
             )}
 
-            <form onSubmit={handleSubmit}>
-                {fields.map((field) => {
+            <form
+                className={styles.form}
+                onSubmit={handleSubmit}
+            >
+                {fields.map((field) => (
+                    <div
+                        className={styles.field}
+                        key={field.name}
+                    >
+                        <label htmlFor={field.name}>
+                            {fieldLabels[field.name] || field.name}:
+                        </label>
 
-                    return (
-                        <div key={field.name}>
-
-                            <label htmlFor={field.name}>
-                                {fieldLabels[field.name] || field.name}:
-                            </label>
-
-                            {renderField(field)}
-
-                        </div>
-                    );
-
-                })}
-
-                <div>
-                    <div>
-                        <button type="submit">
-                            Create User
-                        </button>
-
-                        <button
-                            type="button"
-                            onClick={() => navigate(-1)}
-                        >
-                            Cancel
-                        </button>
+                        {renderField(field)}
                     </div>
+                ))}
+
+                <div className={styles.actions}>
+                    <button type="submit">
+                        Create User
+                    </button>
+
+                    <button
+                        type="button"
+                        onClick={() => navigate(-1)}
+                    >
+                        Cancel
+                    </button>
 
                     {success && (
-                        <span>User successfully created!</span>
+                        <span className={styles.success}>
+                            User successfully created!
+                        </span>
                     )}
                 </div>
             </form>
-        </>
-    )
+        </div>
+    </div>
+)
 
 }
 

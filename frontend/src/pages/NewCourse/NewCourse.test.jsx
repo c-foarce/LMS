@@ -105,7 +105,7 @@ describe("NewCourse", () => {
 
         await expect.element(
             screen.getByRole("heading", {
-                name: "New Course Page",
+                name: "New Course",
             })
         ).toBeInTheDocument();
 

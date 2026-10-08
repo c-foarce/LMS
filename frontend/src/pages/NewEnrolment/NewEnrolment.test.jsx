@@ -170,7 +170,7 @@ describe("NewEnrolment", () => {
         );
 
         await expect.element(
-            screen.getByText("Enrolment sucessfully created!")
+            screen.getByText("Enrolment successfully created!")
         ).toBeInTheDocument();
     });
 
@@ -207,7 +207,7 @@ describe("NewEnrolment", () => {
         }).click();
 
         await expect.element(
-            screen.getByText("Enrolment sucessfully created!")
+            screen.getByText("Enrolment successfully created!")
         ).toBeInTheDocument();
 
         vi.advanceTimersByTime(3000);

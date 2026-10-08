@@ -80,7 +80,7 @@ describe("NewUser", () => {
         );
 
         await expect.element(
-            screen.getByText("New User Page")
+            screen.getByText("New User")
         ).toBeVisible();
 
         await expect.element(

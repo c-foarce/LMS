@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 
+import styles from "./NewCourse.module.css";
+
 import api from '../../services/api'
 
 
@@ -158,71 +160,67 @@ function NewCourse() {
 
 
   return (
-    <>
+    <div className={styles.page}>
+      <button
+        className={styles.back}
+        type="button"
+        onClick={() => navigate(-1)}
+      >
+        ← Back
+      </button>
 
-      <div>
-        <button
-          type="button"
-          onClick={() => navigate(-1)}
+      <div className={styles.card}>
+        <h1>New Course</h1>
+
+        {error && (
+          <p className={styles.error}>{error}</p>
+        )}
+
+        {success && (
+          <p className={styles.success}>
+            Course successfully created!
+          </p>
+        )}
+
+        <form
+          className={styles.form}
+          onSubmit={handleSubmit}
         >
-          ← Back
-        </button>
+          {fields.map((field) => {
+
+            if (field.name === "teacher" && role === "teacher") {
+              return null;
+            }
+
+            return (
+              <div
+                className={styles.field}
+                key={field.name}
+              >
+                <label htmlFor={field.name}>
+                  {fieldLabels[field.name] || field.name}:
+                </label>
+
+                {renderField(field)}
+              </div>
+            );
+          })}
+
+          <div className={styles.actions}>
+            <button type="submit">
+              Create Course
+            </button>
+
+            <button
+              type="button"
+              onClick={() => navigate(-1)}
+            >
+              Cancel
+            </button>
+          </div>
+        </form>
       </div>
-
-      <h1>New Course Page</h1>
-
-      {error && (
-        <p>{error}</p>
-      )}
-
-      {success && (
-        <p>Course successfully created!</p>
-      )}
-
-      <form onSubmit={handleSubmit}>
-
-        {fields.map((field) => {
-
-          {/* Teachers should not choose a teacher. Their own user account will eventually be assigned by the backend. */ }
-          if (field.name === "teacher" && role === "teacher") {
-            return null;
-          }
-
-
-          return (
-            <div key={field.name}>
-
-              <label htmlFor={field.name}>
-                {fieldLabels[field.name] || field.name}:
-              </label>
-
-              {/*If the current user is an admin:
-             show a dropdown instead of a normal text input.
-             The dropdown sends the teacher ID as the value.*/}
-              {renderField(field)}
-
-
-            </div>
-          );
-
-        })}
-
-
-        <div>
-          <button type="submit">
-            Create Course
-          </button>
-
-          <button
-            type="button"
-            onClick={() => navigate(-1)}
-          >
-            Cancel
-          </button>
-        </div>
-        
-      </form>
-    </>
+    </div>
   )
 
 }

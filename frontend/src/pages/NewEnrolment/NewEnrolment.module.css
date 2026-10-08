@@ -1,0 +1,115 @@
+.page {
+    width: min(700px, 100%);
+    margin: 0 auto;
+    padding: var(--spacing-xl);
+}
+
+.back {
+    border: none;
+    padding: 0;
+    background: none;
+    color: var(--primary);
+    cursor: pointer;
+}
+
+.back:hover {
+    background: none;
+    color: var(--primary-dark);
+}
+
+.back:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+}
+
+.card {
+    margin-top: var(--spacing-md);
+    padding: var(--spacing-xl);
+    background-color: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+}
+
+.card h1 {
+    margin-top: 0;
+    margin-bottom: var(--spacing-lg);
+    color: var(--primary-dark);
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+}
+
+.field label {
+    font-weight: 600;
+}
+
+.field input,
+.field select,
+.field textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background-color: var(--surface);
+    color: var(--text);
+}
+
+.field input:focus,
+.field select:focus,
+.field textarea:focus {
+    outline: 2px solid var(--primary);
+    outline-offset: 1px;
+}
+
+.field textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+.actions {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    margin-top: var(--spacing-sm);
+    flex-wrap: wrap;
+}
+
+.success {
+    margin: 0;
+    color: var(--success);
+    font-weight: 600;
+}
+
+.error {
+    margin: 0 0 var(--spacing-md);
+    color: var(--error);
+    font-weight: 600;
+}
+
+@media (max-width: 700px) {
+    .page {
+        padding: var(--spacing-md);
+    }
+
+    .card {
+        padding: var(--spacing-lg);
+    }
+
+    .actions {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .actions button {
+        width: 100%;
+    }
+}
