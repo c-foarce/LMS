@@ -35,7 +35,7 @@ describe("App", () => {
 
         await screen.getByRole(
             "button",
-            { name: "Click to Log in" }
+            { name: "Log in" }
         ).click();
 
         await expect.element(
