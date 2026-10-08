@@ -1,3 +1,5 @@
+import styles from "./FilterDropdown.module.css";
+
 function FilterDropdown({
     value,
     onChange,
@@ -10,14 +12,14 @@ function FilterDropdown({
     id,
 }) {
     return (
-        <div>
+        <div className={styles.dropdown}>
             <label htmlFor={id}>
                 {label}
             </label>
 
             <select
                 id={id}
-                className={className}
+                className={`${styles.select} ${className || ""}`}
                 value={value}
                 onChange={(event) => onChange(event.target.value)}
             >
