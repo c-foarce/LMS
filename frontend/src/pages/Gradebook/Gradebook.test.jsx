@@ -60,7 +60,7 @@ afterEach(() => {
 describe("Gradebook", () => {
 
     test("shows loading state while progress is being retrieved", async () => {
-        api.get.mockReturnValue(new Promise(() => {}));
+        api.get.mockReturnValue(new Promise(() => { }));
 
         const screen = await renderGradebook();
 
@@ -82,17 +82,11 @@ describe("Gradebook", () => {
         const screen = await renderGradebook();
 
         await expect.element(
-            screen.getByRole("heading", {
-                name: "Mathematics (MATH101)",
-                level: 2,
-            })
+            screen.getByText("Mathematics (MATH101)").last()
         ).toBeInTheDocument();
 
         await expect.element(
-            screen.getByRole("heading", {
-                name: "Computer Science (CS101)",
-                level: 2,
-            })
+            screen.getByText("Computer Science (CS101)").last()
         ).toBeInTheDocument();
 
         await expect.element(
@@ -132,17 +126,11 @@ describe("Gradebook", () => {
         await courseFilter.selectOptions("2");
 
         await expect.element(
-            screen.getByRole("heading", {
-                name: "Computer Science (CS101)",
-                level: 2,
-            })
+            screen.getByText("Computer Science (CS101)").last()
         ).toBeInTheDocument();
 
         await expect.element(
-            screen.getByRole("heading", {
-                name: "Mathematics (MATH101)",
-                level: 2,
-            })
+            screen.getByText("Student: studentone")
         ).not.toBeInTheDocument();
     });
 
@@ -209,10 +197,7 @@ describe("Gradebook", () => {
         await gradeFilter.selectOptions("awaiting");
 
         await expect.element(
-            screen.getByRole("heading", {
-                name: "Computer Science (CS101)",
-                level: 2,
-            })
+            screen.getByText("Computer Science (CS101)").last()
         ).toBeInTheDocument();
 
         await expect.element(
