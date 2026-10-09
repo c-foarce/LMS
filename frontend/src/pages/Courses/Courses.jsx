@@ -9,7 +9,7 @@ import styles from "./Courses.module.css"
 
 import StudentCourseCard from "../../components/CourseCards/StudentCourseCard";
 import TeacherCourseCard from "../../components/CourseCards/TeacherCourseCard";
-import FilterDropdown from "../../components/Filters/FilterDropdown";
+import SearchAndFilter from "../../components/Filters/SearchAndFilter";
 
 function Courses() {
 
@@ -210,38 +210,32 @@ function Courses() {
           <p className={styles.success}>{success}</p>
         )}
 
-        <section className={styles.filters}>
-          <label htmlFor="course-search">
-            Search:
-          </label>
-
-          <input
-            id="course-search"
-            type="search"
-            value={searchTerm}
-            onChange={(event) =>
-              setSearchTerm(event.target.value)
-            }
-            placeholder="Search courses..."
-          />
-
-          <FilterDropdown
-            id="status-filter"
-            label="Status:"
-            value={statusFilter}
-            onChange={setStatusFilter}
-            defaultLabel="All Statuses"
-            options={
-              user.role === "student"
-                ? ["active", "completed"]
-                : ["Active", "Inactive"]
-            }
-            getValue={(status) => status}
-            getLabel={(status) =>
-              status.charAt(0) + status.slice(1).toLowerCase()
-            }
-          />
-        </section>
+        <SearchAndFilter
+          search={searchTerm}
+          onSearchChange={setSearchTerm}
+          searchLabel="Search:"
+          searchPlaceholder="Search courses..."
+          filters={[
+            {
+              id: "status-filter",
+              label: "Status:",
+              value: statusFilter,
+              onChange: setStatusFilter,
+              defaultLabel: "All Statuses",
+              options:
+                user.role === "student"
+                  ? ["active", "completed"]
+                  : ["Active", "Inactive"],
+              getValue: status => status,
+              getLabel: status =>
+                status.charAt(0) + status.slice(1).toLowerCase(),
+            },
+          ]}
+          onClear={() => {
+            setSearchTerm("");
+            setStatusFilter("");
+          }}
+        />
 
         {filteredItems.length === 0 ? (
           <p>
