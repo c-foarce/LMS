@@ -1,19 +1,24 @@
 .dropdown {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-xs);
+display: grid;
+grid-template-columns: max-content minmax(0, 1fr);
+align-items: center;
+gap: var(--spacing-sm);
+min-width: 0;
 }
 
 .select {
-    padding: 10px 12px;
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    background-color: var(--surface);
-    color: var(--text);
-    cursor: pointer;
+box-sizing: border-box;
+width: 100%;
+min-width: 0;
+padding: 10px 12px;
+border: 1px solid var(--border);
+border-radius: var(--radius-sm);
+background-color: var(--surface);
+color: var(--text);
+cursor: pointer;
 }
 
 .select:focus {
-    outline: 2px solid var(--primary);
-    outline-offset: 1px;
+outline: 2px solid var(--primary);
+outline-offset: 1px;
 }

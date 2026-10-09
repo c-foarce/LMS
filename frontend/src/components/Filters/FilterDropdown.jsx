@@ -1,5 +1,6 @@
 import styles from "./FilterDropdown.module.css";
 
+
 function FilterDropdown({
     value,
     onChange,
@@ -8,15 +9,15 @@ function FilterDropdown({
     getValue,
     getLabel,
     className,
+    layoutClassName,
     label,
     id,
 }) {
     return (
-        <div className={styles.dropdown}>
+        <div className={`${styles.dropdown} ${layoutClassName || ""}`}>
             <label htmlFor={id}>
                 {label}
             </label>
-
             <select
                 id={id}
                 className={`${styles.select} ${className || ""}`}
@@ -38,6 +39,7 @@ function FilterDropdown({
             </select>
         </div>
     );
+
 }
 
 export default FilterDropdown;
