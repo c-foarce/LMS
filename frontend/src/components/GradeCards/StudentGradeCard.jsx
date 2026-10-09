@@ -1,4 +1,5 @@
 import RenderCard from "../Cards/RenderCard";
+import styles from "./StudentGradeCard.module.css";
 
 function StudentGradeCard({
     student,
@@ -11,19 +12,9 @@ function StudentGradeCard({
 }) {
     const gradeOptions = ["A", "B", "C", "D", "F"];
 
-    const details = [
-        {
-            label: "Student",
-            value: student.student_name,
-        },
-        {
-            label: "Grade",
-            value: student.grade || "Awaiting grade",
-        },
-    ];
-
     const gradeSelector = (
         <select
+            className={styles.gradeSelect}
             value={selectedGrade || ""}
             onChange={(event) => onGradeChange(event.target.value)}
             aria-label={`Select grade for ${student.student_name}`}

@@ -1,0 +1,16 @@
+.gradeSelect {
+    box-sizing: border-box;
+    width: 160px;
+    max-width: 100%;
+    padding: 8px 10px;
+    border: 1px solid var(--primary);
+    border-radius: var(--radius-sm);
+    background-color: var(--surface);
+    color: var(--text);
+    cursor: pointer;
+}
+
+.gradeSelect:focus {
+    outline: 2px solid var(--primary);
+    outline-offset: 1px;
+}
