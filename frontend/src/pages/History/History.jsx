@@ -28,6 +28,9 @@ function History() {
     const [courseFilter, setCourseFilter] = useState("");
     const [gradeFilter, setGradeFilter] = useState("");
 
+    const [fromDate, setFromDate] = useState("");
+    const [toDate, setToDate] = useState("");
+
 
     useEffect(() => {
 
@@ -108,6 +111,8 @@ function History() {
         setTeacherFilter("");
         setCourseFilter("");
         setGradeFilter("");
+        setFromDate("");
+        setToDate("");
 
     };
 
@@ -167,12 +172,22 @@ function History() {
             !gradeFilter ||
             record.grade === gradeFilter;
 
+        const completedDate = record.completed_at?.slice(0, 10) || "";
+
+        const matchesFromDate =
+            !fromDate || completedDate >= fromDate;
+
+        const matchesToDate =
+            !toDate || completedDate <= toDate;
+
         return (
             matchesSearch &&
             matchesStudent &&
             matchesTeacher &&
             matchesCourse &&
-            matchesGrade
+            matchesGrade &&
+            matchesFromDate &&
+            matchesToDate
         );
     });
 
@@ -205,6 +220,7 @@ function History() {
                     {
                         id: "student-filter",
                         label: "Student:",
+                        column: "left",
                         value: studentFilter,
                         onChange: setStudentFilter,
                         defaultLabel: "All Students",
@@ -218,6 +234,7 @@ function History() {
                             {
                                 id: "teacher-filter",
                                 label: "Teacher:",
+                                column: "right",
                                 value: teacherFilter,
                                 onChange: setTeacherFilter,
                                 defaultLabel: "All Teachers",
@@ -231,6 +248,7 @@ function History() {
                     {
                         id: "course-filter",
                         label: "Course:",
+                        column: "left",
                         value: courseFilter,
                         onChange: setCourseFilter,
                         defaultLabel: "All Courses",
@@ -242,6 +260,7 @@ function History() {
                     {
                         id: "grade-filter",
                         label: "Grade:",
+                        column: "right",
                         value: gradeFilter,
                         onChange: setGradeFilter,
                         defaultLabel: "All Grades",
@@ -250,6 +269,14 @@ function History() {
                         getLabel: grade => grade,
                     },
                 ]}
+                showDateRange
+                fromDate={fromDate}
+                toDate={toDate}
+                onDateRangeChange={({ fromDate, toDate }) => {
+                    setFromDate(fromDate);
+                    setToDate(toDate);
+                }}
+                dateRangeLabel="Completed:"
                 onClear={clearFilters}
             />
 
