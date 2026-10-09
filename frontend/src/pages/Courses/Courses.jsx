@@ -219,6 +219,7 @@ function Courses() {
             {
               id: "status-filter",
               label: "Status:",
+              column: "right",
               value: statusFilter,
               onChange: setStatusFilter,
               defaultLabel: "All Statuses",
