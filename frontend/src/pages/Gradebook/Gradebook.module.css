@@ -59,11 +59,8 @@
 }
 
 .course {
-    margin-bottom: var(--spacing-md);
-    overflow: hidden;
-    border: 1px solid var(--border);
-    border-radius: var(--radius-md);
-    background-color: var(--surface);
+    margin-bottom: var(--spacing-sm);
+    border-bottom: 1px solid var(--border);
 }
 
 .courseSummary {
@@ -71,16 +68,23 @@
     color: var(--primary-dark);
     font-weight: 700;
     cursor: pointer;
+    background-color: transparent;
+    transition: background-color 0.2s ease;
 }
 
 .courseSummary:hover {
-    background-color: var(--background);
+    background-color: var(--surface);
+}
+
+.course[open]>.courseSummary {
+    border-bottom: 1px solid var(--border);
 }
 
 .courseContent {
     display: grid;
     gap: var(--spacing-md);
     padding: var(--spacing-md);
+    background-color: transparent;
 }
 
 .emptyMessage {
