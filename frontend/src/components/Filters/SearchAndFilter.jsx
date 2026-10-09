@@ -11,6 +11,7 @@ function SearchAndFilter({
     onSearchChange,
     searchLabel = "Search:",
     searchPlaceholder = "Search...",
+    showSearch = true,
     filters = [],
     extraControls,
     showDateRange = false,
@@ -40,22 +41,19 @@ function SearchAndFilter({
 
             <div className={styles.filterContent}>
                 <div className={styles.controlColumn}>
-                    <div className={styles.searchField}>
-                        <label htmlFor="search-filter">
-                            {searchLabel}
-                        </label>
-
-                        <input
-                            className={styles.searchInput}
-                            id="search-filter"
-                            type="search"
-                            placeholder={searchPlaceholder}
-                            value={search}
-                            onChange={(event) =>
-                                onSearchChange(event.target.value)
-                            }
-                        />
-                    </div>
+                    {showSearch && (
+                        <div className={styles.searchField}>
+                            <label htmlFor="search-filter">{searchLabel}</label>
+                            <input
+                                className={styles.searchInput}
+                                id="search-filter"
+                                type="search"
+                                placeholder={searchPlaceholder}
+                                value={search}
+                                onChange={(event) => onSearchChange(event.target.value)}
+                            />
+                        </div>
+                    )}
 
                     {filters
                         .filter((filter) => (filter.column || "left") === "left")
