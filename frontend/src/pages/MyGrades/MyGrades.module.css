@@ -10,23 +10,7 @@
     color: var(--primary-dark);
 }
 
-.filters {
-    margin-bottom: var(--spacing-xl);
-    padding: var(--spacing-lg);
-    background-color: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-md);
-}
-
-.searchField {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-sm);
-    margin-bottom: var(--spacing-lg);
-}
-
-.searchField label,
-.dateField label {
+.searchField label {
     min-width: max-content;
     font-weight: bold;
     color: var(--text);
@@ -36,32 +20,7 @@
     flex: 1;
 }
 
-.filterRow {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--spacing-md);
-    align-items: center;
-}
-
-.dateRange {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-md);
-    white-space: nowrap;
-}
-
-.dateField {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-sm);
-}
-
-.dateField input {
-    min-width: 150px;
-}
-
-.searchField input,
-.dateField input {
+.searchField input {
     padding: 8px 10px;
     border: 1px solid var(--border);
     border-radius: var(--radius-sm);
@@ -69,10 +28,63 @@
     color: var(--text);
 }
 
-.searchField input:focus,
-.dateField input:focus {
+.searchField input:focus {
     outline: 2px solid var(--primary);
     outline-offset: 1px;
+}
+
+.dateRange {
+    min-width: 0;
+}
+
+.dateRange :global(.react-daterange-picker) {
+    display: inline-flex;
+    max-width: 100%;
+    color: var(--text);
+    font: inherit;
+}
+
+.dateRange :global(.react-daterange-picker__wrapper) {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    min-width: 0;
+    padding: 8px 10px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background-color: var(--surface);
+}
+
+.dateRange :global(.react-daterange-picker__inputGroup) {
+    min-width: 0;
+}
+
+.dateRange :global(.react-daterange-picker__inputGroup__input) {
+    color: var(--text);
+    font: inherit;
+}
+
+.dateRange :global(.react-daterange-picker__button) {
+    padding: 2px;
+    color: var(--primary-dark);
+}
+
+.dateRange :global(.react-daterange-picker__button svg) {
+    stroke: currentColor;
+}
+
+.dateRange :global(.react-daterange-picker__wrapper:focus-within) {
+    outline: 2px solid var(--primary);
+    outline-offset: 1px;
+}
+
+.dateRange :global(.react-calendar) {
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background-color: var(--surface);
+    color: var(--text);
+    font-family: inherit;
+    box-shadow: 0 4px 12px rgb(0 0 0 / 12%);
 }
 
 .clearButton {
@@ -129,27 +141,8 @@
     }
 
     .searchField input {
+        box-sizing: border-box;
         width: 100%;
-    }
-
-    .filterRow {
-        align-items: stretch;
-        flex-direction: column;
-    }
-
-    .dateRange {
-        align-items: stretch;
-        flex-direction: column;
-        gap: var(--spacing-sm);
-    }
-
-    .dateField {
-        justify-content: space-between;
-    }
-
-    .dateField input {
-        flex: 1;
-        width: auto;
     }
 
     .clearButton {

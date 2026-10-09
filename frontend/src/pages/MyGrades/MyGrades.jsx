@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 import api from "../../services/api";
-import FilterDropdown from "../../components/Filters/FilterDropdown";
+import SearchAndFilter from "../../components/Filters/SearchAndFilter";
 import styles from "./MyGrades.module.css";
 
 function MyGrades() {
@@ -109,87 +109,46 @@ function MyGrades() {
                 </p>
             ) : (
                 <>
-                    <section className={styles.filters}>
-                        <div className={styles.searchField}>
-                            <label htmlFor="grade-search">
-                                Search:
-                            </label>
 
-                            <input
-                                id="grade-search"
-                                type="search"
-                                value={searchTerm}
-                                onChange={(event) =>
-                                    setSearchTerm(event.target.value)
-                                }
-                                placeholder="Search courses or teachers..."
-                            />
-                        </div>
+                    <SearchAndFilter
+                        search={searchTerm}
+                        onSearchChange={setSearchTerm}
+                        searchLabel="Search:"
+                        searchPlaceholder="Search courses or teachers..."
+                        filters={[
+                            {
+                                id: "teacher-filter",
+                                label: "Teacher:",
+                                value: teacherFilter,
+                                onChange: setTeacherFilter,
+                                defaultLabel: "All Teachers",
+                                options: teachers,
+                                getValue: teacher => teacher,
+                                getLabel: teacher => teacher,
+                            },
+                            {
+                                id: "grade-filter",
+                                label: "Grade:",
+                                column: "right",
+                                value: gradeFilter,
+                                onChange: setGradeFilter,
+                                defaultLabel: "All Grades",
+                                options: gradeOptions,
+                                getValue: grade => grade,
+                                getLabel: grade => grade,
+                            },
+                        ]}
+                        showDateRange
+                        fromDate={fromDate}
+                        toDate={toDate}
+                        onDateRangeChange={({ fromDate, toDate }) => {
+                            setFromDate(fromDate);
+                            setToDate(toDate);
+                        }}
+                        dateRangeLabel="Completed:"
+                        onClear={clearFilters}
+                    />
 
-                        <div className={styles.filterRow}>
-                            <FilterDropdown
-                                id="teacher-filter"
-                                label="Teacher"
-                                value={teacherFilter}
-                                onChange={setTeacherFilter}
-                                defaultLabel="All Teachers"
-                                options={teachers}
-                                getValue={(teacher) => teacher}
-                                getLabel={(teacher) => teacher}
-                            />
-
-                            <FilterDropdown
-                                id="grade-filter"
-                                label="Grade"
-                                value={gradeFilter}
-                                onChange={setGradeFilter}
-                                defaultLabel="All Grades"
-                                options={gradeOptions}
-                                getValue={(grade) => grade}
-                                getLabel={(grade) => grade}
-                            />
-
-                            <div className={styles.dateRange}>
-                                <div className={styles.dateField}>
-                                    <label htmlFor="from-date">
-                                        From:
-                                    </label>
-
-                                    <input
-                                        id="from-date"
-                                        type="date"
-                                        value={fromDate}
-                                        onChange={(event) =>
-                                            setFromDate(event.target.value)
-                                        }
-                                    />
-                                </div>
-
-                                <div className={styles.dateField}>
-                                    <label htmlFor="to-date">
-                                        To:
-                                    </label>
-
-                                    <input
-                                        id="to-date"
-                                        type="date"
-                                        value={toDate}
-                                        onChange={(event) =>
-                                            setToDate(event.target.value)
-                                        }
-                                    />
-                                </div>
-                            </div>
-
-                            <button
-                                className={styles.clearButton}
-                                type="button"
-                                onClick={clearFilters}
-                            >
-                                Clear Filters
-                            </button>
-                        </div>
-                    </section>
 
                     {filteredGrades.length === 0 ? (
                         <p className={styles.empty}>
