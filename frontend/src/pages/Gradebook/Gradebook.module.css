@@ -64,6 +64,10 @@
 }
 
 .courseSummary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--spacing-md);
     padding: var(--spacing-md);
     color: var(--primary-dark);
     font-weight: 700;
@@ -76,8 +80,15 @@
     background-color: var(--surface);
 }
 
-.course[open]>.courseSummary {
+.course[open] > .courseSummary {
     border-bottom: 1px solid var(--border);
+}
+
+.gradeCount {
+    flex-shrink: 0;
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+    color: var(--warning);
 }
 
 .courseContent {
