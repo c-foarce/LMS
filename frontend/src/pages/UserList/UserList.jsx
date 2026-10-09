@@ -4,7 +4,7 @@ import api from '../../services/api';
 
 import styles from "./UserList.module.css";
 
-import FilterDropdown from "../../components/Filters/FilterDropdown";
+import SearchAndFilter from "../../components/Filters/SearchAndFilter";
 
 import UserCard from "../../components/UserCards/UserCard";
 
@@ -67,35 +67,34 @@ function UserList() {
             {error && (
                 <p>{error}</p>
             )}
-
-            <div className={styles.filters}>
-                <label htmlFor="user-search">
-                    Search:
-                </label>
-
-                <input
-                    id="user-search"
-                    type="text"
-                    placeholder="Search users..."
-                    value={searchTerm}
-                    onChange={(event) => setSearchTerm(event.target.value)}
-                />
-
-                <FilterDropdown
-                    id="role-filter"
-                    label="Role:"
-                    value={roleFilter}
-                    onChange={setRoleFilter}
-                    defaultLabel="All Roles"
-                    options={[
-                        { value: "student", label: "Student" },
-                        { value: "teacher", label: "Teacher" },
-                        { value: "admin", label: "Admin" }
-                    ]}
-                    getValue={role => role.value}
-                    getLabel={role => role.label}
-                />
-            </div>
+            
+            <SearchAndFilter
+                search={searchTerm}
+                onSearchChange={setSearchTerm}
+                searchLabel="Search:"
+                searchPlaceholder="Search users..."
+                filters={[
+                    {
+                        id: "role-filter",
+                        label: "Role:",
+                        column: "right",
+                        value: roleFilter,
+                        onChange: setRoleFilter,
+                        defaultLabel: "All Roles",
+                        options: [
+                            { value: "student", label: "Student" },
+                            { value: "teacher", label: "Teacher" },
+                            { value: "admin", label: "Admin" },
+                        ],
+                        getValue: role => role.value,
+                        getLabel: role => role.label,
+                    },
+                ]}
+                onClear={() => {
+                    setSearchTerm("");
+                    setRoleFilter("");
+                }}
+            />
 
             {users.length === 0 ? (
                 <p>Connection successful, no users found.</p>

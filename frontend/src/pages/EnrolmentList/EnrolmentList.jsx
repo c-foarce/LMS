@@ -6,7 +6,7 @@ import api from '../../services/api';
 
 import styles from "./EnrolmentList.module.css";
 
-import FilterDropdown from "../../components/Filters/FilterDropdown";
+import SearchAndFilter from "../../components/Filters/SearchAndFilter";
 
 import EnrolmentCard from "../../components/EnrolmentCards/EnrolmentCard";
 
@@ -124,47 +124,47 @@ function EnrolmentList() {
         <div className={styles.page}>
             <h1>All Enrolments</h1>
 
-            <div className={styles.filters}>
-                <label htmlFor="enrolment-search">
-                    Search:
-                </label>
-
-                <input
-                    id="enrolment-search"
-                    type="text"
-                    placeholder="Search enrolments..."
-                    value={search}
-                    onChange={(event) => setSearch(event.target.value)}
-                />
-
-                <FilterDropdown
-                    id="status-filter"
-                    label="Status:"
-                    value={statusFilter}
-                    onChange={setStatusFilter}
-                    defaultLabel="All Statuses"
-                    options={[
-                        { value: "ACTIVE", label: "Active" },
-                        { value: "COMPLETED", label: "Completed" },
-                    ]}
-                    getValue={status => status.value}
-                    getLabel={status => status.label}
-                />
-
-                <FilterDropdown
-                    id="grade-filter"
-                    label="Grade:"
-                    value={gradeFilter}
-                    onChange={setGradeFilter}
-                    defaultLabel="All"
-                    options={[
-                        { value: "graded", label: "Graded" },
-                        { value: "ungraded", label: "Not Graded" }
-                    ]}
-                    getValue={option => option.value}
-                    getLabel={option => option.label}
-                />
-            </div>
+            <SearchAndFilter
+                search={search}
+                onSearchChange={setSearch}
+                searchLabel="Search:"
+                searchPlaceholder="Search enrolments..."
+                filters={[
+                    {
+                        id: "status-filter",
+                        label: "Status:",
+                        column: "left",
+                        value: statusFilter,
+                        onChange: setStatusFilter,
+                        defaultLabel: "All Statuses",
+                        options: [
+                            { value: "ACTIVE", label: "Active" },
+                            { value: "COMPLETED", label: "Completed" },
+                        ],
+                        getValue: status => status.value,
+                        getLabel: status => status.label,
+                    },
+                    {
+                        id: "grade-filter",
+                        label: "Grade:",
+                        column: "right",
+                        value: gradeFilter,
+                        onChange: setGradeFilter,
+                        defaultLabel: "All",
+                        options: [
+                            { value: "graded", label: "Graded" },
+                            { value: "ungraded", label: "Not Graded" },
+                        ],
+                        getValue: option => option.value,
+                        getLabel: option => option.label,
+                    },
+                ]}
+                onClear={() => {
+                    setSearch("");
+                    setStatusFilter("");
+                    setGradeFilter("");
+                }}
+            />
 
             {filteredEnrolments.length === 0 ? (
                 <p>

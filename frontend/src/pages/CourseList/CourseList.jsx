@@ -7,7 +7,7 @@ import api from '../../services/api'
 
 import styles from "./CourseList.module.css"
 
-import FilterDropdown from "../../components/Filters/FilterDropdown";
+import SearchAndFilter from "../../components/Filters/SearchAndFilter";
 
 import CourseCard from "../../components/CourseCards/CourseCard";
 
@@ -241,43 +241,45 @@ function CourseList() {
                     Course List
                 </h1>
 
-                <div className={styles.filters}>
-                    <label htmlFor="course-search">
-                        Search:
-                    </label>
-
-                    <input
-                        id="course-search"
-                        type="text"
-                        placeholder="Search courses..."
-                        value={search}
-                        onChange={(event) => setSearch(event.target.value)}
-                    />
-
-                    <FilterDropdown
-                        id="teacher-filter"
-                        label="Teacher:"
-                        value={teacherFilter}
-                        onChange={setTeacherFilter}
-                        defaultLabel="All Teachers"
-                        options={teachers}
-                        getValue={teacher => teacher}
-                        getLabel={teacher => teacher}
-                    />
-
-                    {user.role !== "student" && (
-                        <FilterDropdown
-                            id="status-filter"
-                            label="Status:"
-                            value={statusFilter}
-                            onChange={setStatusFilter}
-                            defaultLabel="All Statuses"
-                            options={statuses}
-                            getValue={status => status.value}
-                            getLabel={status => status.label}
-                        />
-                    )}
-                </div>
+<SearchAndFilter
+    search={search}
+    onSearchChange={setSearch}
+    searchLabel="Search:"
+    searchPlaceholder="Search courses..."
+    filters={[
+        {
+            id: "teacher-filter",
+            label: "Teacher:",
+            column: "left",
+            value: teacherFilter,
+            onChange: setTeacherFilter,
+            defaultLabel: "All Teachers",
+            options: teachers,
+            getValue: teacher => teacher,
+            getLabel: teacher => teacher,
+        },
+        ...(user.role !== "student"
+            ? [
+                {
+                    id: "status-filter",
+                    label: "Status:",
+                    column: "right",
+                    value: statusFilter,
+                    onChange: setStatusFilter,
+                    defaultLabel: "All Statuses",
+                    options: statuses,
+                    getValue: status => status.value,
+                    getLabel: status => status.label,
+                },
+            ]
+            : []),
+    ]}
+    onClear={() => {
+        setSearch("");
+        setTeacherFilter("");
+        setStatusFilter("");
+    }}
+/>
 
                 {enrolSuccess && (
                     <p>{enrolSuccess}</p>
