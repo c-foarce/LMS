@@ -1,3 +1,5 @@
+import RenderCard from "../Cards/RenderCard";
+
 function StudentGradeCard({
     student,
     editing,
@@ -7,107 +9,81 @@ function StudentGradeCard({
     onSave,
     onCancel,
 }) {
+    const gradeOptions = ["A", "B", "C", "D", "F"];
 
-    const gradeOptions = ["A", "B", "C", "D", "F"]
+    const details = [
+        {
+            label: "Student",
+            value: student.student_name,
+        },
+        {
+            label: "Grade",
+            value: student.grade || "Awaiting grade",
+        },
+    ];
 
-    return (
+    const gradeSelector = (
+        <select
+            value={selectedGrade || ""}
+            onChange={(event) => onGradeChange(event.target.value)}
+            aria-label={`Select grade for ${student.student_name}`}
+        >
+            <option value="" disabled>
+                Select grade
+            </option>
 
-        <div>
+            {gradeOptions.map((grade) => (
+                <option key={grade} value={grade}>
+                    {grade}
+                </option>
+            ))}
+        </select>
+    );
 
-            <p>
-                Student: {student.student_name}
-            </p>
+    const actions = student.grade ? (
+        editing ? (
+            <>
+                {gradeSelector}
 
-            <p>
-
-                {student.grade ? (
-
-                    <>
-                        Grade: {student.grade}
-
-                        {!editing && (
-                            <button
-                                onClick={onEdit}
-                            >
-                                Change Grade
-                            </button>
-                        )}
-
-                        {editing && (
-                            <>
-                                <select
-                                    value={selectedGrade || ""}
-                                    onChange={(event) =>
-                                        onGradeChange(event.target.value)
-                                    }
-                                >
-                                    <option value="" disabled>
-                                        Select grade
-                                    </option>
-
-                                    {gradeOptions.map(grade => (
-                                        <option key={grade} value={grade}>
-                                            {grade}
-                                        </option>
-                                    ))}
-                                </select>
-
-                                {selectedGrade && (
-                                    <button
-                                        onClick={onSave}
-                                    >
-                                        Save Grade
-                                    </button>
-                                )}
-
-                                <button
-                                    onClick={onCancel}
-                                >
-                                    Cancel
-                                </button>
-                            </>
-                        )}
-                    </>
-
-                ) : (
-
-                    <>
-                        Grade: Awaiting grade
-
-                        <select
-                            value={selectedGrade || ""}
-                            onChange={(event) =>
-                                onGradeChange(event.target.value)
-                            }
-                        >
-                            <option value="" disabled>
-                                Select grade
-                            </option>
-
-                            {gradeOptions.map(grade => (
-                                <option key={grade} value={grade}>
-                                    {grade}
-                                </option>
-                            ))}
-                        </select>
-
-                        {selectedGrade && (
-                            <button
-                                onClick={onSave}
-                            >
-                                Save Grade
-                            </button>
-                        )}
-                    </>
-
+                {selectedGrade && (
+                    <button type="button" onClick={onSave}>
+                        Save Grade
+                    </button>
                 )}
 
-            </p>
+                <button type="button" onClick={onCancel}>
+                    Cancel
+                </button>
+            </>
+        ) : (
+            <button type="button" onClick={onEdit}>
+                Change Grade
+            </button>
+        )
+    ) : (
+        <>
+            {gradeSelector}
 
-            <p>-----</p>
+            {selectedGrade && (
+                <button type="button" onClick={onSave}>
+                    Save Grade
+                </button>
+            )}
+        </>
+    );
 
-        </div>
-    )
+    return (
+        <RenderCard
+            title={student.student_name}
+            details={[
+                {
+                    label: "Grade",
+                    value: student.grade || "Awaiting grade",
+                },
+            ]}
+            actions={actions}
+        />
+    );
 }
 
-export default StudentGradeCard
+export default StudentGradeCard;
