@@ -7,17 +7,20 @@ import api from "../../services/api";
 import HistoryRecordCard from "../../components/HistoryCards/HistoryRecordCard";
 
 import FilterDropdown from "../../components/Filters/FilterDropdown";
+import SearchAndFilter from "../../components/Filters/SearchAndFilter";
+
+import styles from "./History.module.css";
 
 function History() {
 
-    const { user } = useAuth()
+    const { user } = useAuth();
 
     const [records, setRecords] = useState([]);
 
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    //for searching/filtering:
+    // For searching/filtering:
     const [search, setSearch] = useState("");
 
     const [studentFilter, setStudentFilter] = useState("");
@@ -37,7 +40,6 @@ function History() {
                 );
 
                 setRecords(response.data);
-
 
             } catch (error) {
 
@@ -80,6 +82,7 @@ function History() {
         ];
     };
 
+
     const createCourseOptions = (records) => {
 
         return [
@@ -97,6 +100,7 @@ function History() {
 
     };
 
+
     const clearFilters = () => {
 
         setSearch("");
@@ -108,7 +112,7 @@ function History() {
     };
 
 
-    //Creating the filter dropdown options
+    // Creating the filter dropdown options
 
     const students = createPersonOptions(
         records,
@@ -183,92 +187,85 @@ function History() {
 
 
     return (
-        <>
-            <div>
-                <h1>
-                    {user?.role === "admin"
-                        ? "Course History"
-                        : "My Course History"
-                    }
-                </h1>
-                <div>
-                    <div>
-                        <label htmlFor="search-history">Search:</label>
-                    <input
-                    id="search-history"
-                        type="text"
-                        placeholder="Search history..."
-                        value={search}
-                        onChange={(event) => setSearch(event.target.value)}
-                    />
-                    </div>
+        <div className={styles.page}>
 
-                    <FilterDropdown
-                        id="student-filter"
-                        label="Student:"
-                        value={studentFilter}
-                        onChange={setStudentFilter}
-                        defaultLabel="All Students"
-                        options={students}
-                        getValue={student => student.username}
-                        getLabel={student =>
-                            `${student.username} - ${student.firstName} ${student.lastName}`
-                        }
-                    />
+            <h1>
+                {user?.role === "admin"
+                    ? "Course History"
+                    : "My Course History"
+                }
+            </h1>
 
-                    {user?.role === "admin" && (
-                        <FilterDropdown
-                            id="teacher-filter"
-                            label="Teacher:"
-                            value={teacherFilter}
-                            onChange={setTeacherFilter}
-                            defaultLabel="All Teachers"
-                            options={teachers}
-                            getValue={teacher => teacher.username}
-                            getLabel={teacher =>
-                                `${teacher.username} - ${teacher.firstName} ${teacher.lastName}`
-                            }
-                        />
-                    )}
+            <SearchAndFilter
+                search={search}
+                onSearchChange={setSearch}
+                searchLabel="Search:"
+                searchPlaceholder="Search history..."
+                filters={[
+                    {
+                        id: "student-filter",
+                        label: "Student:",
+                        value: studentFilter,
+                        onChange: setStudentFilter,
+                        defaultLabel: "All Students",
+                        options: students,
+                        getValue: student => student.username,
+                        getLabel: student =>
+                            `${student.username} - ${student.firstName} ${student.lastName}`,
+                    },
+                    ...(user?.role === "admin"
+                        ? [
+                            {
+                                id: "teacher-filter",
+                                label: "Teacher:",
+                                value: teacherFilter,
+                                onChange: setTeacherFilter,
+                                defaultLabel: "All Teachers",
+                                options: teachers,
+                                getValue: teacher => teacher.username,
+                                getLabel: teacher =>
+                                    `${teacher.username} - ${teacher.firstName} ${teacher.lastName}`,
+                            },
+                        ]
+                        : []),
+                    {
+                        id: "course-filter",
+                        label: "Course:",
+                        value: courseFilter,
+                        onChange: setCourseFilter,
+                        defaultLabel: "All Courses",
+                        options: courses,
+                        getValue: course => course.id,
+                        getLabel: course =>
+                            `${course.code} - ${course.name}`,
+                    },
+                    {
+                        id: "grade-filter",
+                        label: "Grade:",
+                        value: gradeFilter,
+                        onChange: setGradeFilter,
+                        defaultLabel: "All Grades",
+                        options: grades,
+                        getValue: grade => grade,
+                        getLabel: grade => grade,
+                    },
+                ]}
+                onClear={clearFilters}
+            />
 
-                    <FilterDropdown
-                        id="course-filter"
-                        label="Course:"
-                        value={courseFilter}
-                        onChange={setCourseFilter}
-                        defaultLabel="All Courses"
-                        options={courses}
-                        getValue={course => course.id}
-                        getLabel={course =>
-                            `${course.code} - ${course.name}`
-                        }
-                    />
-
-                    <FilterDropdown
-                        id="grade-filter"
-                        label="Grade:"
-                        value={gradeFilter}
-                        onChange={setGradeFilter}
-                        defaultLabel="All Grades"
-                        options={grades}
-                        getValue={grade => grade}
-                        getLabel={grade => grade}
-                    />
-
-                    <button onClick={clearFilters}>
-                        Clear Filters
-                    </button>
-
-                </div>
-
+            <div className={styles.records}>
 
                 {records.length === 0 ? (
 
-                    <p>No completed courses found.</p>
+                    <p className={styles.emptyMessage}>
+                        No completed courses found.
+                    </p>
 
                 ) : filteredRecords.length === 0 ? (
 
-                    <p>No records match your current filters.</p>
+                    <p className={styles.emptyMessage}>
+                        No records match your current filters.
+                    </p>
 
                 ) : (
 
@@ -280,9 +277,12 @@ function History() {
                     ))
 
                 )}
+
             </div>
-        </>
+
+        </div>
     );
+
 }
 
 export default History;
