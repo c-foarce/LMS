@@ -13,14 +13,15 @@
 }
 
 .detail {
-    display: flex;
-    align-items: center;
+    display: contents;
 }
 
+
 .details {
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-xs);
+    display: grid;
+    grid-template-columns: max-content minmax(0, 1fr);
+    column-gap: var(--spacing-sm);
+    row-gap: var(--spacing-xs);
 }
 
 .details p {
@@ -29,8 +30,12 @@
 }
 
 .details strong {
-    margin-right: var(--spacing-xs);
     color: var(--text);
+}
+
+.detail span {
+    min-width: 0;
+    overflow-wrap: anywhere;
 }
 
 .actions {
@@ -38,4 +43,14 @@
     gap: var(--spacing-sm);
     margin-top: var(--spacing-lg);
     flex-wrap: wrap;
+}
+
+.label {
+    color: var(--text);
+}
+
+.value {
+    min-width: 0;
+    color: var(--text);
+    overflow-wrap: anywhere;
 }

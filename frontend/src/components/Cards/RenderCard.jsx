@@ -7,9 +7,15 @@ function RenderCard({ title, details, actions }) {
 
             <div className={styles.details}>
                 {details.map(({ label, value }) => (
-                    <p key={label} className={styles.detail}>
-                        <strong>{label}:</strong> {value}
-                    </p>
+                    <div key={label} className={styles.detail}>
+                        <strong className={styles.label}>
+                            {label}:
+                        </strong>
+
+                        <span className={styles.value}>
+                            {value}
+                        </span>
+                    </div>
                 ))}
             </div>
 
