@@ -11,6 +11,7 @@
     "test": "vitest"
   },
   "dependencies": {
+    "@wojtekmaj/react-daterange-picker": "^7.1.0",
     "axios": "^1.18.1",
     "clsx": "^2.1.1",
     "react": "^19.2.7",
