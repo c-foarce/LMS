@@ -1,5 +1,7 @@
+import RenderCard from "../Cards/RenderCard";
 
 function HistoryRecordCard({ record }) {
+
 
     const formattedDate = new Date(
         record.completed_at
@@ -9,23 +11,39 @@ function HistoryRecordCard({ record }) {
         year: "numeric",
         hour: "2-digit",
         minute: "2-digit",
-    })
+    });
+
+    const details = [
+        {
+            label: "Code",
+            value: record.course_code,
+        },
+        {
+            label: "Student",
+            value: `${record.student_first_name} ${record.student_last_name}`,
+        },
+        {
+            label: "Teacher",
+            value: record.teacher_username,
+        },
+        {
+            label: "Grade",
+            value: record.grade,
+        },
+        {
+            label: "Completed",
+            value: formattedDate,
+        },
+    ];
 
     return (
-        <div>
-            <h2>{record.course_name}</h2>
+        <RenderCard
+            title={record.course_name}
+            details={details}
+        />
+    );
 
-            <p>Code: {record.course_code}</p>
 
-            <p>Student: {record.student_first_name}{" "}{record.student_last_name}</p>
-
-            <p>Teacher: {record.teacher_username}</p>
-
-            <p>Grade: {record.grade}</p>
-
-            <p>Completed: {formattedDate}</p>
-        </div>
-    )
 }
 
-export default HistoryRecordCard
+export default HistoryRecordCard;
