@@ -2,6 +2,7 @@
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
     gap: var(--spacing-md);
+    margin-top: var(--spacing-md);
 }
 
 .record {
@@ -9,4 +10,65 @@
     border: 1px solid var(--border);
     border-radius: var(--radius-sm);
     background-color: var(--surface);
+}
+
+.overview {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: var(--spacing-md);
+    margin-top: var(--spacing-md);
+}
+
+.summaryCard {
+    padding: var(--spacing-md);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background-color: var(--surface);
+}
+
+.summaryCard h4 {
+    margin: 0;
+}
+
+.summaryCount {
+    margin: var(--spacing-sm) 0 0;
+    font-size: 1.75rem;
+    font-weight: 700;
+}
+
+.section {
+    margin-bottom: var(--spacing-lg);
+}
+
+.sectionHeading {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-md);
+}
+
+.sectionHeading h3 {
+    margin: 0;
+}
+
+.attentionHeading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-md);
+}
+
+.attentionHeading h4 {
+    margin: 0;
+    overflow-wrap: anywhere;
+}
+
+.attentionHeading button {
+    flex-shrink: 0;
+}
+
+.missingFields {
+    margin: var(--spacing-sm) 0 0;
+    padding-left: var(--spacing-lg);
 }

@@ -7,14 +7,15 @@ import styles from "./AdminDashboard.module.css";
 
 function AdminDashboard() {
 
-    const navigate = useNavigate()
+    const navigate = useNavigate();
 
     const [users, setUsers] = useState([]);
-    const [courses, setCourses] = useState([])
-    const [enrolments, setEnrolments] = useState([])
+    const [courses, setCourses] = useState([]);
+    const [enrolments, setEnrolments] = useState([]);
 
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+
 
     useEffect(() => {
 
@@ -22,12 +23,15 @@ function AdminDashboard() {
 
             try {
 
-                const [usersResponse, coursesResponse, enrolmentsResponse] =
-                    await Promise.all([
-                        api.get("/accounts/all/"),
-                        api.get("/courses/list/"),
-                        api.get("/courses/enrolments/all/")
-                    ]);
+                const [
+                    usersResponse,
+                    coursesResponse,
+                    enrolmentsResponse
+                ] = await Promise.all([
+                    api.get("/accounts/all/"),
+                    api.get("/courses/list/"),
+                    api.get("/courses/enrolments/all/")
+                ]);
 
                 setUsers(usersResponse.data);
                 setCourses(coursesResponse.data);
@@ -42,13 +46,15 @@ function AdminDashboard() {
                 setLoading(false);
 
             }
+
         };
 
         fetchDashboardData();
 
     }, []);
 
-    //User data
+
+    // User data
 
     const studentCount = users.filter(
         user => user.role === "student"
@@ -62,10 +68,10 @@ function AdminDashboard() {
         user => user.role === "admin"
     ).length;
 
-    const totalUsers = users.length
+    const totalUsers = users.length;
 
 
-    //Course data
+    // Course data
 
     const activeCourses = courses.filter(
         course => course.is_active
@@ -78,7 +84,7 @@ function AdminDashboard() {
     const totalCourses = courses.length;
 
 
-    //Enrolment Data
+    // Enrolment data
 
     const activeEnrolments = enrolments.filter(
         enrolment => enrolment.status === "active"
@@ -91,7 +97,7 @@ function AdminDashboard() {
     const totalEnrolments = enrolments.length;
 
 
-    //Admin Action Data
+    // Admin Action Data
 
     const coursesWithoutTeacher = courses.filter(
         course => !course.teacher_name
@@ -105,6 +111,7 @@ function AdminDashboard() {
     );
 
     const getMissingUserFields = (user) => {
+
         const missing = [];
 
         if (!user.first_name) missing.push("first name");
@@ -112,9 +119,8 @@ function AdminDashboard() {
         if (!user.email) missing.push("email");
 
         return missing;
+
     };
-
-
 
 
     //--------------------------------------------------------
@@ -129,45 +135,130 @@ function AdminDashboard() {
         return <p>{error}</p>;
     }
 
+
     return (
+
         <div className={styles.page}>
 
             <h2>System Overview</h2>
 
+
             <section className={styles.section}>
 
-                <h3>Users</h3>
+                <div className={styles.sectionHeading}>
+                    <h3>Users</h3>
+                    <button onClick={() => navigate("/app/accounts/all/")}>
+                        View Users
+                    </button>
+                </div>
 
-                <p>Students: {studentCount}</p>
-                <p>Teachers: {teacherCount}</p>
-                <p>Admins: {adminCount}</p>
-                <p>Total: {totalUsers}</p>
+                <div className={styles.overview}>
+
+                    <div className={styles.summaryCard}>
+                        <h4>Students</h4>
+                        <p className={styles.summaryCount}>
+                            {studentCount}
+                        </p>
+                    </div>
+
+                    <div className={styles.summaryCard}>
+                        <h4>Teachers</h4>
+                        <p className={styles.summaryCount}>
+                            {teacherCount}
+                        </p>
+                    </div>
+
+                    <div className={styles.summaryCard}>
+                        <h4>Admins</h4>
+                        <p className={styles.summaryCount}>
+                            {adminCount}
+                        </p>
+                    </div>
+
+                    <div className={styles.summaryCard}>
+                        <h4>Total</h4>
+                        <p className={styles.summaryCount}>
+                            {totalUsers}
+                        </p>
+                    </div>
+
+                </div>
 
             </section>
 
 
             <section className={styles.section}>
 
-                <h3>Courses</h3>
+                <div className={styles.sectionHeading}>
+                    <h3>Courses</h3>
+                    <button onClick={() => navigate("/app/courses/all/")}>
+                        View Courses
+                    </button>
+                </div>
 
-                <p>Active Courses: {activeCourses}</p>
-                <p>Inactive Courses: {inactiveCourses}</p>
-                <p>Total Courses: {totalCourses}</p>
+                <div className={styles.overview}>
+
+                    <div className={styles.summaryCard}>
+                        <h4>Active Courses</h4>
+                        <p className={styles.summaryCount}>
+                            {activeCourses}
+                        </p>
+                    </div>
+
+                    <div className={styles.summaryCard}>
+                        <h4>Inactive Courses</h4>
+                        <p className={styles.summaryCount}>
+                            {inactiveCourses}
+                        </p>
+                    </div>
+
+                    <div className={styles.summaryCard}>
+                        <h4>Total</h4>
+                        <p className={styles.summaryCount}>
+                            {totalCourses}
+                        </p>
+                    </div>
+
+                </div>
 
             </section>
 
 
             <section className={styles.section}>
 
-                <h3>Enrolments</h3>
+                <div className={styles.sectionHeading}>
+                    <h3>Enrolments</h3>
+                    <button onClick={() => navigate("/app/courses/enrolments/all/")}>
+                        View Enrolments
+                    </button>
+                </div>
 
-                <p>Active Enrolments: {activeEnrolments}</p>
-                <p>Completed Enrolments: {completedEnrolments}</p>
-                {/* <p>Dropped Enrolments: {droppedEnrolments}</p> */}
-                <p>Total Enrolments: {totalEnrolments}</p>
+                <div className={styles.overview}>
+
+                    <div className={styles.summaryCard}>
+                        <h4>Active Enrolments</h4>
+                        <p className={styles.summaryCount}>
+                            {activeEnrolments}
+                        </p>
+                    </div>
+
+                    <div className={styles.summaryCard}>
+                        <h4>Completed Enrolments</h4>
+                        <p className={styles.summaryCount}>
+                            {completedEnrolments}
+                        </p>
+                    </div>
+
+                    <div className={styles.summaryCard}>
+                        <h4>Total</h4>
+                        <p className={styles.summaryCount}>
+                            {totalEnrolments}
+                        </p>
+                    </div>
+
+                </div>
 
             </section>
-
 
             <section className={styles.section}>
 
@@ -175,11 +266,15 @@ function AdminDashboard() {
 
                 {coursesWithoutTeacher.length === 0 &&
                     usersWithMissingInfo.length === 0 ? (
+
                     <p>No issues requiring attention.</p>
+
                 ) : (
+
                     <>
 
                         {coursesWithoutTeacher.length > 0 && (
+
                             <div>
 
                                 <h4>Courses without an assigned teacher</h4>
@@ -187,38 +282,48 @@ function AdminDashboard() {
                                 <div className={styles.records}>
 
                                     {coursesWithoutTeacher.map(course => (
+
                                         <div
                                             key={course.id}
                                             className={styles.record}
                                         >
 
-                                            <span>
-                                                {course.subject_name}
-                                                {course.code &&
-                                                    ` (${course.code})`
-                                                }
-                                            </span>
+                                            <div className={styles.attentionHeading}>
 
-                                            <button
-                                                onClick={() =>
-                                                    navigate(
-                                                        `/app/courses/${course.id}/edit/`
-                                                    )
-                                                }
-                                            >
-                                                Edit Course
-                                            </button>
+                                                <h4>
+                                                    {course.subject_name}
+                                                    {course.code &&
+                                                        ` (${course.code})`
+                                                    }
+                                                </h4>
+
+                                                <button
+                                                    onClick={() =>
+                                                        navigate(
+                                                            `/app/courses/${course.id}/edit/`
+                                                        )
+                                                    }
+                                                >
+                                                    Edit
+                                                </button>
+
+                                            </div>
+
+                                            <p>Needs an assigned teacher.</p>
 
                                         </div>
+
                                     ))}
 
                                 </div>
 
                             </div>
+
                         )}
 
 
                         {usersWithMissingInfo.length > 0 && (
+
                             <div>
 
                                 <h4>Users with missing information</h4>
@@ -226,41 +331,57 @@ function AdminDashboard() {
                                 <div className={styles.records}>
 
                                     {usersWithMissingInfo.map(user => (
+
                                         <div
                                             key={user.id}
                                             className={styles.record}
                                         >
 
-                                            <span>
-                                                {user.username} — Missing:{" "}
-                                                {getMissingUserFields(user).join(", ")}
-                                            </span>
+                                            <div className={styles.attentionHeading}>
 
-                                            <button
-                                                onClick={() =>
-                                                    navigate(
-                                                        `/app/accounts/${user.id}/edit/`
-                                                    )
-                                                }
-                                            >
-                                                Edit User
-                                            </button>
+                                                <h4>{user.username}</h4>
+
+                                                <button
+                                                    onClick={() =>
+                                                        navigate(
+                                                            `/app/accounts/${user.id}/edit/`
+                                                        )
+                                                    }
+                                                >
+                                                    Edit
+                                                </button>
+
+                                            </div>
+
+                                            <p>Missing information:</p>
+
+                                            <ul className={styles.missingFields}>
+                                                {getMissingUserFields(user).map(field => (
+                                                    <li key={field}>{field}</li>
+                                                ))}
+                                            </ul>
 
                                         </div>
+
                                     ))}
 
                                 </div>
 
                             </div>
+
                         )}
 
                     </>
+
                 )}
 
             </section>
 
+
         </div>
+
     );
+
 }
 
-export default AdminDashboard
+export default AdminDashboard;

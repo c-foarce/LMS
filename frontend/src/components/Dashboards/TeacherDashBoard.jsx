@@ -98,13 +98,31 @@ function TeacherDashboard() {
 
                 <h3>Overview</h3>
 
-                <div>
-                    <p>Courses Taught: {totalCourses}</p>
-                    <p>Total Students: {totalStudents}</p>
-                    <p>Awaiting Grading: {awaitingGrading.length}</p>
+                <div className={styles.overview}>
+                    <div className={styles.summaryCard}>
+                        <h4>Courses Taught</h4>
+                        <p className={styles.summaryCount}>
+                            {totalCourses}
+                        </p>
+                    </div>
+
+                    <div className={styles.summaryCard}>
+                        <h4>Total Students</h4>
+                        <p className={styles.summaryCount}>
+                            {totalStudents}
+                        </p>
+                    </div>
+
+                    <div className={styles.summaryCard}>
+                        <h4>Awaiting Grading</h4>
+                        <p className={styles.summaryCount}>
+                            {awaitingGrading.length}
+                        </p>
+                    </div>
                 </div>
 
             </section>
+
 
 
             <section className={styles.section}>

@@ -10,3 +10,26 @@
     border-radius: var(--radius-sm);
     background-color: var(--surface);
 }
+
+.overview {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: var(--spacing-md);
+}
+
+.summaryCard {
+    padding: var(--spacing-md);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background-color: var(--surface);
+}
+
+.summaryCard h4 {
+    margin: 0;
+}
+
+.summaryCount {
+    margin: var(--spacing-sm) 0 0;
+    font-size: 1.75rem;
+    font-weight: 700;
+}
