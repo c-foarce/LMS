@@ -3,132 +3,88 @@ import { useNavigate } from "react-router-dom";
 
 import api from "../../services/api";
 
+import styles from "./Gradebook.module.css";
+
 import StudentGradeCard from "../../components/GradeCards/StudentGradeCard";
 
 function Gradebook() {
 
-    const navigate = useNavigate()
+const navigate = useNavigate();
 
-    const [courses, setCourses] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+const [courses, setCourses] = useState([]);
+const [loading, setLoading] = useState(true);
+const [error, setError] = useState(null);
 
-    const [selectedGrades, setSelectedGrades] = useState({});
-    const [editingGrades, setEditingGrades] = useState({});
+const [selectedGrades, setSelectedGrades] = useState({});
+const [editingGrades, setEditingGrades] = useState({});
 
-    const [selectedCourse, setSelectedCourse] = useState("all");
-    const [selectedGradeStatus, setSelectedGradeStatus] = useState("all");
-
-
-    useEffect(() => {
-
-        const fetchProgress = async () => {
-
-            try {
-
-                const response = await api.get(
-                    "/courses/teaching/progress/"
-                );
+const [selectedCourse, setSelectedCourse] = useState("all");
+const [selectedGradeStatus, setSelectedGradeStatus] = useState("all");
 
 
-                setCourses(response.data);
+useEffect(() => {
 
-            } catch (error) {
-
-                setError(
-                    "Failed to retrieve student progress."
-                );
-
-            } finally {
-
-                setLoading(false);
-
-            }
-        };
-
-        fetchProgress();
-
-    }, []);
-
-
-    const handleSaveGrade = async (enrolmentId) => {
+    const fetchProgress = async () => {
 
         try {
 
-            await api.patch(
-                `/courses/enrolments/${enrolmentId}/grade/`,
-                {
-                    grade: selectedGrades[enrolmentId]
-                }
+            const response = await api.get(
+                "/courses/teaching/progress/"
             );
 
-            setCourses(previousCourses =>
-                previousCourses.map(course => ({
-                    ...course,
-                    completed_students:
-                        course.completed_students.map(student =>
-                            student.id === enrolmentId
-                                ? {
-                                    ...student,
-                                    grade: selectedGrades[enrolmentId]
-                                }
-                                : student
-                        )
-                }))
-            );
-
-            setSelectedGrades(previousGrades => {
-                const updatedGrades = { ...previousGrades };
-
-                delete updatedGrades[enrolmentId];
-
-                return updatedGrades;
-            });
-
-            setEditingGrades(previousEditing => {
-                const updatedEditing = { ...previousEditing };
-
-                delete updatedEditing[enrolmentId];
-
-                return updatedEditing;
-            });
+            setCourses(response.data);
 
         } catch (error) {
 
-            setError("Failed to save grade.");
+            setError(
+                "Failed to retrieve student progress."
+            );
+
+        } finally {
+
+            setLoading(false);
 
         }
     };
 
+    fetchProgress();
 
-    // Stores the grade currently selected
-    // for each enrolment.
-
-    const handleGradeChange = (enrolmentId, grade) => {
-
-        setSelectedGrades(previousGrades => ({
-            ...previousGrades,
-            [enrolmentId]: grade
-        }));
-
-    };
+}, []);
 
 
-    const handleEditGrade = (enrolmentId) => {
+const handleSaveGrade = async (enrolmentId) => {
 
-        setEditingGrades(previousEditing => ({
-            ...previousEditing,
-            [enrolmentId]: true
-        }));
+    try {
 
-        setSelectedGrades(previousGrades => ({
-            ...previousGrades,
-            [enrolmentId]: ""
-        }));
-    };
+        await api.patch(
+            `/courses/enrolments/${enrolmentId}/grade/`,
+            {
+                grade: selectedGrades[enrolmentId]
+            }
+        );
 
+        setCourses(previousCourses =>
+            previousCourses.map(course => ({
+                ...course,
+                completed_students:
+                    course.completed_students.map(student =>
+                        student.id === enrolmentId
+                            ? {
+                                ...student,
+                                grade: selectedGrades[enrolmentId]
+                            }
+                            : student
+                    )
+            }))
+        );
 
-    const handleCancelGradeEdit = (enrolmentId) => {
+        setSelectedGrades(previousGrades => {
+            const updatedGrades = { ...previousGrades };
+
+            delete updatedGrades[enrolmentId];
+
+            return updatedGrades;
+        });
 
         setEditingGrades(previousEditing => {
             const updatedEditing = { ...previousEditing };
@@ -138,90 +94,136 @@ function Gradebook() {
             return updatedEditing;
         });
 
-        setSelectedGrades(previousGrades => {
-            const updatedGrades = { ...previousGrades };
+    } catch (error) {
 
-            delete updatedGrades[enrolmentId];
+        setError("Failed to save grade.");
 
-            return updatedGrades;
-        });
-    };
+    }
+};
 
 
-    const courseOptions = courses;
+// Stores the grade currently selected
+// for each enrolment.
+
+const handleGradeChange = (enrolmentId, grade) => {
+
+    setSelectedGrades(previousGrades => ({
+        ...previousGrades,
+        [enrolmentId]: grade
+    }));
+
+};
 
 
-    /*
-     * Filter the courses based on the selected course.
-     *
-     * Then filter the completed students inside each course
-     * based on their grade status.
-     *
-     * Importantly, the course itself is NOT removed when it
-     * has no students matching the grade filter.
-     */
+const handleEditGrade = (enrolmentId) => {
 
-    const filteredCourses = courses
-        .filter(course =>
-            selectedCourse === "all" ||
-            course.id === Number(selectedCourse)
-        )
-        .map(course => {
+    setEditingGrades(previousEditing => ({
+        ...previousEditing,
+        [enrolmentId]: true
+    }));
 
-            const students = course.completed_students.filter(student => {
+    setSelectedGrades(previousGrades => ({
+        ...previousGrades,
+        [enrolmentId]: ""
+    }));
+};
 
-                if (selectedGradeStatus === "all") {
-                    return true;
-                }
 
-                if (selectedGradeStatus === "graded") {
-                    return Boolean(student.grade);
-                }
+const handleCancelGradeEdit = (enrolmentId) => {
 
-                if (selectedGradeStatus === "awaiting") {
-                    return !student.grade;
-                }
+    setEditingGrades(previousEditing => {
+        const updatedEditing = { ...previousEditing };
 
+        delete updatedEditing[enrolmentId];
+
+        return updatedEditing;
+    });
+
+    setSelectedGrades(previousGrades => {
+        const updatedGrades = { ...previousGrades };
+
+        delete updatedGrades[enrolmentId];
+
+        return updatedGrades;
+    });
+};
+
+
+const courseOptions = courses;
+
+
+/*
+ * Filter the courses based on the selected course.
+ *
+ * Then filter the completed students inside each course
+ * based on their grade status.
+ *
+ * Importantly, the course itself is NOT removed when it
+ * has no students matching the grade filter.
+ */
+
+const filteredCourses = courses
+    .filter(course =>
+        selectedCourse === "all" ||
+        course.id === Number(selectedCourse)
+    )
+    .map(course => {
+
+        const students = course.completed_students.filter(student => {
+
+            if (selectedGradeStatus === "all") {
                 return true;
-            });
+            }
 
-            return {
-                ...course,
-                completed_students: students
-            };
+            if (selectedGradeStatus === "graded") {
+                return Boolean(student.grade);
+            }
+
+            if (selectedGradeStatus === "awaiting") {
+                return !student.grade;
+            }
+
+            return true;
         });
 
-
-    // Loading state.
-
-    if (loading) {
-        return <p>Loading...</p>;
-    }
-
-
-    // Error state.
-
-    if (error) {
-        return <p>{error}</p>;
-    }
+        return {
+            ...course,
+            completed_students: students
+        };
+    });
 
 
-    return (
-        <>
+// Loading state.
 
-            <div>
-                <button
-                    type="button"
-                    onClick={() => navigate(-1)}
-                >
-                    ← Back
-                </button>
-            </div>
-
-            <h1>Courses to Grade</h1>
+if (loading) {
+    return <p>Loading...</p>;
+}
 
 
-            <div>
+// Error state.
+
+if (error) {
+    return <p>{error}</p>;
+}
+
+
+return (
+    <div className={styles.page}>
+
+        <button
+            className={styles.back}
+            type="button"
+            onClick={() => navigate(-1)}
+        >
+            ← Back
+        </button>
+
+        <h1>Courses to Grade</h1>
+
+
+        <div className={styles.filters}>
+
+            <div className={styles.filter}>
                 <label htmlFor="course-filter">
                     Course:
                 </label>
@@ -247,12 +249,10 @@ function Gradebook() {
                     ))}
 
                 </select>
-
             </div>
 
 
-            <div>
-
+            <div className={styles.filter}>
                 <label htmlFor="grade-filter">
                     Grade Status:
                 </label>
@@ -277,20 +277,27 @@ function Gradebook() {
                     </option>
 
                 </select>
-
             </div>
 
+        </div>
 
-            {filteredCourses.map(course => (
 
-                <details key={course.id} open>
+        {filteredCourses.map(course => (
 
-                    <summary>
-                        {course.subject_name} ({course.code})
-                    </summary>
+            <details
+                key={course.id}
+                className={styles.course}
+                open
+            >
+
+                <summary className={styles.courseSummary}>
+                    {course.subject_name} ({course.code})
+                </summary>
+
+                <div className={styles.courseContent}>
 
                     {course.completed_students.length === 0 ? (
-                        <p>
+                        <p className={styles.emptyMessage}>
                             No students match the selected filters.
                         </p>
                     ) : (
@@ -319,12 +326,15 @@ function Gradebook() {
                         ))
                     )}
 
-                </details>
+                </div>
 
-            ))}
+            </details>
 
-        </>
-    );
+        ))}
+
+    </div>
+);
+
 }
 
 export default Gradebook;
