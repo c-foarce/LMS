@@ -12,7 +12,7 @@
 .filters {
     display: flex;
     flex-wrap: wrap;
-    align-items: end;
+    align-items: center;
     gap: var(--spacing-md);
     margin-bottom: var(--spacing-lg);
     padding: var(--spacing-md);
