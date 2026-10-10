@@ -6,7 +6,6 @@ import api from "../../services/api";
 
 import HistoryRecordCard from "../../components/HistoryCards/HistoryRecordCard";
 
-import FilterDropdown from "../../components/Filters/FilterDropdown";
 import SearchAndFilter from "../../components/Filters/SearchAndFilter";
 
 import styles from "./History.module.css";
