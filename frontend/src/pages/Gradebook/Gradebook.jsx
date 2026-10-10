@@ -155,24 +155,19 @@ function Gradebook() {
 
 
     /*
-     * Filter the courses based on the selected course.
-     *
-     * Then filter the completed students inside each course
-     * based on their grade status.
-     *
-     * Importantly, the course itself is NOT removed when it
-     * has no students matching the grade filter.
-     */
-
+ * Filter by the selected course and grade status.
+ *
+ * Courses with no matching students remain visible when
+ * viewing all grades, but are hidden when a grade-status
+ * filter is active.
+ */
     const filteredCourses = courses
         .filter(course =>
             selectedCourse === "all" ||
             course.id === Number(selectedCourse)
         )
         .map(course => {
-
             const students = course.completed_students.filter(student => {
-
                 if (selectedGradeStatus === "all") {
                     return true;
                 }
@@ -192,7 +187,11 @@ function Gradebook() {
                 ...course,
                 completed_students: students
             };
-        });
+        })
+        .filter(course =>
+            selectedGradeStatus === "all" ||
+            course.completed_students.length > 0
+        );
 
 
     // Loading state.
@@ -263,14 +262,19 @@ function Gradebook() {
                 <details
                     key={course.id}
                     className={styles.course}
-                    open
                 >
                     <summary className={styles.courseSummary}>
                         <span>{course.subject_name} ({course.code}) </span>
 
                         <span className={styles.gradeCount}>
-                            {course.completed_students.filter(student => !student.grade).length > 0
-                                ? `${course.completed_students.filter(student => !student.grade).length} awaiting grading`
+                            {courses
+                                .find(originalCourse => originalCourse.id === course.id)
+                                ?.completed_students
+                                .filter(student => !student.grade).length > 0
+                                ? `${courses
+                                    .find(originalCourse => originalCourse.id === course.id)
+                                    .completed_students
+                                    .filter(student => !student.grade).length} awaiting grading`
                                 : "All graded"}
                         </span>
                     </summary>

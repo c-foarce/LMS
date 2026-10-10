@@ -153,10 +153,6 @@ function Completion() {
         );
     }
 
-        if (loading) {
-        return <p>Loading...</p>;
-    }
-
     return (
         <div className={styles.page}>
             <button
