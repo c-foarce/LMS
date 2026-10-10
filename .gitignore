@@ -42,4 +42,4 @@ Thumbs.db
 # DB.SQLITE3 FILE
 # ----------------------------
 
-backend/db.sqlite3
+*.sqlite3
