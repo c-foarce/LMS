@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 
 import api from "../../services/api";
 
+import styles from "./Completion.module.css"
+
 function Completion() {
 
     const navigate = useNavigate()
@@ -144,96 +146,100 @@ function Completion() {
 
 
     if (loading) {
+        return (
+            <main className={styles.page}>
+                <p className={styles.statusMessage}>Loading completed courses...</p>
+            </main>
+        );
+    }
+
+        if (loading) {
         return <p>Loading...</p>;
     }
 
-
     return (
-        <>
+        <div className={styles.page}>
+            <button
+                type="button"
+                className={styles.back}
+                onClick={() => navigate(-1)}
+            >
+                ← Back
+            </button>
 
-            <div>
-                <button
-                    type="button"
-                    onClick={() => navigate(-1)}
-                >
-                    ← Back
-                </button>
-            </div>
             <h1>Course Completion</h1>
 
-            {items.length === 0 ? (
+            {error && errorEnrolmentId === null && (
+                <p className={styles.error}>
+                    {error}
+                </p>
+            )}
 
+            {items.length === 0 ? (
                 <p>
                     You have no courses awaiting completion.
                 </p>
-
             ) : (
+                <div className={styles.list}>
+                    {items.map(item => (
+                        <article
+                            key={item.id}
+                            className={styles.card}
+                        >
+                            <h2 className={styles.title}>
+                                {item.course_name}
+                            </h2>
 
-                items.map(item => (
+                            <div className={styles.details}>
+                                {fields
+                                    .filter(field => field !== "course_name")
+                                    .map(field => (
+                                        <div
+                                            key={field}
+                                            className={styles.detail}
+                                        >
+                                            <strong>
+                                                {fieldLabels[field]}:
+                                            </strong>
 
-                    <div key={item.id}>
+                                            <span>
+                                                {renderField(field, item)}
+                                            </span>
+                                        </div>
+                                    ))}
+                            </div>
 
-                        <div>
-                            {fields.map((field) => {
-
-                                if (field === "course_name") {
-                                    return (
-                                        <h2 key={field}>
-                                            {renderField(field, item)}
-                                        </h2>
-                                    );
-                                }
-
-                                return (
-                                    <div key={field}>
-
-                                        <label>
-                                            {fieldLabels[field] || field}:
-                                        </label>
-
-                                        {renderField(field, item)}
-
-                                    </div>
-                                );
-
-                            })}
-                        </div>
-
-                        <p>
-                            Awaiting your acknowledgement.
-                        </p>
-
-                        {error && errorEnrolmentId === item.id && (
-                            <p>
-                                {error}
-                            </p>
-                        )}
-
-                        {successEnrolmentId === item.id ? (
-
-                            <p>
-                                {success}
+                            <p className={styles.message}>
+                                Awaiting your acknowledgement.
                             </p>
 
-                        ) : (
+                            {error && errorEnrolmentId === item.id && (
+                                <p className={styles.error}>
+                                    {error}
+                                </p>
+                            )}
 
-                            <button
-                                onClick={() =>
-                                    handleAcknowledgeCompletion(item.id)
-                                }
-                            >
-                                Acknowledge Completion
-                            </button>
-
-                        )}
-
-                    </div>
-
-                ))
-
+                            {successEnrolmentId === item.id ? (
+                                <p className={styles.success}>
+                                    {success}
+                                </p>
+                            ) : (
+                                <button
+                                    type="button"
+                                    onClick={() =>
+                                        handleAcknowledgeCompletion(item.id)
+                                    }
+                                >
+                                    Acknowledge Completion
+                                </button>
+                            )}
+                        </article>
+                    ))}
+                </div>
             )}
-        </>
+        </div>
     );
 }
 
 export default Completion;
+
