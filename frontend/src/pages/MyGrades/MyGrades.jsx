@@ -53,7 +53,7 @@ function MyGrades() {
 
         const matchesSearch =
             grade.course_name.toLowerCase().includes(search) ||
-            grade.course_code.toLowerCase().includes(search) ||
+            (grade.course_code || "").toLowerCase().includes(search) ||
             grade.teacher_username.toLowerCase().includes(search);
 
         const matchesTeacher =
