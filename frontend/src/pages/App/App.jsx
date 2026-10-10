@@ -11,8 +11,6 @@ import { AuthProvider } from "../../context/AuthContext";
 import "../../styles/variables.css";
 import "../../styles/globals.css";
 
-import styles from "./App.module.css";
-
 import ProtectedRoute from "../../components/ProtectedRoute/ProtectedRoute";
 import RoleRoute from "../../components/RoleRoute/RoleRoute";
 
