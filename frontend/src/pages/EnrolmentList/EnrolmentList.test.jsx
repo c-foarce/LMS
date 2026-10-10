@@ -67,55 +67,56 @@ describe("Loading and data retrieval", () => {
         )
     });
 
-    test("display the enrolments correctly after being requested", async () => {
+    test("displays the enrolments correctly after being requested", async () => {
         vi.mocked(useAuth).mockReturnValue({
             user: {
                 role: "admin",
             },
-        })
+        });
 
-        vi.spyOn(api, "get")
-            .mockResolvedValue({
-                data: [mockAdminEnrolments[0]]
-            })
+        vi.spyOn(api, "get").mockResolvedValue({
+            data: [mockAdminEnrolments[0]],
+        });
 
-        const screen = await renderEnrolmentList()
+        const screen = await renderEnrolmentList();
 
-        const title =
+        const enrolmentCard = screen.getByRole("article");
+
+        await expect.element(
             screen.getByRole("heading", { level: 2 })
-        await expect.element(title)
-            .toHaveTextContent("studentone - MATH101")
+        ).toHaveTextContent("studentone - MATH101");
 
-        const courseParent =
-            screen.getByText("Course:", { exact: true }).locator("..");
-        await expect.element(courseParent)
-            .toHaveTextContent("Mathematics")
+        for (const [label, value] of [
+            ["Course:", "Mathematics"],
+            ["Code:", "MATH101"],
+            ["Teacher:", "teacherone"],
+            ["Progress:", "50%"],
+        ]) {
+            const field = enrolmentCard.getByText(label, {
+                exact: true,
+            }).locator("..");
 
-        const codeParent =
-            screen.getByText("Code:", { exact: true }).locator("..");
-        await expect.element(codeParent)
-            .toHaveTextContent("MATH101")
+            await expect.element(field).toHaveTextContent(value);
+        }
 
-        const teacherParent =
-            screen.getByText("Teacher:", { exact: true }).locator("..")
-        await expect.element(teacherParent)
-            .toHaveTextContent("teacherone")
+        await expect.element(
+            enrolmentCard.getByText("Status:", { exact: true })
+        ).toBeInTheDocument();
 
-        const statusElement =
-            screen.getByText("Status: active", { exact: true })
-        await expect.element(statusElement)
-            .toBeInTheDocument()
+        await expect.element(
+            enrolmentCard.getByText("active", { exact: true })
+        ).toBeInTheDocument();
 
-        const progressParent =
-            screen.getByText("Progress:", { exact: true }).locator("..");
-        await expect.element(progressParent)
-            .toHaveTextContent("50%")
+        const gradeLabel = enrolmentCard.getByText("Grade:", {
+            exact: true,
+        });
 
-        const gradeElement =
-            screen.getByText("Grade: Not graded", { exact: true });
-        await expect.element(gradeElement)
-            .toBeInTheDocument()
-    })
+        await expect.element(gradeLabel).toBeInTheDocument();
+
+        await expect.element(
+            enrolmentCard.getByText("Not graded", { exact: true })
+        ).toBeInTheDocument();
+    });
 
     test("when returned data is empty, display message communicating this", async () => {
         vi.mocked(useAuth).mockReturnValue({

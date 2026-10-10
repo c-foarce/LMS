@@ -32,7 +32,7 @@ describe("Completion", () => {
         );
 
         await expect.element(
-            screen.getByText("Loading...")
+            screen.getByText("Loading completed courses...")
         ).toBeInTheDocument();
     });
 

@@ -371,6 +371,8 @@ describe("Courses", () => {
             </MemoryRouter>
         );
 
+        await screen.getByText("Search & Filters").click();
+
         await screen.getByRole("searchbox", {
             name: "Search:",
         }).fill("Mathematics");
@@ -412,6 +414,8 @@ describe("Courses", () => {
                 <Courses />
             </MemoryRouter>
         );
+
+        await screen.getByText("Search & Filters").click();
 
         await screen.getByRole("searchbox", {
             name: "Search:",
@@ -456,6 +460,8 @@ describe("Courses", () => {
                 <Courses />
             </MemoryRouter>
         );
+
+        await screen.getByText("Search & Filters").click();
 
         await screen.getByLabelText("Status:").selectOptions("completed");
 
@@ -505,6 +511,8 @@ describe("Courses", () => {
                 <Courses />
             </MemoryRouter>
         );
+
+        await screen.getByText("Search & Filters").click();
 
         await screen.getByRole("searchbox", {
             name: "Search:",

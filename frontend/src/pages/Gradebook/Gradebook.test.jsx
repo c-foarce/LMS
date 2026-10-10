@@ -52,6 +52,10 @@ const renderGradebook = async () => {
     );
 };
 
+const openFilters = async (screen) => {
+    await screen.getByText("Search & Filters").click();
+};
+
 afterEach(() => {
     vi.clearAllMocks();
     vi.restoreAllMocks();
@@ -90,15 +94,15 @@ describe("Gradebook", () => {
         ).toBeInTheDocument();
 
         await expect.element(
-            screen.getByText("Student: studentone")
+            screen.getByText("studentone")
         ).toBeInTheDocument();
 
         await expect.element(
-            screen.getByText("Student: studenttwo")
+            screen.getByText("studenttwo")
         ).toBeInTheDocument();
 
         await expect.element(
-            screen.getByText("Student: studentthree")
+            screen.getByText("studentthree")
         ).toBeInTheDocument();
     });
 
@@ -121,6 +125,8 @@ describe("Gradebook", () => {
 
         const screen = await renderGradebook();
 
+        await openFilters(screen);
+
         const courseFilter = screen.getByLabelText("Course:");
 
         await courseFilter.selectOptions("2");
@@ -141,22 +147,14 @@ describe("Gradebook", () => {
         });
 
         const screen = await renderGradebook();
+        await openFilters(screen);
 
         const gradeFilter = screen.getByLabelText("Grade Status:");
-
         await gradeFilter.selectOptions("graded");
 
-        await expect.element(
-            screen.getByText("Student: studentone")
-        ).toBeInTheDocument();
-
-        await expect.element(
-            screen.getByText("Student: studentthree")
-        ).toBeInTheDocument();
-
-        await expect.element(
-            screen.getByText("Student: studenttwo")
-        ).not.toBeInTheDocument();
+        await expect.element(screen.getByText("studentone")).toBeInTheDocument();
+        await expect.element(screen.getByText("studentthree")).toBeInTheDocument();
+        await expect.element(screen.getByText("studenttwo")).not.toBeInTheDocument();
     });
 
 
@@ -166,47 +164,35 @@ describe("Gradebook", () => {
         });
 
         const screen = await renderGradebook();
+        await openFilters(screen);
 
         const gradeFilter = screen.getByLabelText("Grade Status:");
-
         await gradeFilter.selectOptions("awaiting");
 
-        await expect.element(
-            screen.getByText("Student: studenttwo")
-        ).toBeInTheDocument();
-
-        await expect.element(
-            screen.getByText("Student: studentone")
-        ).not.toBeInTheDocument();
-
-        await expect.element(
-            screen.getByText("Student: studentthree")
-        ).not.toBeInTheDocument();
+        await expect.element(screen.getByText("studenttwo")).toBeInTheDocument();
+        await expect.element(screen.getByText("studentone")).not.toBeInTheDocument();
+        await expect.element(screen.getByText("studentthree")).not.toBeInTheDocument();
     });
 
-
-    test("keeps the course visible when no students match the selected filter", async () => {
+    test("hides courses when no students match the selected grade filter", async () => {
         api.get.mockResolvedValue({
             data: mockCourses,
         });
 
         const screen = await renderGradebook();
+        await openFilters(screen);
 
         const gradeFilter = screen.getByLabelText("Grade Status:");
-
         await gradeFilter.selectOptions("awaiting");
 
         await expect.element(
-            screen.getByText("Computer Science (CS101)").last()
+            screen.getByText("studenttwo")
         ).toBeInTheDocument();
 
         await expect.element(
-            screen.getByText(
-                "No students match the selected filters."
-            )
-        ).toBeInTheDocument();
+            screen.getByTestId("course-2")
+        ).not.toBeInTheDocument();
     });
-
 
     test("saves a grade for a student awaiting a grade", async () => {
         api.get.mockResolvedValue({
@@ -219,36 +205,35 @@ describe("Gradebook", () => {
 
         const screen = await renderGradebook();
 
-        const student = screen.getByText("Student: studenttwo");
+        await screen.getByText("Mathematics (MATH101)").last().click();
 
-        const card = student.locator("..");
-
-        const gradeSelect = card.getByRole("combobox");
+        const gradeSelect = screen.getByLabelText(
+            "Select grade for studenttwo"
+        );
 
         await gradeSelect.selectOptions("A");
 
-        await expect.element(
-            card.getByRole("button", {
-                name: "Save Grade",
-            })
-        ).toBeInTheDocument();
-
-        await card.getByRole("button", {
+        await screen.getByRole("button", {
             name: "Save Grade",
         }).click();
 
         expect(api.patch).toHaveBeenCalledWith(
             "/courses/enrolments/11/grade/",
-            {
-                grade: "A",
-            }
+            { grade: "A" }
         );
 
         await expect.element(
-            card.getByText("Grade: A")
+            screen.getByText("studenttwo")
+        ).toBeInTheDocument();
+
+        await expect.element(
+            screen.getByText("Grade:", { exact: true }).last()
+        ).toBeInTheDocument();
+
+        await expect.element(
+            screen.getByText("A", { exact: true }).last()
         ).toBeInTheDocument();
     });
-
 
     test("changes an existing grade", async () => {
         api.get.mockResolvedValue({
@@ -261,37 +246,30 @@ describe("Gradebook", () => {
 
         const screen = await renderGradebook();
 
-        const student = screen.getByText("Student: studentone");
+        await screen.getByText("Mathematics (MATH101)").last().click();
 
+        const student = screen.getByText("studentone");
         const card = student.locator("..");
 
-        await card.getByRole("button", {
-            name: "Change Grade",
-        }).click();
+        await card.getByRole("button", { name: "Change Grade" }).click();
 
-        const gradeSelect = card.getByRole("combobox");
-
+        const gradeSelect = screen.getByLabelText(
+            "Select grade for studentone"
+        );
         await gradeSelect.selectOptions("C");
 
-        await card.getByRole("button", {
-            name: "Save Grade",
-        }).click();
+        await card.getByRole("button", { name: "Save Grade" }).click();
 
         expect(api.patch).toHaveBeenCalledWith(
             "/courses/enrolments/10/grade/",
-            {
-                grade: "C",
-            }
+            { grade: "C" }
         );
 
-        await expect.element(
-            card.getByText("Grade: C")
-        ).toBeInTheDocument();
+        await expect.element(card.getByText("Grade:")).toBeInTheDocument();
+        await expect.element(card.getByText("C", { exact: true })).toBeInTheDocument();
 
         await expect.element(
-            card.getByRole("button", {
-                name: "Change Grade",
-            })
+            card.getByRole("button", { name: "Change Grade" })
         ).toBeInTheDocument();
     });
 
@@ -303,34 +281,63 @@ describe("Gradebook", () => {
 
         const screen = await renderGradebook();
 
-        const student = screen.getByText("Student: studentone");
+        await screen.getByText("Mathematics (MATH101)").last().click();
 
+        const student = screen.getByText("studentone");
         const card = student.locator("..");
 
-        await card.getByRole("button", {
-            name: "Change Grade",
-        }).click();
+        await card.getByRole("button", { name: "Change Grade" }).click();
 
         await expect.element(
-            card.getByRole("button", {
-                name: "Cancel",
-            })
+            card.getByRole("button", { name: "Cancel" })
         ).toBeInTheDocument();
 
-        await card.getByRole("button", {
-            name: "Cancel",
-        }).click();
+        await card.getByRole("button", { name: "Cancel" }).click();
 
         expect(api.patch).not.toHaveBeenCalled();
 
+        await expect.element(card.getByText("Grade:")).toBeInTheDocument();
         await expect.element(
-            card.getByText("Grade: A")
+            card.getByText("A", { exact: true })
         ).toBeInTheDocument();
 
         await expect.element(
-            card.getByRole("button", {
-                name: "Change Grade",
-            })
+            card.getByRole("button", { name: "Change Grade" })
+        ).toBeInTheDocument();
+    });
+
+    test("course accordions start collapsed", async () => {
+        api.get.mockResolvedValue({
+            data: mockCourses,
+        });
+
+        const screen = await renderGradebook();
+
+        const courseSummary = screen.getByText(
+            "Mathematics (MATH101)"
+        ).last();
+
+        const course = courseSummary.locator("..");
+
+        await expect.element(course).not.toHaveAttribute("open");
+    });
+
+    test("outstanding grading count stays accurate when filtering graded students", async () => {
+        api.get.mockResolvedValue({
+            data: mockCourses,
+        });
+
+        const screen = await renderGradebook();
+
+        await openFilters(screen);
+
+
+        const gradeFilter = screen.getByLabelText("Grade Status:");
+
+        await gradeFilter.selectOptions("graded");
+
+        await expect.element(
+            screen.getByText("1 awaiting grading")
         ).toBeInTheDocument();
     });
 

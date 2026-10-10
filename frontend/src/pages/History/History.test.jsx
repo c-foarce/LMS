@@ -178,16 +178,18 @@ describe("History", () => {
 
         const screen = await renderHistory();
 
+        await screen.getByText("Search & Filters").click();
+
         const search = screen.getByPlaceholder("Search history...");
 
         await search.fill("studenttwo");
 
         await expect.element(
-            screen.getByText("Student: Student Two")
+            screen.getByRole("heading", { name: "Computer Science" })
         ).toBeInTheDocument();
 
         await expect.element(
-            screen.getByText("Student: Student One")
+            screen.getByRole("heading", { name: "Mathematics" })
         ).not.toBeInTheDocument();
     });
 
@@ -199,16 +201,18 @@ describe("History", () => {
 
         const screen = await renderHistory();
 
+        await screen.getByText("Search & Filters").click();
+
         const studentFilter = screen.getByLabelText("Student:");
 
         await studentFilter.selectOptions("studenttwo");
 
         await expect.element(
-            screen.getByText("Student: Student Two")
+            screen.getByRole("heading", { name: "Computer Science" })
         ).toBeInTheDocument();
 
         await expect.element(
-            screen.getByText("Student: Student One")
+            screen.getByRole("heading", { name: "Mathematics" })
         ).not.toBeInTheDocument();
     });
 
@@ -220,16 +224,18 @@ describe("History", () => {
 
         const screen = await renderHistory();
 
+        await screen.getByText("Search & Filters").click();
+
         const teacherFilter = screen.getByLabelText("Teacher:");
 
         await teacherFilter.selectOptions("teacherone");
 
         await expect.element(
-            screen.getByText("Teacher: teacherone")
+            screen.getByRole("heading", { name: "Mathematics" })
         ).toBeInTheDocument();
 
         await expect.element(
-            screen.getByText("Teacher: teachertwo")
+            screen.getByRole("heading", { name: "Computer Science" })
         ).not.toBeInTheDocument();
     });
 
@@ -239,6 +245,8 @@ describe("History", () => {
         });
 
         const screen = await renderHistory();
+
+        await screen.getByText("Search & Filters").click();
 
         const courseFilter = screen.getByLabelText("Course:");
 
@@ -261,6 +269,8 @@ describe("History", () => {
 
         const screen = await renderHistory();
 
+        await screen.getByText("Search & Filters").click();
+
         const gradeFilter = screen.getByLabelText("Grade:");
 
         await gradeFilter.selectOptions("A");
@@ -282,6 +292,8 @@ describe("History", () => {
 
         const screen = await renderHistory();
 
+        await screen.getByText("Search & Filters").click();
+
         await expect.element(
             screen.getByText("No completed courses found.")
         ).toBeInTheDocument();
@@ -294,6 +306,8 @@ describe("History", () => {
         });
 
         const screen = await renderHistory();
+
+        await screen.getByText("Search & Filters").click();
 
         const studentFilter = screen.getByLabelText("Student:");
         const courseFilter = screen.getByLabelText("Course:");
@@ -313,6 +327,8 @@ describe("History", () => {
         });
 
         const screen = await renderHistory();
+
+        await screen.getByText("Search & Filters").click();
 
         const search = screen.getByPlaceholder(
             "Search history..."
