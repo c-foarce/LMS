@@ -36,10 +36,11 @@ describe("course details", () => {
 
         for (const { label, value } of details) {
             await expect.element(
-                screen.getByText(
-                    `${label}: ${value}`,
-                    { exact: true }
-                )
+                screen.getByText(`${label}:`, { exact: false })
+            ).toBeInTheDocument();
+
+            await expect.element(
+                screen.getByText(String(value), { exact: true }).last()
             ).toBeInTheDocument();
         }
     });

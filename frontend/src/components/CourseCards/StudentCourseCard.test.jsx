@@ -24,23 +24,39 @@ describe("StudentCourseCard", () => {
         );
 
         await expect.element(
-            screen.getByText("Mathematics")
+            screen.getByRole("heading", { name: "Mathematics" })
         ).toBeVisible();
 
         await expect.element(
-            screen.getByText("Code: MATH101")
+            screen.getByText("Code:", { exact: true })
         ).toBeVisible();
 
         await expect.element(
-            screen.getByText("Teacher: teacherone")
+            screen.getByText("MATH101", { exact: true })
         ).toBeVisible();
 
         await expect.element(
-            screen.getByText("Status: Active")
+            screen.getByText("Teacher:", { exact: true })
         ).toBeVisible();
 
         await expect.element(
-            screen.getByText("Progress: 50%")
+            screen.getByText("teacherone", { exact: true })
+        ).toBeVisible();
+
+        await expect.element(
+            screen.getByText("Status:", { exact: true })
+        ).toBeVisible();
+
+        await expect.element(
+            screen.getByText("Active", { exact: true })
+        ).toBeVisible();
+
+        await expect.element(
+            screen.getByText("Progress:", { exact: true })
+        ).toBeVisible();
+
+        await expect.element(
+            screen.getByText(/50\s*%/)
         ).toBeVisible();
     });
 
@@ -58,7 +74,11 @@ describe("StudentCourseCard", () => {
         ).toBeVisible();
 
         await expect.element(
-            screen.getByText("Grade: Not graded")
+            screen.getByText("Grade:", { exact: true })
+        ).toBeVisible();
+
+        await expect.element(
+            screen.getByText("Not graded", { exact: true })
         ).toBeVisible();
     });
 
@@ -98,7 +118,11 @@ describe("StudentCourseCard", () => {
         );
 
         await expect.element(
-            screen.getByText("Grade: A")
+            screen.getByText("Grade:", { exact: true })
+        ).toBeVisible();
+
+        await expect.element(
+            screen.getByText("A", { exact: true })
         ).toBeVisible();
 
         await expect.element(
@@ -122,7 +146,11 @@ describe("StudentCourseCard", () => {
         );
 
         await expect.element(
-            screen.getByText("Grade: Awaiting grade")
+            screen.getByText("Grade:", { exact: true })
+        ).toBeVisible();
+
+        await expect.element(
+            screen.getByText("Awaiting grade", { exact: true })
         ).toBeVisible();
     });
 
@@ -136,11 +164,15 @@ describe("StudentCourseCard", () => {
         );
 
         await expect.element(
-            screen.getByText("Grade: Not graded")
+            screen.getByText("Grade:", { exact: true })
         ).toBeVisible();
 
         await expect.element(
-            screen.getByText("Grade: Awaiting grade")
+            screen.getByText("Not graded", { exact: true })
+        ).toBeVisible();
+
+        await expect.element(
+            screen.getByText("Awaiting grade", { exact: true })
         ).not.toBeInTheDocument();
     });
 

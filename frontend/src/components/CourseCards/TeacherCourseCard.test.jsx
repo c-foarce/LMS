@@ -30,19 +30,35 @@ describe("TeacherCourseCard", () => {
         ).toBeVisible();
 
         await expect.element(
-            screen.getByText("Status: Active")
+            screen.getByText("Status:", { exact: false })
         ).toBeVisible();
 
         await expect.element(
-            screen.getByText("Total Students: 10")
+            screen.getByText("Active", { exact: true })
         ).toBeVisible();
 
         await expect.element(
-            screen.getByText("Active Students: 7")
+            screen.getByText("Total Students:", { exact: false })
         ).toBeVisible();
 
         await expect.element(
-            screen.getByText("Completed Students: 2")
+            screen.getByText("10", { exact: true })
+        ).toBeVisible();
+
+        await expect.element(
+            screen.getByText("Active Students:", { exact: false })
+        ).toBeVisible();
+
+        await expect.element(
+            screen.getByText("7", { exact: true })
+        ).toBeVisible();
+
+        await expect.element(
+            screen.getByText("Completed Students:", { exact: false })
+        ).toBeVisible();
+
+        await expect.element(
+            screen.getByText("2", { exact: true })
         ).toBeVisible();
 
     });
@@ -63,7 +79,11 @@ describe("TeacherCourseCard", () => {
         );
 
         await expect.element(
-            screen.getByText("Status: Inactive")
+            screen.getByText("Status:", { exact: false })
+        ).toBeVisible();
+
+        await expect.element(
+            screen.getByText("Inactive", { exact: true })
         ).toBeVisible();
 
         await expect.element(

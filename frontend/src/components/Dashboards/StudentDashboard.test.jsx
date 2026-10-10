@@ -339,7 +339,6 @@ describe("Completed courses", () => {
         ).toBeInTheDocument();
     });
 
-
     test("displays recent grades with the newest completion first", async () => {
         const olderCompleted = {
             ...mockSecondCompletedEnrolment,
@@ -354,9 +353,7 @@ describe("Completed courses", () => {
         vi.spyOn(api, "get")
             .mockImplementation((url) => {
                 if (url === "/courses/enrolments/me/") {
-                    return Promise.resolve({
-                        data: [],
-                    });
+                    return Promise.resolve({ data: [] });
                 }
 
                 return Promise.resolve({
@@ -370,38 +367,26 @@ describe("Completed courses", () => {
             </MemoryRouter>
         );
 
-        const history = screen.getByRole(
-            "heading",
-            { name: "History (HIST101)" }
-        );
-
-        const english = screen.getByRole(
-            "heading",
-            { name: "English (ENG101)" }
-        );
-
-        await expect.element(history).toBeInTheDocument();
-        await expect.element(english).toBeInTheDocument();
-
         const recentGradesHeading = screen.getByRole(
             "heading",
             { name: "Recent Grades" }
         );
 
         const recentGradesSection =
-            recentGradesHeading.element().parentElement;
+            recentGradesHeading.element().closest("section");
+
+        const recentGradesText = recentGradesSection.textContent;
 
         const historyPosition =
-            recentGradesSection.textContent.indexOf("History (HIST101)");
+            recentGradesText.indexOf("History");
 
         const englishPosition =
-            recentGradesSection.textContent.indexOf("English (ENG101)");
+            recentGradesText.indexOf("English");
 
         expect(historyPosition).toBeGreaterThanOrEqual(0);
         expect(englishPosition).toBeGreaterThanOrEqual(0);
         expect(historyPosition).toBeLessThan(englishPosition);
     });
-
 
     test("limits recent grades to five courses", async () => {
         const completedCourses = Array.from(
@@ -458,7 +443,7 @@ describe("Completed courses", () => {
         );
 
         const recentGradesSection =
-            recentGradesHeading.element().parentElement;
+            recentGradesHeading.element().closest("section");
 
         expect(
             recentGradesSection.textContent

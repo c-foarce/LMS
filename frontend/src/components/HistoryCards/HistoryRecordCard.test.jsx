@@ -21,11 +21,15 @@ describe("HistoryRecordCard", () => {
         );
 
         await expect.element(
-            screen.getByText("Mathematics")
+            screen.getByRole("heading", { name: "Mathematics" })
         ).toBeVisible();
 
         await expect.element(
-            screen.getByText("Code: MATH101")
+            screen.getByText("Code:", { exact: false })
+        ).toBeVisible();
+
+        await expect.element(
+            screen.getByText("MATH101", { exact: true })
         ).toBeVisible();
     });
 
@@ -36,15 +40,27 @@ describe("HistoryRecordCard", () => {
         );
 
         await expect.element(
-            screen.getByText("Student: Student One")
+            screen.getByText("Student:", { exact: false })
         ).toBeVisible();
 
         await expect.element(
-            screen.getByText("Teacher: teacherone")
+            screen.getByText("Student One", { exact: true })
         ).toBeVisible();
 
         await expect.element(
-            screen.getByText("Grade: A")
+            screen.getByText("Teacher:", { exact: false })
+        ).toBeVisible();
+
+        await expect.element(
+            screen.getByText("teacherone", { exact: true })
+        ).toBeVisible();
+
+        await expect.element(
+            screen.getByText("Grade:", { exact: false })
+        ).toBeVisible();
+
+        await expect.element(
+            screen.getByText("A", { exact: true })
         ).toBeVisible();
     });
 
@@ -55,7 +71,13 @@ describe("HistoryRecordCard", () => {
         );
 
         await expect.element(
-            screen.getByText("Completed: 30 August 2026 at 15:30")
+            screen.getByText("Completed:", { exact: false })
+        ).toBeVisible();
+
+        await expect.element(
+            screen.getByText(
+                /30 August 2026 at 15:30/
+            )
         ).toBeVisible();
     });
 

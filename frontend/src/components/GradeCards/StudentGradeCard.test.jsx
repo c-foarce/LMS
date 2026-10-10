@@ -24,11 +24,15 @@ describe("StudentGradeCard", () => {
         );
 
         await expect.element(
-            screen.getByText("Student: Student One")
+            screen.getByRole("heading", { name: "Student One" })
         ).toBeVisible();
 
         await expect.element(
-            screen.getByText("Grade: Awaiting grade")
+            screen.getByText("Grade:", { exact: false })
+        ).toBeVisible();
+
+        await expect.element(
+            screen.getByText("Awaiting grade", { exact: true })
         ).toBeVisible();
     });
 
@@ -120,7 +124,11 @@ describe("StudentGradeCard", () => {
         );
 
         await expect.element(
-            screen.getByText("Grade: B")
+            screen.getByText("Grade:", { exact: false })
+        ).toBeVisible();
+
+        await expect.element(
+            screen.getByText("B", { exact: true })
         ).toBeVisible();
 
         await expect.element(

@@ -139,17 +139,29 @@ describe("Teacher overview", () => {
             </MemoryRouter>
         );
 
-        await expect.element(
-            screen.getByText("Courses Taught: 2")
-        ).toBeInTheDocument();
+        const coursesCard = screen.getByRole("heading", {
+            name: "Courses Taught",
+        }).element().parentElement;
+
+        const studentsCard = screen.getByRole("heading", {
+            name: "Total Students",
+        }).element().parentElement;
+
+        const gradingCard = screen.getByRole("heading", {
+            name: "Awaiting Grading",
+        }).element().parentElement;
 
         await expect.element(
-            screen.getByText("Total Students: 15")
-        ).toBeInTheDocument();
+            coursesCard.querySelector("p")
+        ).toHaveTextContent("2");
 
         await expect.element(
-            screen.getByText("Awaiting Grading: 2")
-        ).toBeInTheDocument();
+            studentsCard.querySelector("p")
+        ).toHaveTextContent("15");
+
+        await expect.element(
+            gradingCard.querySelector("p")
+        ).toHaveTextContent("2");
     });
 
 
@@ -182,15 +194,27 @@ describe("Teacher overview", () => {
         ).toBeInTheDocument();
 
         await expect.element(
-            screen.getByText("Courses Taught: 0")
+            screen.getByRole("heading", { name: "Courses Taught" })
         ).toBeInTheDocument();
 
         await expect.element(
-            screen.getByText("Total Students: 0")
+            screen.getByText("0", { exact: true }).nth(0)
         ).toBeInTheDocument();
 
         await expect.element(
-            screen.getByText("Awaiting Grading: 0")
+            screen.getByRole("heading", { name: "Total Students" })
+        ).toBeInTheDocument();
+
+        await expect.element(
+            screen.getByText("0", { exact: true }).nth(1)
+        ).toBeInTheDocument();
+
+        await expect.element(
+            screen.getByRole("heading", { name: "Awaiting Grading" })
+        ).toBeInTheDocument();
+
+        await expect.element(
+            screen.getByText("0", { exact: true }).nth(2)
         ).toBeInTheDocument();
     });
 
@@ -363,7 +387,7 @@ describe("Gradebook", () => {
             })
             .locator("..")
             .locator("..");
-            
+
         await expect.element(
             mathematics.getByRole(
                 "button",

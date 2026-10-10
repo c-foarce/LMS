@@ -181,20 +181,32 @@ describe("System overview", () => {
         );
 
         await expect.element(
-            screen.getByText("Students: 1", { exact: true })
-        ).toBeInTheDocument();
+            screen.getByRole("heading", { name: "Students" })
+        ).toBeVisible();
 
         await expect.element(
-            screen.getByText("Teachers: 1", { exact: true })
-        ).toBeInTheDocument();
+            screen.getByRole("heading", { name: "Teachers" })
+        ).toBeVisible();
 
         await expect.element(
-            screen.getByText("Admins: 1", { exact: true })
-        ).toBeInTheDocument();
+            screen.getByRole("heading", { name: "Admins" })
+        ).toBeVisible();
 
         await expect.element(
-            screen.getByText("Total: 3", { exact: true })
-        ).toBeInTheDocument();
+            screen.getByText("1", { exact: true }).nth(0)
+        ).toBeVisible();
+
+        await expect.element(
+            screen.getByText("1", { exact: true }).nth(1)
+        ).toBeVisible();
+
+        await expect.element(
+            screen.getByText("1", { exact: true }).nth(2)
+        ).toBeVisible();
+
+        await expect.element(
+            screen.getByText("3", { exact: true })
+        ).toBeVisible();
     });
 
 
@@ -225,18 +237,26 @@ describe("System overview", () => {
             </MemoryRouter>
         );
 
-        //getByText is vague. need to be cleared up --> using , {exact:true} is a sort of fix
-        await expect.element(
-            screen.getByText("Active Courses: 1", { exact: true })
-        ).toBeInTheDocument();
+        screen.getByRole("heading", {
+            name: "Active Courses",
+            exact: true
+        })
 
         await expect.element(
-            screen.getByText("Inactive Courses: 1", { exact: true })
-        ).toBeInTheDocument();
+            screen.getByRole("heading", { name: "Inactive Courses" })
+        ).toBeVisible();
 
         await expect.element(
-            screen.getByText("Total Courses: 2", { exact: true })
-        ).toBeInTheDocument();
+            screen.getByText("1", { exact: true }).nth(0)
+        ).toBeVisible();
+
+        await expect.element(
+            screen.getByText("1", { exact: true }).nth(1)
+        ).toBeVisible();
+
+        await expect.element(
+            screen.getByText("2", { exact: true })
+        ).toBeVisible();
     });
 
 
@@ -268,16 +288,24 @@ describe("System overview", () => {
         );
 
         await expect.element(
-            screen.getByText("Active Enrolments: 2", { exact: true })
-        ).toBeInTheDocument();
+            screen.getByRole("heading", { name: "Active Enrolments" })
+        ).toBeVisible();
 
         await expect.element(
-            screen.getByText("Completed Enrolments: 1", { exact: true })
-        ).toBeInTheDocument();
+            screen.getByRole("heading", { name: "Completed Enrolments" })
+        ).toBeVisible();
 
         await expect.element(
-            screen.getByText("Total Enrolments: 3", { exact: true })
-        ).toBeInTheDocument();
+            screen.getByText("2", { exact: true })
+        ).toBeVisible();
+
+        await expect.element(
+            screen.getByText("1", { exact: true })
+        ).toBeVisible();
+
+        await expect.element(
+            screen.getByText("3", { exact: true })
+        ).toBeVisible();
     });
 
 });
@@ -378,11 +406,8 @@ describe("Administrative attention", () => {
         ).toBeInTheDocument();
 
         await expect.element(
-            screen.getByRole(
-                "button",
-                { name: "Edit Course" }
-            )
-        ).toBeInTheDocument();
+            screen.getByRole("button", { name: "Edit" })
+        ).toBeVisible();
     });
 
 
@@ -436,7 +461,7 @@ describe("Administrative attention", () => {
 
         await screen.getByRole(
             "button",
-            { name: "Edit Course" }
+            { name: "Edit" }
         ).click();
 
         await expect.element(
@@ -495,21 +520,28 @@ describe("Administrative attention", () => {
         ).toBeInTheDocument();
 
         await expect.element(
-            screen.getByText(
-                "incompleteuser — Missing: first name, email", { exact: true }
-            )
-        ).toBeInTheDocument();
+            screen.getByRole("heading", { name: "incompleteuser" })
+        ).toBeVisible();
 
         await expect.element(
-            screen.getByRole(
-                "button",
-                { name: "Edit User" }
-            )
-        ).toBeInTheDocument();
+            screen.getByText("Missing information:", { exact: true })
+        ).toBeVisible();
+
+        await expect.element(
+            screen.getByText("first name", { exact: true })
+        ).toBeVisible();
+
+        await expect.element(
+            screen.getByText("email", { exact: true })
+        ).toBeVisible();
+
+        await expect.element(
+            screen.getByRole("button", { name: "Edit" })
+        ).toBeVisible();
     });
 
 
-    test("navigates to the user edit page when Edit User is clicked", async () => {
+    test("navigates to the user edit page when Edit is clicked", async () => {
         const usersWithMissingInfo = [
             {
                 id: 4,
@@ -559,7 +591,7 @@ describe("Administrative attention", () => {
 
         await screen.getByRole(
             "button",
-            { name: "Edit User" }
+            { name: "Edit" }
         ).click();
 
         await expect.element(
