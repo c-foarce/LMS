@@ -10,93 +10,6 @@
     color: var(--primary-dark);
 }
 
-.searchField label {
-    min-width: max-content;
-    font-weight: bold;
-    color: var(--text);
-}
-
-.searchField input {
-    flex: 1;
-}
-
-.searchField input {
-    padding: 8px 10px;
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    background-color: var(--surface);
-    color: var(--text);
-}
-
-.searchField input:focus {
-    outline: 2px solid var(--primary);
-    outline-offset: 1px;
-}
-
-.dateRange {
-    min-width: 0;
-}
-
-.dateRange :global(.react-daterange-picker) {
-    display: inline-flex;
-    max-width: 100%;
-    color: var(--text);
-    font: inherit;
-}
-
-.dateRange :global(.react-daterange-picker__wrapper) {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-sm);
-    min-width: 0;
-    padding: 8px 10px;
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    background-color: var(--surface);
-}
-
-.dateRange :global(.react-daterange-picker__inputGroup) {
-    min-width: 0;
-}
-
-.dateRange :global(.react-daterange-picker__inputGroup__input) {
-    color: var(--text);
-    font: inherit;
-}
-
-.dateRange :global(.react-daterange-picker__button) {
-    padding: 2px;
-    color: var(--primary-dark);
-}
-
-.dateRange :global(.react-daterange-picker__button svg) {
-    stroke: currentColor;
-}
-
-.dateRange :global(.react-daterange-picker__wrapper:focus-within) {
-    outline: 2px solid var(--primary);
-    outline-offset: 1px;
-}
-
-.dateRange :global(.react-calendar) {
-    border: 1px solid var(--border);
-    border-radius: var(--radius-md);
-    background-color: var(--surface);
-    color: var(--text);
-    font-family: inherit;
-    box-shadow: 0 4px 12px rgb(0 0 0 / 12%);
-}
-
-.clearButton {
-    background-color: var(--surface);
-    color: var(--primary);
-}
-
-.clearButton:hover {
-    background-color: var(--primary);
-    color: white;
-}
-
 .list {
     display: flex;
     flex-direction: column;
@@ -132,20 +45,5 @@
 @media (max-width: 700px) {
     .page {
         padding: var(--spacing-md);
-    }
-
-    .searchField {
-        align-items: flex-start;
-        flex-direction: column;
-        gap: var(--spacing-xs);
-    }
-
-    .searchField input {
-        box-sizing: border-box;
-        width: 100%;
-    }
-
-    .clearButton {
-        width: 100%;
     }
 }

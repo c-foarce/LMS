@@ -27,37 +27,6 @@
     outline-offset: 2px;
 }
 
-.filters {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: var(--spacing-md);
-    margin-bottom: var(--spacing-lg);
-    padding: var(--spacing-md);
-    background-color: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-md);
-}
-
-.filter {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-sm);
-}
-
-.filter select {
-    padding: 10px 12px;
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    background-color: var(--surface);
-    color: var(--text);
-}
-
-.filter select:focus {
-    outline: 2px solid var(--primary);
-    outline-offset: 1px;
-}
-
 .course {
     margin-bottom: var(--spacing-sm);
     border-bottom: 1px solid var(--border);
