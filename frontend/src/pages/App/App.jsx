@@ -191,7 +191,8 @@ const router = createBrowserRouter(
 
       </Route>
     </>
-  )
+  ),
+  {basename: "/LMS"}
 )
 
 

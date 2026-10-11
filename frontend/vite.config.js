@@ -4,6 +4,7 @@ import { playwright } from "@vitest/browser-playwright";
 
 // https://vite.dev/config/
 export default defineConfig({
+  base:"/LMS/",
   plugins: [react()],
 
   test: {
