@@ -84,3 +84,15 @@
 .error {
     color: var(--error);
 }
+
+
+.passwordField {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.passwordField input {
+    flex: 1;
+    min-width: 0;
+}

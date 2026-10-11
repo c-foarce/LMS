@@ -16,6 +16,8 @@ function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
+  const [showPassword, setShowPassword] = useState(false);
+
   const [loginState, setLoginState] = useState(
     {
       type: "",
@@ -89,14 +91,25 @@ function Login() {
             onChange={(e) => setUsername(e.target.value)}
           />
 
+
           <label htmlFor="password">Password:</label>
-          <input
-            id="password"
-            placeholder="password"
-            /*TO DO, REMOVE COMMENT FOR PRODUCTION*/
-            /* type="password" */
-            onChange={(e) => setPassword(e.target.value)}
-          />
+          <div className={styles.passwordField}>
+            <input
+              id="password"
+              type={showPassword ? "text" : "password"}
+              placeholder="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+
+            <button
+              type="button"
+              onClick={() => setShowPassword((prev) => !prev)}
+            >
+              {showPassword ? "Hide" : "Show"}
+            </button>
+          </div>
+
 
           <button type="submit">Login</button>
         </form>
