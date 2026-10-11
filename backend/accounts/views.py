@@ -95,7 +95,7 @@ class AllUserListView(generics.ListAPIView):
 
     permission_classes = [ permissions.IsAdmin]
 
-    queryset = User.objects.all()
+    queryset = User.objects.all().order_by("id")
 
     
 
