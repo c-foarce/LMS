@@ -18,7 +18,7 @@ afterEach(() => {
 describe("App", () => {
 
     test("renders the Welcome page", async () => {
-        const screen = await render(<App />);
+        const screen = await render(<App basename="/" />);
 
         await expect.element(
             screen.getByRole("heading", { name: "Welcome" })
@@ -31,7 +31,7 @@ describe("App", () => {
 
 
     test("navigates from Welcome to Login", async () => {
-        const screen = await render(<App />);
+        const screen = await render(<App basename="/" />);
 
         await screen.getByRole(
             "button",

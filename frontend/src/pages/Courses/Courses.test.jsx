@@ -26,15 +26,19 @@ vi.mock("../../services/api", () => ({
 }));
 
 vi.mock("../../components/CourseCards/StudentCourseCard", () => ({
-    default: ({ course, onSubmitProgress }) => (
+    default: ({ course, onSubmitProgress, success }) => (
         <div>
             <p>{course.course_name}</p>
+
             <button onClick={() => onSubmitProgress(course.id)}>
                 Submit Progress
             </button>
+
+            {success && <p>{success}</p>}
         </div>
     ),
 }));
+
 
 vi.mock("../../components/CourseCards/TeacherCourseCard", () => ({
     default: ({ course, onToggleActive, onEdit }) => (

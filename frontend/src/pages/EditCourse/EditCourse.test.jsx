@@ -272,13 +272,19 @@ describe("EditCourse", () => {
             { name: "Save changes" }
         ).click();
 
+
+
         expect(api.patch).toHaveBeenCalledWith(
             "/courses/5/edit/",
             {
-                ...mockCourse,
+                id: 5,
                 subject_name: "Advanced Mathematics",
+                code: "MATH101",
+                description: "A mathematics course",
             }
         );
+
+
 
         await expect.element(
             screen.getByText("Course updated successfully!")
