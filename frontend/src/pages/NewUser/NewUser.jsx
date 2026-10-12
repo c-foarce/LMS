@@ -12,10 +12,9 @@ function NewUser() {
     // will store all the needed fields form the User Model
     const [fields, setFields] = useState([])
 
-    // gets the role of the user, possibly for denying access to Students/Teachers since this should be an admin only feature
-    const [role, setRole] = useState("")
-
     const [success, setSuccess] = useState(false)
+
+    const [submittingSuccess, setSubmittingSuccess] = useState(false)
 
     const [error, setError] = useState(null)
 
@@ -55,15 +54,19 @@ function NewUser() {
     const handleSubmit = (event) => {
         event.preventDefault();
 
+        setError(null);
+
         api.post("/accounts/create/", formData)
             .then(() => {
-
+                setError(null);
                 setSuccess(true);
+                setSubmittingSuccess(true);
 
                 setTimeout(() => {
                     setFormData({});
-                    setSuccess(false)
-                }, 3000)
+                    setSuccess(false);
+                    setSubmittingSuccess(false);
+                }, 3000);
             })
             .catch((error) => {
                 setError(
@@ -71,6 +74,13 @@ function NewUser() {
                     error.response?.data?.non_field_errors?.[0] ||
                     "Failed to create user."
                 );
+
+                setSubmittingSuccess(true);
+
+                setTimeout(() => {
+                    setError(null);
+                    setSubmittingSuccess(false);
+                }, 3000);
             });
     };
 
@@ -141,61 +151,70 @@ function NewUser() {
 
 
     return (
-    <div className={styles.page}>
-        <button
-            className={styles.back}
-            type="button"
-            onClick={() => navigate(-1)}
-        >
-            ← Back
-        </button>
-
-        <div className={styles.card}>
-            <h1>New User</h1>
-
-            {error && (
-                <p className={styles.error}>{error}</p>
-            )}
-
-            <form
-                className={styles.form}
-                onSubmit={handleSubmit}
+        <div className={styles.page}>
+            <button
+                className={styles.back}
+                type="button"
+                onClick={() => navigate(-1)}
             >
-                {fields.map((field) => (
-                    <div
-                        className={styles.field}
-                        key={field.name}
-                    >
-                        <label htmlFor={field.name}>
-                            {fieldLabels[field.name] || field.name}:
-                        </label>
+                ← Back
+            </button>
 
-                        {renderField(field)}
+            <div className={styles.card}>
+                <h1>New User</h1>
+
+                <form
+                    className={styles.form}
+                    onSubmit={handleSubmit}
+                >
+                    {fields.map((field) => (
+                        <div
+                            className={styles.field}
+                            key={field.name}
+                        >
+                            <label htmlFor={field.name}>
+                                {fieldLabels[field.name] || field.name}:
+                            </label>
+
+                            {renderField(field)}
+                        </div>
+                    ))}
+
+                    <div className={styles.actions}>
+                        <button
+                            type="submit"
+                            disabled={submittingSuccess}
+                        >
+                            {submittingSuccess
+                                ? error
+                                    ? "Creation Failed"
+                                    : "User Created"
+                                : "Create User"}
+                        </button>
+
+                        <button
+                            type="button"
+                            onClick={() => navigate(-1)}
+                        >
+                            Cancel
+                        </button>
+
+                        {success && (
+                            <span className={styles.success}>
+                                User successfully created!
+                            </span>
+                        )}
+
+                        {error && (
+                            <span className={styles.error}>
+                                {error}
+                            </span>
+                        )}
                     </div>
-                ))}
-
-                <div className={styles.actions}>
-                    <button type="submit">
-                        Create User
-                    </button>
-
-                    <button
-                        type="button"
-                        onClick={() => navigate(-1)}
-                    >
-                        Cancel
-                    </button>
-
-                    {success && (
-                        <span className={styles.success}>
-                            User successfully created!
-                        </span>
-                    )}
-                </div>
-            </form>
+                </form>
+            </div>
         </div>
-    </div>
-)
+    )
 
 }
 

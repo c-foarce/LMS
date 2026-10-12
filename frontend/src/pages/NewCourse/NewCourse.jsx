@@ -20,6 +20,8 @@ function NewCourse() {
   // for tracking when a successful POST has been made, flags to reset the page back to default
   const [success, setSuccess] = useState(false);
 
+  const [submittingSuccess, setSubmittingSuccess] = useState(false);
+
   const [error, setError] = useState(null)
 
   // Stores all possible teachers, only for use when role == "admin"
@@ -54,6 +56,7 @@ function NewCourse() {
       .then(() => {
 
         setSuccess(true);
+        setSubmittingSuccess(true)
 
         // this will reset the form
         setTimeout(() => {
@@ -61,13 +64,22 @@ function NewCourse() {
 
           //hide success message
           setSuccess(false)
+          setSubmittingSuccess(false)
 
 
         }, 3000)
       })
+
       .catch(() => {
-        setError("Failed to create course.");
-      })
+        setError("Could not create course. Please check your entries and try again.");
+        setSubmittingSuccess(true);
+
+        setTimeout(() => {
+          setError(null);
+          setSubmittingSuccess(false);
+        }, 2000);
+      });
+
   }
 
 
@@ -172,16 +184,6 @@ function NewCourse() {
       <div className={styles.card}>
         <h1>New Course</h1>
 
-        {error && (
-          <p className={styles.error}>{error}</p>
-        )}
-
-        {success && (
-          <p className={styles.success}>
-            Course successfully created!
-          </p>
-        )}
-
         <form
           className={styles.form}
           onSubmit={handleSubmit}
@@ -207,8 +209,12 @@ function NewCourse() {
           })}
 
           <div className={styles.actions}>
-            <button type="submit">
-              Create Course
+            <button type="submit" disabled={submittingSuccess}>
+              {submittingSuccess
+                ? error
+                  ? "Creation Failed"
+                  : "Course Created"
+                : "Create Course"}
             </button>
 
             <button
@@ -217,6 +223,18 @@ function NewCourse() {
             >
               Cancel
             </button>
+
+            {success && (
+              <span className={styles.success}>
+                Course successfully created!
+              </span>
+            )}
+
+            {error && (
+              <span className={styles.error}>
+                {error}
+              </span>
+            )}
           </div>
         </form>
       </div>

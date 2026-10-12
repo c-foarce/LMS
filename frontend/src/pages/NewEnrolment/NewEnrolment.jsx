@@ -14,6 +14,8 @@ function NewEnrolment() {
     //These will capture all available students and all available courses to then populate dropdowns
 
     const [success, setSuccess] = useState(false) // used for ssuccessful POST, allows message and wipe of page
+    const [submittingSuccess, setSubmittingSuccess] = useState(false)
+
     const [error, setError] = useState(null)
 
 
@@ -34,14 +36,14 @@ function NewEnrolment() {
     };
 
     const handleSubmit = (event) => {
-        event.preventDefault()
+        event.preventDefault();
 
-        setError(null)
+        setError(null);
 
         api.post("/courses/enrolments/create/", formData)
-            .then(response => {
-
+            .then(() => {
                 setSuccess(true);
+                setSubmittingSuccess(true);
 
                 setTimeout(() => {
                     setFormData({
@@ -49,22 +51,26 @@ function NewEnrolment() {
                         course: ""
                     });
 
-                    setSuccess(false)
-                }, 3000)
+                    setSuccess(false);
+                    setSubmittingSuccess(false);
+                }, 3000);
             })
             .catch(error => {
-
                 setError(
-                    error.response?.data?.non_field_errors?.[0] ||
                     error.response?.data?.detail ||
+                    error.response?.data?.non_field_errors?.[0] ||
                     "Could not create enrolment."
-                )
+                );
+
+                setSubmittingSuccess(true);
 
                 setTimeout(() => {
-                    setError(null)
+                    setError(null);
+                    setSubmittingSuccess(false);
                 }, 2000);
-            })
-    }
+            });
+    };
+
 
     useEffect(() => {
 
@@ -102,15 +108,7 @@ function NewEnrolment() {
             <div className={styles.card}>
                 <h1>New Enrolment</h1>
 
-                {success && (
-                    <p className={styles.success}>
-                        Enrolment successfully created!
-                    </p>
-                )}
 
-                {error && (
-                    <p className={styles.error}>{error}</p>
-                )}
 
                 <form
                     className={styles.form}
@@ -169,8 +167,15 @@ function NewEnrolment() {
                     </div>
 
                     <div className={styles.actions}>
-                        <button type="submit">
-                            Create Enrolment
+                        <button
+                            type="submit"
+                            disabled={submittingSuccess}
+                        >
+                            {submittingSuccess
+                                ? error
+                                    ? "Creation Failed"
+                                    : "Enrolment Created"
+                                : "Create Enrolment"}
                         </button>
 
                         <button
@@ -179,6 +184,18 @@ function NewEnrolment() {
                         >
                             Cancel
                         </button>
+
+                        {success && (
+                            <span className={styles.success}>
+                                Enrolment successfully created!
+                            </span>
+                        )}
+
+                        {error && (
+                            <span className={styles.error}>
+                                {error}
+                            </span>
+                        )}
                     </div>
                 </form>
             </div>
