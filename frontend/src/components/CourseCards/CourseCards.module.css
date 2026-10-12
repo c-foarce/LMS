@@ -39,5 +39,5 @@
 
 .success {
     margin: 0;
-    color: green;
+    color: var(--success);
 }

@@ -266,7 +266,16 @@ function Gradebook() {
                     <summary className={styles.courseSummary}>
                         <span>{course.subject_name} ({course.code}) </span>
 
-                        <span className={styles.gradeCount}>
+
+                        <span
+                            className={`${styles.gradeCount} ${courses
+                                    .find(originalCourse => originalCourse.id === course.id)
+                                    ?.completed_students
+                                    .filter(student => !student.grade).length > 0
+                                    ? ""
+                                    : styles.allGraded
+                                }`}
+                        >
                             {courses
                                 .find(originalCourse => originalCourse.id === course.id)
                                 ?.completed_students
@@ -277,6 +286,7 @@ function Gradebook() {
                                     .filter(student => !student.grade).length} awaiting grading`
                                 : "All graded"}
                         </span>
+
                     </summary>
 
                     <div className={styles.courseContent}>

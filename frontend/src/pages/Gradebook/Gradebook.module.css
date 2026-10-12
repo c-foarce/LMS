@@ -71,3 +71,11 @@
     margin: 0;
     color: var(--text-muted);
 }
+
+.gradeCount {
+    font-weight: bold;
+}
+
+.allGraded {
+    color: var(--success);
+}
