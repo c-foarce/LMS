@@ -1,7 +1,7 @@
 import RenderCard from "../Cards/RenderCard";
 import styles from "./CourseCards.module.css";
 
-function StudentCourseCard({ course, onSubmitProgress }) {
+function StudentCourseCard({ course, onSubmitProgress, success, isSubmittingSuccess }) {
 
     const details = [
         { label: "Code", value: course.course_code },
@@ -36,14 +36,22 @@ function StudentCourseCard({ course, onSubmitProgress }) {
 
     const actions = [];
 
-    if (course.progress !== 100) {
+    if (course.progress !== 100 || isSubmittingSuccess) {
         actions.push(
-            <button
-                key="submit-progress"
-                onClick={() => onSubmitProgress(course.id)}
-            >
-                Submit Progress
-            </button>
+            <div key="submit-progress" className={styles.submitAction}>
+                <button
+                    disabled={isSubmittingSuccess}
+                    onClick={() => onSubmitProgress(course.id)}
+                >
+                    {isSubmittingSuccess ? "Progress Submitted" : "Submit Progress"}
+                </button>
+
+                {success && (
+                    <p className={styles.success}>
+                        {success}
+                    </p>
+                )}
+            </div>
         );
     }
 
@@ -52,6 +60,11 @@ function StudentCourseCard({ course, onSubmitProgress }) {
             title={course.course_name}
             details={details}
             actions={actions}
+            message={
+                success
+                    ? { type: "success", text: success }
+                    : null
+            }
         />
     );
 }

@@ -1,5 +1,7 @@
 import RenderCard from "../Cards/RenderCard";
 
+import styles from "./CourseCards.module.css"
+
 function CourseCard({
     course,
     role,
@@ -9,7 +11,9 @@ function CourseCard({
     updateActiveError,
     updateActiveErrorCourseId,
     enrolError,
-    enrolErrorCourseId
+    enrolErrorCourseId,
+    enrolSuccess,
+    isEnrolSuccess
 }) {
 
     // DETAILS -----------------------------------------
@@ -80,12 +84,17 @@ function CourseCard({
     // Student
     if (role === "student") {
         actions.push(
-            <div key="enrol-action">
+            <div key="enrol-action" className={styles.submitAction}>
                 <button
+                    disabled={isEnrolSuccess}
                     onClick={() => onEnrol(course.id)}
                 >
-                    Enrol
+                    {isEnrolSuccess ? "Enrolled" : "Enrol"}
                 </button>
+
+                {enrolSuccess && (
+                    <span className={styles.success}>{enrolSuccess}</span>
+                )}
 
                 {enrolError && enrolErrorCourseId === course.id && (
                     <span>
