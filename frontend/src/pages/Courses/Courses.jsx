@@ -23,6 +23,8 @@ function Courses() {
 
   const [error, setError] = useState(null)
   const [success, setSuccess] = useState(null)
+  const [successId, setSuccessId] = useState(null)
+  const [submittingSuccessId, setSubmittingSuccessId] = useState(null)
 
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
@@ -100,10 +102,14 @@ function Courses() {
         )
       )
 
-      setSuccess("Progress submitted successfully")
+      setSuccess("Progress submitted successfully");
+      setSuccessId(enrolmentId);
+      setSubmittingSuccessId(enrolmentId);
 
       setTimeout(() => {
-        setSuccess(null)
+        setSuccess(null);
+        setSuccessId(null);
+        setSubmittingSuccessId(null);
       }, 2000);
 
     } catch (error) {
@@ -206,10 +212,6 @@ function Courses() {
           <p className={styles.error}>{error}</p>
         )}
 
-        {success && (
-          <p className={styles.success}>{success}</p>
-        )}
-
         <SearchAndFilter
           search={searchTerm}
           onSearchChange={setSearchTerm}
@@ -255,6 +257,8 @@ function Courses() {
                     key={item.id}
                     course={item}
                     onSubmitProgress={handleSubmitProgress}
+                    success={successId === item.id ? success : null}
+                    isSubmittingSuccess={submittingSuccessId === item.id}
                   />
                 );
               }

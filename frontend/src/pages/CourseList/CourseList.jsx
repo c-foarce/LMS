@@ -31,6 +31,7 @@ function CourseList() {
     const [enrolErrorCourseId, setEnrolErrorCourseId] = useState(null)
 
     const [enrolSuccess, setEnrolSuccess] = useState(null)
+    const [enrolSuccessCourseId, setEnrolSuccessCourseId] = useState(null)
 
     const [search, setSearch] = useState("");
     const [teacherFilter, setTeacherFilter] = useState("");
@@ -157,16 +158,17 @@ function CourseList() {
                 }
             )
 
-
-            setEnrolments(previousEnrolments => [
-                ...previousEnrolments,
-                response.data
-            ])
-
             setEnrolSuccess("Successfully Enrolled")
+            setEnrolSuccessCourseId(courseId)
 
             setTimeout(() => {
+                setEnrolments(previousEnrolments => [
+                    ...previousEnrolments,
+                    response.data
+                ])
+
                 setEnrolSuccess(null)
+                setEnrolSuccessCourseId(null)
             }, 2000);
 
 
@@ -241,50 +243,45 @@ function CourseList() {
                     Course List
                 </h1>
 
-<SearchAndFilter
-    search={search}
-    onSearchChange={setSearch}
-    searchLabel="Search:"
-    searchPlaceholder="Search courses..."
-    filters={[
-        {
-            id: "teacher-filter",
-            label: "Teacher:",
-            column: "left",
-            value: teacherFilter,
-            onChange: setTeacherFilter,
-            defaultLabel: "All Teachers",
-            options: teachers,
-            getValue: teacher => teacher,
-            getLabel: teacher => teacher,
-        },
-        ...(user.role !== "student"
-            ? [
-                {
-                    id: "status-filter",
-                    label: "Status:",
-                    column: "right",
-                    value: statusFilter,
-                    onChange: setStatusFilter,
-                    defaultLabel: "All Statuses",
-                    options: statuses,
-                    getValue: status => status.value,
-                    getLabel: status => status.label,
-                },
-            ]
-            : []),
-    ]}
-    onClear={() => {
-        setSearch("");
-        setTeacherFilter("");
-        setStatusFilter("");
-    }}
-/>
-
-                {enrolSuccess && (
-                    <p>{enrolSuccess}</p>
-                )}
-                {/*This i want moved next to the relvant button in a <span> */}
+                <SearchAndFilter
+                    search={search}
+                    onSearchChange={setSearch}
+                    searchLabel="Search:"
+                    searchPlaceholder="Search courses..."
+                    filters={[
+                        {
+                            id: "teacher-filter",
+                            label: "Teacher:",
+                            column: "left",
+                            value: teacherFilter,
+                            onChange: setTeacherFilter,
+                            defaultLabel: "All Teachers",
+                            options: teachers,
+                            getValue: teacher => teacher,
+                            getLabel: teacher => teacher,
+                        },
+                        ...(user.role !== "student"
+                            ? [
+                                {
+                                    id: "status-filter",
+                                    label: "Status:",
+                                    column: "right",
+                                    value: statusFilter,
+                                    onChange: setStatusFilter,
+                                    defaultLabel: "All Statuses",
+                                    options: statuses,
+                                    getValue: status => status.value,
+                                    getLabel: status => status.label,
+                                },
+                            ]
+                            : []),
+                    ]}
+                    onClear={() => {
+                        setSearch("");
+                        setTeacherFilter("");
+                        setStatusFilter("");
+                    }}
+                />
 
                 {filteredCourses.length === 0 ? (
                     <p>
@@ -310,6 +307,12 @@ function CourseList() {
                                 updateActiveErrorCourseId={updateActiveErrorCourseId}
                                 enrolError={enrolError}
                                 enrolErrorCourseId={enrolErrorCourseId}
+                                enrolSuccess={
+                                    enrolSuccessCourseId === course.id
+                                        ? enrolSuccess
+                                        : null
+                                }
+                                isEnrolSuccess={enrolSuccessCourseId === course.id}
                             />
                         ))}
                     </div>
