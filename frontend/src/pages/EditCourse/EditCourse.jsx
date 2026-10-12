@@ -92,9 +92,15 @@ function EditCourse() {
 
         try {
 
+            const payload = { ...formData };
+
+            if (user.role === "teacher") {
+                delete payload.teacher;
+            }
+
             const response = await api.patch(
                 `/courses/${id}/edit/`,
-                formData
+                payload
             );
 
             setFormData(response.data);
