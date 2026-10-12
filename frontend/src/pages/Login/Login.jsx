@@ -9,12 +9,11 @@ import api from "../../services/api";
 
 import styles from "./Login.module.css"
 
-//IMPORT CLSX LATER
-
 function Login() {
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [login, setLogin] = useState(false);
 
   const [showPassword, setShowPassword] = useState(false);
 
@@ -27,8 +26,17 @@ function Login() {
 
   const { setUser } = useAuth()
 
+
+  const [loading, setLoading] = useState(false);
+
   const handleLogin = async (event) => {
-    event.preventDefault()
+    event.preventDefault();
+
+    // Prevent duplicate submissions
+    if (loading) return;
+
+    setLoading(true);
+
     try {
       const res = await api.post("accounts/login/", {
         username,
@@ -42,33 +50,30 @@ function Login() {
 
       setUser(userRes.data);
 
-      setLoginState(
-        {
-          type: "success",
-          message: "Successfully Logged in!"
-        }
-      )
+      setLoginState({
+        type: "success",
+        message: "Successfully Logged in!"
+      });
 
       setTimeout(() => {
-        setLoginState(
-          {
-            type: "",
-            message: ""
-          }
-        )
+        setLoginState({
+          type: "",
+          message: ""
+        });
         navigate("/app/dashboard/");
       }, 1000);
 
     } catch (err) {
-      setLoginState(
-        {
-          type: "error",
-          message: "Login Failed."
-        }
-      )
+      setLoginState({
+        type: "error",
+        message: "Login Failed."
+      });
 
+    } finally {
+      setLoading(false);
     }
   };
+
 
   return (
     <div className={styles.page}>
@@ -111,7 +116,9 @@ function Login() {
           </div>
 
 
-          <button type="submit">Login</button>
+          <button type="submit" disabled={loading}>
+            {loading ? "Logging in..." : "Login"}
+          </button>
         </form>
 
         {loginState.message && (
