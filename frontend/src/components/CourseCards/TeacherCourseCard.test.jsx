@@ -11,7 +11,6 @@ const mockCourse = {
     total_students: 10,
     active_students: 7,
     completed_students: 2,
-    dropped_students: 1,
 };
 
 describe("TeacherCourseCard", () => {

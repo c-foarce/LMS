@@ -271,7 +271,6 @@ class TeacherDashboardSerializer(serializers.ModelSerializer):
     total_students = serializers.SerializerMethodField()
     active_students = serializers.SerializerMethodField()
     completed_students = serializers.SerializerMethodField()
-    dropped_students = serializers.SerializerMethodField()
 
     class Meta:
         model = Course
@@ -283,7 +282,6 @@ class TeacherDashboardSerializer(serializers.ModelSerializer):
             "total_students",
             "active_students",
             "completed_students",
-            "dropped_students",
         ]
 
     def get_total_students(self, obj):
@@ -299,17 +297,11 @@ class TeacherDashboardSerializer(serializers.ModelSerializer):
             status=Enrolment.Status.COMPLETED
         ).count()
 
-    def get_dropped_students(self, obj):
-        return obj.enrolments.filter(
-            status=Enrolment.Status.DROPPED
-        ).count()
-
 class TeacherCourseSerializer(serializers.ModelSerializer):
 
     total_students = serializers.SerializerMethodField()
     active_students = serializers.SerializerMethodField()
     completed_students = serializers.SerializerMethodField()
-    dropped_students = serializers.SerializerMethodField()
 
     class Meta:
         model = Course
@@ -324,7 +316,6 @@ class TeacherCourseSerializer(serializers.ModelSerializer):
             "total_students",
             "active_students",
             "completed_students",
-            "dropped_students",
         ]
 
     def get_total_students(self, obj):
@@ -339,8 +330,4 @@ class TeacherCourseSerializer(serializers.ModelSerializer):
         return obj.enrolments.filter(
             status=Enrolment.Status.COMPLETED
         ).count()
-
-    def get_dropped_students(self, obj):
-        return obj.enrolments.filter(
-            status=Enrolment.Status.DROPPED
-        ).count()
+    

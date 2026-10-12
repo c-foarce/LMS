@@ -687,11 +687,6 @@ class TeacherDashboardSerializerTests(
             role="student",
         )
 
-        self.student4 = self.create_user(
-            "student4",
-            role="student",
-        )
-
         self.course = self.create_course(
             teacher=self.teacher,
         )
@@ -711,12 +706,6 @@ class TeacherDashboardSerializerTests(
         Enrolment.objects.create(
             student=self.student3,
             course=self.course,
-            status=Enrolment.Status.DROPPED,
-        )
-
-        Enrolment.objects.create(
-            student=self.student4,
-            course=self.course,
             status=Enrolment.Status.ACTIVE,
         )
 
@@ -727,7 +716,7 @@ class TeacherDashboardSerializerTests(
 
         self.assertEqual(
             data["total_students"],
-            4,
+            3,
         )
 
         self.assertEqual(
@@ -737,11 +726,6 @@ class TeacherDashboardSerializerTests(
 
         self.assertEqual(
             data["completed_students"],
-            1,
-        )
-
-        self.assertEqual(
-            data["dropped_students"],
             1,
         )
 
@@ -766,7 +750,6 @@ class TeacherCourseSerializerTests(
             "total_students",
             "active_students",
             "completed_students",
-            "dropped_students",
         }
 
         self.assertEqual(
@@ -781,7 +764,7 @@ class TeacherCourseSerializerTests(
 
         self.assertEqual(
             data["total_students"],
-            4,
+            3,
         )
 
         self.assertEqual(
@@ -793,8 +776,4 @@ class TeacherCourseSerializerTests(
             data["completed_students"],
             1,
         )
-
-        self.assertEqual(
-            data["dropped_students"],
-            1,
-        )
+        

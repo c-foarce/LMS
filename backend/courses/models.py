@@ -40,7 +40,6 @@ class Enrolment(models.Model):
     class Status(models.TextChoices):
         ACTIVE = "active","Active"
         COMPLETED = "completed","Completed"
-        DROPPED = "dropped","Dropped"
 
     student = models.ForeignKey(
         "accounts.User",

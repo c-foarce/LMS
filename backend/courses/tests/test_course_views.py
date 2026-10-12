@@ -773,7 +773,6 @@ class TeacherDashboardViewTests(CourseViewTestBase):
         self.assertEqual(course["total_students"], 0)
         self.assertEqual(course["active_students"], 0)
         self.assertEqual(course["completed_students"], 0)
-        self.assertEqual(course["dropped_students"], 0)
 
     def test_dashboard_counts_enrolments_by_status(self):
         Enrolment.objects.create(
@@ -796,18 +795,6 @@ class TeacherDashboardViewTests(CourseViewTestBase):
             grade="A",
         )
 
-        third_student = User.objects.create_user(
-            username="student3",
-            password="password123",
-            role="student",
-        )
-
-        Enrolment.objects.create(
-            student=third_student,
-            course=self.course,
-            status=Enrolment.Status.DROPPED,
-        )
-
         self.authenticate(self.teacher)
 
         response = self.client.get(reverse("teacher-dashboard"))
@@ -816,10 +803,9 @@ class TeacherDashboardViewTests(CourseViewTestBase):
 
         course = response.data[0]
 
-        self.assertEqual(course["total_students"], 3)
+        self.assertEqual(course["total_students"], 2)
         self.assertEqual(course["active_students"], 1)
         self.assertEqual(course["completed_students"], 1)
-        self.assertEqual(course["dropped_students"], 1)
 
     def test_inactive_course_still_appears_on_teacher_dashboard(self):
         self.course.is_active = False

@@ -185,11 +185,6 @@ function TeacherDashboard() {
                                         {course.completed_students}
                                     </p>
 
-                                    <p>
-                                        Dropped Students:{" "}
-                                        {course.dropped_students}
-                                    </p>
-
                                     <div>
                                         <p>
                                             Awaiting Grading:{" "}

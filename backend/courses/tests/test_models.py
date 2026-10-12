@@ -287,11 +287,6 @@ class EnrolmentModelTests(TestCase):
             "completed"
         )
 
-        self.assertEqual(
-            Enrolment.Status.DROPPED,
-            "dropped"
-        )
-
 
 class CompletedEnrolmentModelTests(TestCase):
 

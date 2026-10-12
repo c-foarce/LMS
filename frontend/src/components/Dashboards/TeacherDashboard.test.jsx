@@ -6,7 +6,7 @@ import {
     Routes,
 } from "react-router-dom";
 
-import TeacherDashboard from "./TeacherDashboard";
+import TeacherDashboard from "./TeacherDashBoard";
 import api from "../../services/api";
 
 import {
@@ -283,10 +283,6 @@ describe("Teacher courses", () => {
             mathematics.getByText(/Completed Students:/)
         ).toHaveTextContent("Completed Students: 0");
 
-        await expect.element(
-            mathematics.getByText(/Dropped Students:/)
-        ).toHaveTextContent("Dropped Students: 4");
-
         // Computer Science
         await expect.element(
             computerScience.getByRole("heading", { level: 4 })
@@ -307,10 +303,6 @@ describe("Teacher courses", () => {
         await expect.element(
             computerScience.getByText(/Completed Students:/)
         ).toHaveTextContent("Completed Students: 2");
-
-        await expect.element(
-            computerScience.getByText(/Dropped Students:/)
-        ).toHaveTextContent("Dropped Students: 1");
     });
 
 

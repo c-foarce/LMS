@@ -95,7 +95,6 @@ export const mockTeacherCourses = [
         total_students: 10,
         active_students: 6,
         completed_students: 0,
-        dropped_students: 4,
     },
     {
         id: 2,
@@ -105,7 +104,6 @@ export const mockTeacherCourses = [
         total_students: 5,
         active_students: 2,
         completed_students: 2,
-        dropped_students: 1,
     },
 ];
 
