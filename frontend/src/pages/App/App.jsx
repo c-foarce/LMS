@@ -36,172 +36,172 @@ import Completion from "../Completion/Completion";
 import History from "../History/History";
 import EditUser from "../EditUser/EditUser";
 
-const router = createBrowserRouter(
-  createRoutesFromElements(
-    <>
-      {/* All Access */}
-      <Route path="/" element={<AuthLayout />}>
-        <Route index element={<Welcome />} />
-        <Route path="login" element={<Login />} />
-        <Route path="register" element={<Register />} />
-      </Route>
-      {/*Anyone can access this */}
-      {/* Login Access */}
-      <Route
-        path="/app"
-        element={
-          <ProtectedRoute>
-            <AppLayout />
-          </ProtectedRoute>
-        }
-      >
+function App({ basename = "/LMS" }) {
+  const router = createBrowserRouter(
+    createRoutesFromElements(
+      <>
+        {/* All Access */}
+        <Route path="/" element={<AuthLayout />}>
+          <Route index element={<Welcome />} />
+          <Route path="login" element={<Login />} />
+          <Route path="register" element={<Register />} />
+        </Route>
         {/*Anyone can access this */}
-        <Route index element={<Navigate to="dashboard" replace />} />
-
-        {/*Anyone can access this */}
+        {/* Login Access */}
         <Route
-          path="dashboard/"
-          element={<Dashboard />}
-        />
-
-        {/*Only Students or Teachers can access this */}
-        <Route
-          path="courses/"
+          path="/app"
           element={
-            <RoleRoute roles={["student", "teacher"]}>
-              <Courses />
+            <ProtectedRoute>
+              <AppLayout />
+            </ProtectedRoute>
+          }
+        >
+          {/*Anyone can access this */}
+          <Route index element={<Navigate to="dashboard" replace />} />
+
+          {/*Anyone can access this */}
+          <Route
+            path="dashboard/"
+            element={<Dashboard />}
+          />
+
+          {/*Only Students or Teachers can access this */}
+          <Route
+            path="courses/"
+            element={
+              <RoleRoute roles={["student", "teacher"]}>
+                <Courses />
+              </RoleRoute>
+            }
+          />
+
+          {/* Student facing page for their grades */}
+          <Route
+            path="courses/grades/"
+            element={<RoleRoute roles={["student"]}>
+              <MyGrades />
             </RoleRoute>
-          }
-        />
+            }
+          />
 
-        {/* Student facing page for their grades */}
-        <Route
-          path="courses/grades/"
-          element={<RoleRoute roles={["student"]}>
-            <MyGrades />
-          </RoleRoute>
-          }
-        />
+          {/*Only teachers or admins can access this */}
+          <Route
+            path="courses/new/"
+            element={
+              <RoleRoute roles={["teacher", "admin"]}>
+                <NewCourse />
+              </RoleRoute>
+            }
+          />
 
-        {/*Only teachers or admins can access this */}
-        <Route
-          path="courses/new/"
-          element={
-            <RoleRoute roles={["teacher", "admin"]}>
-              <NewCourse />
-            </RoleRoute>
-          }
-        />
+          {/*Only admins can access this */}
+          <Route
+            path="accounts/new/"
+            element={
+              <RoleRoute roles={["admin"]}>
+                <NewUser />
+              </RoleRoute>
+            }
+          />
 
-        {/*Only admins can access this */}
-        <Route
-          path="accounts/new/"
-          element={
-            <RoleRoute roles={["admin"]}>
-              <NewUser />
-            </RoleRoute>
-          }
-        />
+          {/*Only teachers or admins can access this */}
+          <Route
+            path="courses/enrolments/new/"
+            element={
+              <RoleRoute roles={["teacher", "admin"]}>
+                <NewEnrolment />
+              </RoleRoute>
+            }
+          />
 
-        {/*Only teachers or admins can access this */}
-        <Route
-          path="courses/enrolments/new/"
-          element={
-            <RoleRoute roles={["teacher", "admin"]}>
-              <NewEnrolment />
-            </RoleRoute>
-          }
-        />
+          {/* Only teachers can access this */}
+          <Route
+            path="courses/progress/"
+            element={
+              <RoleRoute roles={["teacher"]}>
+                <Gradebook />
+              </RoleRoute>
+            }
+          />
 
-        {/* Only teachers can access this */}
-        <Route
-          path="courses/progress/"
-          element={
-            <RoleRoute roles={["teacher"]}>
-              <Gradebook />
-            </RoleRoute>
-          }
-        />
+          {/*Only teachers or admins can access this */}
+          <Route
+            path="courses/:id/edit/"
+            element={
+              <RoleRoute roles={["teacher", "admin"]}>
+                <EditCourse />
+              </RoleRoute>
+            }
+          />
 
-        {/*Only teachers or admins can access this */}
-        <Route
-          path="courses/:id/edit/"
-          element={
-            <RoleRoute roles={["teacher", "admin"]}>
-              <EditCourse />
-            </RoleRoute>
-          }
-        />
+          <Route
+            path="accounts/:id/edit/"
+            element={
+              <RoleRoute roles={["admin"]}>
+                <EditUser />
+              </RoleRoute>
+            }
+          />
 
-        <Route
-          path="accounts/:id/edit/"
-          element={
-            <RoleRoute roles={["admin"]}>
-              <EditUser />
-            </RoleRoute>
-          }
-        />
+          {/*Only admins should be able to see this */}
+          <Route
+            path="courses/enrolments/all/"
+            element={
+              <RoleRoute roles={["admin"]}>
+                <EnrolmentList />
+              </RoleRoute>
+            }
+          />
 
-        {/*Only admins should be able to see this */}
-        <Route
-          path="courses/enrolments/all/"
-          element={
-            <RoleRoute roles={["admin"]}>
-              <EnrolmentList />
-            </RoleRoute>
-          }
-        />
+          <Route
+            path="accounts/all/"
+            element={
+              <RoleRoute roles={["admin"]}>
+                <UserList />
+              </RoleRoute>
+            }
 
-        <Route
-          path="accounts/all/"
-          element={
-            <RoleRoute roles={["admin"]}>
-              <UserList />
-            </RoleRoute>
-          }
+          />
 
-        />
+          <Route
+            path="courses/all/"
+            element={
+              <RoleRoute roles={["admin", "student"]}>
+                <CourseList />
+              </RoleRoute>
+            }
+          />
 
-        <Route
-          path="courses/all/"
-          element={
-            <RoleRoute roles={["admin", "student"]}>
-              <CourseList />
-            </RoleRoute>
-          }
-        />
+          <Route
+            path="courses/enrolments/complete/"
+            element={
+              <RoleRoute roles={["student"]}>
+                <Completion />
+              </RoleRoute>
+            }
+          />
 
-        <Route
-          path="courses/enrolments/complete/"
-          element={
-            <RoleRoute roles={["student"]}>
-              <Completion />
-            </RoleRoute>
-          }
-        />
+          <Route
+            path="courses/enrolments/history/"
+            element={
+              <RoleRoute roles={["admin", "teacher"]}>
+                <History />
+              </RoleRoute>
+            }
+          />
 
-        <Route
-          path="courses/enrolments/history/"
-          element={
-            <RoleRoute roles={["admin", "teacher"]}>
-              <History />
-            </RoleRoute>
-          }
-        />
+        </Route>
+      </>
+    ),
+    { basename }
+  );
 
-      </Route>
-    </>
-  ),
-  {basename: "/LMS"}
-)
-
-
-function App() {
   return (
     <AuthProvider>
       <RouterProvider router={router} />
     </AuthProvider>
   )
 }
+
 
 export default App;
