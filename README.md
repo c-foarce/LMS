@@ -40,6 +40,13 @@ The frontend is hosted on GitHub Pages, with the REST API hosted separately on R
 
 The backend enforces role-based permissions independently of the frontend, protecting restricted operations from unauthorised API requests.
 
+## Project Wireframes
+
+Here is a preview of the initial application layout and design architecture:
+![Project Wireframe Page 1](screenshots/Project%20Wireframe%20Page%201.png)
+
+You can view the full set of 15 system layouts and user flows directly inside the [Wireframes Folder](./screenshots).
+
 ## Technology Stack
 
 **Frontend**
